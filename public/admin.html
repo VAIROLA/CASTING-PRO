@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel Administrativo & Gestão Financeira • CASTING PRO</title>
+  <link rel="icon" type="image/jpeg" href="/img/logo.jpg">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/css/main.css">
+  <style>
+    .metric-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+    .metric-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+    .metric-value {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      color: #fff;
+    }
+    .metric-sub {
+      font-size: 0.78rem;
+      color: var(--text-sub);
+      margin-top: 4px;
+    }
+    .table-wrap {
+      overflow-x: auto;
+    }
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.88rem;
+    }
+    .admin-table th {
+      background: #0f1523;
+      color: var(--text-muted);
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 600;
+    }
+    .admin-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--text-sub);
+    }
+    .revenue-box {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(56, 189, 248, 0.08));
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      margin-bottom: 30px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="/" class="brand-logo">
+        <img src="/img/logo.jpg" alt="Logo CASTING PRO" class="brand-logo-img">
+        <div class="brand-text-stack">
+          <span class="brand-title-casting">CASTING</span>
+          <span class="brand-title-pro">— PRO —</span>
+        </div>
+        <span class="brand-badge">ADMIN COMERCIAL</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="/">Vitrine Pública</a></li>
+        <li><a href="/painel-artista.html">Painel do Artista</a></li>
+        <li><a href="/admin.html" class="active">Controle Comercial</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="main-wrapper">
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 15px;">
+      <div>
+        <h1 style="font-family: 'Montserrat', sans-serif; font-size: 1.8rem; color: #fff;">
+          Controle Comercial & Assinaturas
+        </h1>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">
+          Métricas auditadas com dados reais do banco e do gateway de cobrança nacional.
+        </p>
+      </div>
+
+      <div style="display: flex; gap: 10px;">
+        <button type="button" id="btnExportarCSV" class="btn btn-secondary btn-sm">
+          📥 Exportar Relatório CSV
+        </button>
+        <button type="button" id="btnExportarJSON" class="btn btn-secondary btn-sm">
+          📦 Exportar JSON
+        </button>
+        <button type="button" id="btnAtualizarDados" class="btn btn-primary btn-sm">
+          🔄 Atualizar Métricas
+        </button>
+      </div>
+    </div>
+
+    <!-- RECEITA DISCRIMINADA (Regra Master #8) -->
+    <section class="revenue-box">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 15px; margin-bottom: 20px;">
+        <div>
+          <span style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: #f59e0b; font-weight: 700;">Demonstrativo Financeiro Real</span>
+          <h2 style="font-family: 'Montserrat', sans-serif; font-size: 2.2rem; color: #fff; margin-top: 4px;">
+            Receita Efetiva Total: <span id="valReceitaTotal" style="color: #10b981;">R$ 0,00</span>
+          </h2>
+        </div>
+        <div style="text-align: right;">
+          <span style="font-size: 0.85rem; color: var(--text-muted);">MRR Projetado (Mensalidade Recorrente Ativa)</span>
+          <div id="valMrr" style="font-family: 'Montserrat', sans-serif; font-size: 1.5rem; font-weight: 800; color: #38bdf8;">R$ 0,00 / mês</div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div style="background: rgba(15, 21, 35, 0.7); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 18px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <strong style="color: #fff; font-size: 1.05rem;">Receita de Novas Adesões (Taxa Única)</strong>
+              <p style="color: var(--text-muted); font-size: 0.82rem;">Cobrança inicial de R$ 20,00 por artista cadastrado.</p>
+            </div>
+            <div id="valReceitaTaxas" style="font-size: 1.6rem; font-weight: 800; color: #f59e0b;">
+              R$ 0,00
+            </div>
+          </div>
+        </div>
+
+        <div style="background: rgba(15, 21, 35, 0.7); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 18px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <strong style="color: #fff; font-size: 1.05rem;">Receita Mensal Recorrente (Manutenção)</strong>
+              <p style="color: var(--text-muted); font-size: 0.82rem;">Mensalidades de R$ 10,00 recebidas a cada ciclo de 30 dias.</p>
+            </div>
+            <div id="valReceitaMensalidades" style="font-size: 1.6rem; font-weight: 800; color: #38bdf8;">
+              R$ 0,00
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GRID DE MÉTRICAS OPERACIONAIS (6 CARDS) -->
+    <section class="grid-3" style="margin-bottom: 30px;">
+      <div class="metric-card">
+        <span class="metric-label">Cadastros Iniciados</span>
+        <div id="mCadastrosIniciados" class="metric-value">0</div>
+        <span class="metric-sub">Contas criadas aguardando taxa</span>
+      </div>
+
+      <div class="metric-card">
+        <span class="metric-label">Taxas Iniciais Pagas</span>
+        <div id="mTaxasPagas" class="metric-value" style="color: #10b981;">0</div>
+        <span class="metric-sub">Adesões de R$ 20 confirmadas</span>
+      </div>
+
+      <div class="metric-card">
+        <span class="metric-label">Assinaturas Ativas</span>
+        <div id="mAssinaturasAtivas" class="metric-value" style="color: #38bdf8;">0</div>
+        <span class="metric-sub">Perfis em dia na vitrine pública</span>
+      </div>
+
+      <div class="metric-card">
+        <span class="metric-label">Pagamentos Pendentes</span>
+        <div id="mPagamentosPendentes" class="metric-value" style="color: #fb923c;">0</div>
+        <span class="metric-sub">Renovação aguardando confirmação</span>
+      </div>
+
+      <div class="metric-card">
+        <span class="metric-label">Pagamentos Atrasados</span>
+        <div id="mPagamentosAtrasados" class="metric-value" style="color: #ef4444;">0</div>
+        <span class="metric-sub">Visibilidade pública suspensa</span>
+      </div>
+
+      <div class="metric-card">
+        <span class="metric-label">Assinaturas Canceladas</span>
+        <div id="mAssinaturasCanceladas" class="metric-value" style="color: #94a3b8;">0</div>
+        <span class="metric-sub">Dados e portfólio preservados</span>
+      </div>
+    </section>
+
+    <!-- FERRAMENTA DE SIMULAÇÃO DE WEBHOOK / CICLO BANCÁRIO -->
+    <section class="card" style="margin-bottom: 30px; border-color: rgba(56, 189, 248, 0.4);">
+      <h2 style="font-family: 'Montserrat', sans-serif; font-size: 1.25rem; color: #fff; display: flex; align-items: center; gap: 8px;">
+        ⚡ Simulador de Ciclo Bancário & Webhooks
+      </h2>
+      <p style="color: var(--text-muted); font-size: 0.88rem; margin: 4px 0 16px;">
+        Utilize este painel para validar o comportamento do sistema diante de eventos do provedor (renovação mensal de R$ 10, inadimplência e suspensão sem exclusão de dados).
+      </p>
+
+      <div style="display: flex; gap: 15px; flex-wrap: wrap; align-items: center;">
+        <select id="simArtistaSelect" class="form-select" style="max-width: 280px; margin: 0;">
+          <!-- Opções preenchidas dinamicamente -->
+        </select>
+        <button type="button" class="btn btn-success btn-sm" onclick="executarSimulacao('renovar_mensalidade')">
+          ✓ Simular Cobrança de Mensalidade Aprovada (+R$ 10,00)
+        </button>
+        <button type="button" class="btn btn-warning btn-sm" onclick="executarSimulacao('falhar_cobranca')">
+          ⚠️ Simular Falha de Cartão (Pagamento Pendente)
+        </button>
+        <button type="button" class="btn btn-danger btn-sm" onclick="executarSimulacao('suspender_atraso')">
+          🔒 Simular Suspensão por Atraso (Sem Deletar Fotos)
+        </button>
+      </div>
+    </section>
+
+    <!-- HISTÓRICO DE TRANSAÇÕES REAIS -->
+    <section class="card" style="margin-bottom: 30px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 10px;">
+        <h2 style="font-family: 'Montserrat', sans-serif; font-size: 1.25rem; color: #fff;">
+          Histórico Geral de Transações da Plataforma
+        </h2>
+        <span style="font-size: 0.82rem; color: var(--text-muted);">Auditado em tempo real</span>
+      </div>
+
+      <div class="table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>ID Transação</th>
+              <th>Data</th>
+              <th>Artista</th>
+              <th>Tipo</th>
+              <th>Valor</th>
+              <th>Método</th>
+              <th>Status</th>
+              <th>Comprovante</th>
+            </tr>
+          </thead>
+          <tbody id="transacoesTableBody">
+            <!-- Renderizado via JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- CONFIGURAÇÃO DOS PREÇOS COMERCIAIS DA PLATAFORMA -->
+    <section class="card">
+      <h2 style="font-family: 'Montserrat', sans-serif; font-size: 1.25rem; color: #fff; margin-bottom: 8px;">
+        Configurações Comerciais Globais
+      </h2>
+      <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 20px;">
+        Ajuste de tabelas de preços sem alteração unilateral de contratos ativos existentes.
+      </p>
+
+      <form id="formConfig" class="grid-3">
+        <div class="form-group">
+          <label class="form-label">Taxa Única de Cadastro Inicial (R$)</label>
+          <input type="number" step="0.50" id="confInitialFee" class="form-input" value="20.00">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Mensalidade Recorrente (R$)</label>
+          <input type="number" step="0.50" id="confMonthlyFee" class="form-input" value="10.00">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Dias de Tolerância / Carência</label>
+          <input type="number" id="confGracePeriod" class="form-input" value="5">
+        </div>
+        <div style="grid-column: 1 / -1;">
+          <button type="submit" class="btn btn-primary">💾 Salvar Configurações Comerciais</button>
+        </div>
+      </form>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div>
+        <strong style="color: #fff; font-size: 1.1rem;">CASTING PRO</strong> • Painel de Gestão Comercial e Auditoria Financeira
+      </div>
+      <div style="display: flex; gap: 15px;">
+        <a href="/" style="color: var(--primary); text-decoration: none;">Vitrine de Artistas</a>
+        <a href="/painel-artista.html" style="color: var(--text-sub); text-decoration: none;">Área do Artista</a>
+      </div>
+    </div>
+    <div style="max-width: 1200px; margin: 18px auto 0; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.08); text-align: center; font-size: 0.88rem; color: #94a3b8;">
+      <span style="color: #38bdf8; font-weight: 600;">Copyright &copy; 2026</span> - Todos os direitos reservados. <strong>CASTING PRO</strong>
+    </div>
+  </footer>
+
+  <script src="/js/api.js"></script>
+  <script>
+    let adminData = null;
+
+    async function loadAdminData() {
+      try {
+        adminData = await API.getAdminMetricas();
+        renderMetrics();
+        renderTransactions();
+        populateSimSelect();
+      } catch (err) {
+        alert('Erro ao carregar métricas administrativas: ' + err.message);
+      }
+    }
+
+    function renderMetrics() {
+      const { totais, receita, config } = adminData;
+
+      document.getElementById('valReceitaTotal').textContent = `R$ ${receita.receita_total.toFixed(2)}`;
+      document.getElementById('valMrr').textContent = `R$ ${receita.mrr_projetado.toFixed(2)} / mês`;
+      document.getElementById('valReceitaTaxas').textContent = `R$ ${receita.receita_taxas_iniciais.toFixed(2)}`;
+      document.getElementById('valReceitaMensalidades').textContent = `R$ ${receita.receita_recorrente_mensal.toFixed(2)}`;
+
+      document.getElementById('mCadastrosIniciados').textContent = totais.cadastros_iniciados;
+      document.getElementById('mTaxasPagas').textContent = totais.taxas_iniciais_pagas;
+      document.getElementById('mAssinaturasAtivas').textContent = totais.assinaturas_ativas;
+      document.getElementById('mPagamentosPendentes').textContent = totais.pagamentos_pendentes;
+      document.getElementById('mPagamentosAtrasados').textContent = totais.pagamentos_atrasados;
+      document.getElementById('mAssinaturasCanceladas').textContent = totais.assinaturas_canceladas;
+
+      if (config) {
+        document.getElementById('confInitialFee').value = config.initial_fee || 20.00;
+        document.getElementById('confMonthlyFee').value = config.monthly_fee || 10.00;
+        document.getElementById('confGracePeriod').value = config.grace_period_days || 5;
+      }
+    }
+
+    function renderTransactions() {
+      const tbody = document.getElementById('transacoesTableBody');
+      const txs = adminData.transacoes || [];
+
+      if (txs.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--text-muted);">Nenhuma transação financeira registrada.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = txs.map(tx => `
+        <tr>
+          <td><code style="color: var(--accent);">${tx.id}</code></td>
+          <td>${new Date(tx.data).toLocaleString('pt-BR')}</td>
+          <td>
+            <strong style="color: #fff;">${tx.artista_nome}</strong><br>
+            <span style="font-size: 0.75rem; color: var(--text-muted);">${tx.email}</span>
+          </td>
+          <td>
+            <span class="status-badge ${tx.tipo === 'taxa_inicial' ? 'status-cadastro_iniciado' : 'status-preenchimento_perfil'}">
+              ${tx.tipo === 'taxa_inicial' ? 'TAXA INICIAL (R$ 20)' : 'MENSALIDADE (R$ 10)'}
+            </span>
+          </td>
+          <td><strong style="color: #fff;">R$ ${parseFloat(tx.valor).toFixed(2)}</strong></td>
+          <td>${tx.metodo || 'PIX'}</td>
+          <td>
+            <span class="status-badge ${tx.status === 'pago' ? 'status-ativo' : 'status-pagamento_pendente'}">
+              ${tx.status.toUpperCase()}
+            </span>
+          </td>
+          <td>
+            ${tx.status === 'pago' ? `
+              <a href="/api/recibos/${tx.id}" target="_blank" class="btn btn-outline btn-sm" style="color: #38bdf8;">
+                📄 Recibo
+              </a>
+            ` : '-'}
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    async function populateSimSelect() {
+      const select = document.getElementById('simArtistaSelect');
+      const artistas = await API.getArtistas();
+      // Pega todos incluindo privados via busca
+      select.innerHTML = `
+        <option value="art-101">Larissa Vasconcelos (art-101)</option>
+        <option value="art-102">Thiago Albuquerque (art-102)</option>
+        <option value="art-103">Bia Camargo (art-103)</option>
+        <option value="art-104">Gabriel Rocha (art-104)</option>
+      `;
+    }
+
+    window.executarSimulacao = async function(acao) {
+      const artistId = document.getElementById('simArtistaSelect').value;
+      try {
+        const res = await API.simularCiclo(acao, artistId);
+        alert(res.message);
+        loadAdminData();
+      } catch (err) {
+        alert('Erro na simulação: ' + err.message);
+      }
+    };
+
+    // Salvar Config
+    document.getElementById('formConfig').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payload = {
+        initial_fee: parseFloat(document.getElementById('confInitialFee').value),
+        monthly_fee: parseFloat(document.getElementById('confMonthlyFee').value),
+        grace_period_days: parseInt(document.getElementById('confGracePeriod').value)
+      };
+
+      try {
+        const res = await API.updateConfig(payload);
+        alert(res.message);
+        loadAdminData();
+      } catch (err) {
+        alert(err.message);
+      }
+    });
+
+    // Exportações
+    document.getElementById('btnExportarCSV').addEventListener('click', () => {
+      const txs = adminData.transacoes || [];
+      let csv = 'ID;Data;Artista;Email;Tipo;Valor;Metodo;Status\n';
+      txs.forEach(t => {
+        csv += `"${t.id}";"${t.data}";"${t.artista_nome}";"${t.email}";"${t.tipo}";"${t.valor}";"${t.metodo}";"${t.status}"\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `relatorio-financeiro-casting-pro-${Date.now()}.csv`;
+      a.click();
+    });
+
+    document.getElementById('btnExportarJSON').addEventListener('click', () => {
+      const blob = new Blob([JSON.stringify(adminData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `metricas-casting-pro-${Date.now()}.json`;
+      a.click();
+    });
+
+    document.getElementById('btnAtualizarDados').addEventListener('click', loadAdminData);
+
+    loadAdminData();
+  </script>
+</body>
+</html>

@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perfil Artístico • CASTING PRO</title>
+  <link rel="icon" type="image/jpeg" href="/img/logo.jpg">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/css/main.css">
+  <style>
+    .public-hero {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 35px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 30px;
+      margin-bottom: 35px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+    }
+    .hero-photo-frame {
+      width: 100%;
+      height: 480px;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 2px solid #2e3e5c;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+      background: #000;
+    }
+    .hero-photo-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .hero-meta-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.2;
+      margin-bottom: 6px;
+    }
+    .hero-meta-cat {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .specs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 12px;
+      background: #0f1523;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin: 20px 0;
+    }
+    .spec-item {
+      display: flex;
+      flex-direction: column;
+    }
+    .spec-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .spec-val {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #fff;
+      margin-top: 2px;
+    }
+    /* Galeria com até 7 fotos */
+    .public-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 18px;
+      margin-top: 20px;
+    }
+    .public-gallery-item {
+      height: 290px;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      position: relative;
+      background: #0f1523;
+      transition: all 0.3s;
+    }
+    .public-gallery-item:hover {
+      transform: translateY(-4px);
+      border-color: var(--primary);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    }
+    .public-gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s;
+    }
+    .public-gallery-item:hover img {
+      transform: scale(1.05);
+    }
+    .gallery-caption-overlay {
+      position: absolute;
+      bottom: 0;
+      inset-inline: 0;
+      background: linear-gradient(transparent, rgba(10, 14, 23, 0.9));
+      padding: 20px 12px 10px;
+      color: #fff;
+      font-size: 0.82rem;
+      font-weight: 500;
+    }
+    .video-card {
+      background: #0f1523;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 18px;
+    }
+    .video-frame-wrap {
+      position: relative;
+      padding-bottom: 56.25%; /* 16:9 */
+      height: 0;
+      overflow: hidden;
+      border-radius: var(--radius-sm);
+      background: #000;
+      margin-top: 10px;
+    }
+    .video-frame-wrap iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    @media (max-width: 860px) {
+      .public-hero {
+        grid-template-columns: 1fr;
+      }
+      .hero-photo-frame {
+        height: 380px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="/" class="brand-logo">
+        <img src="/img/logo.jpg" alt="Logo CASTING PRO" class="brand-logo-img">
+        <div class="brand-text-stack">
+          <span class="brand-title-casting">CASTING</span>
+          <span class="brand-title-pro">— PRO —</span>
+        </div>
+        <span class="brand-badge">PERFIL PÚBLICO</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="/">← Voltar à Vitrine</a></li>
+        <li><a href="/cadastro.html" class="btn-nav-cta">Criar Meu Perfil</a></li>
+        <li><a href="/painel-artista.html">Área do Artista</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="main-wrapper">
+
+    <!-- HERO DO ARTISTA -->
+    <section class="public-hero">
+      <!-- 1. FOTOGRAFIA PRINCIPAL EM DESTAQUE -->
+      <div class="hero-photo-frame">
+        <img id="publicMainPhoto" src="https://via.placeholder.com/600x800?text=Carregando..." alt="Fotografia Principal">
+      </div>
+
+      <!-- 2. INFORMAÇÕES ARTÍSTICAS, DRT E CONTATO -->
+      <div style="display: flex; flex-direction: column;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px;">
+          <div>
+            <h1 id="publicName" class="hero-meta-title">Carregando...</h1>
+            <div class="hero-meta-cat">
+              <span id="publicCategory">Categoria</span>
+              <span id="publicDrt" class="status-badge status-ativo" style="font-size: 0.75rem;">DRT Verificado</span>
+            </div>
+            <p id="publicLocation" style="color: var(--text-muted); font-size: 0.95rem;">
+              📍 São Paulo - SP
+            </p>
+          </div>
+
+          <!-- BOTÕES DE COMPARTILHAMENTO & CONTATO -->
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button type="button" id="btnShare" class="btn btn-secondary btn-sm">
+              🔗 Compartilhar
+            </button>
+            <button type="button" id="btnWhatsApp" class="btn btn-success btn-sm">
+              💬 Contatar Elenco
+            </button>
+          </div>
+        </div>
+
+        <!-- 5. FICHA TÉCNICA / CARACTERÍSTICAS FÍSICAS -->
+        <div class="specs-grid" id="specsContainer">
+          <!-- Renderizado via JS -->
+        </div>
+
+        <!-- HABILIDADES -->
+        <div style="margin-bottom: 20px;">
+          <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Habilidades Artísticas</span>
+          <div id="publicSkillsWrap" class="artist-tags" style="margin-top: 8px;"></div>
+        </div>
+
+        <!-- 4. BIOGRAFIA -->
+        <div>
+          <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Biografia</span>
+          <p id="publicBio" style="color: var(--text-sub); font-size: 0.95rem; margin-top: 6px; line-height: 1.7; white-space: pre-line;">
+            Carregando biografia...
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. GALERIA COM ATÉ SETE FOTOS DE APRESENTAÇÃO -->
+    <section class="card" style="margin-bottom: 30px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+        <div>
+          <h2 style="font-family: 'Montserrat', sans-serif; font-size: 1.4rem; color: #fff;">
+            Galeria de Apresentação
+          </h2>
+          <p style="color: var(--text-muted); font-size: 0.88rem;">
+            Portfólio com enquadramentos, expressões e trabalhos artísticos (Clique para ampliar).
+          </p>
+        </div>
+        <span id="galleryCounterPill" style="background: #0f1523; border: 1px solid var(--border); border-radius: 8px; padding: 4px 12px; font-weight: 700; color: #f59e0b; font-size: 0.85rem;">
+          0 fotos
+        </span>
+      </div>
+
+      <div id="publicGalleryGrid" class="public-gallery">
+        <!-- Fotos de apresentação -->
+      </div>
+    </section>
+
+    <!-- 7. VÍDEOS DE TRABALHOS (ATÉ 2) -->
+    <section class="card" style="margin-bottom: 30px;">
+      <h2 style="font-family: 'Montserrat', sans-serif; font-size: 1.4rem; color: #fff; margin-bottom: 6px;">
+        Vídeos & Showreels
+      </h2>
+      <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 20px;">
+        Demonstrações de interpretação, voz e presença cênica.
+      </p>
+
+      <div id="publicVideosGrid" class="grid-2">
+        <!-- Até 2 vídeos -->
+      </div>
+    </section>
+
+    <!-- 4. CURRÍCULO ARTÍSTICO E TRABALHOS -->
+    <section class="card">
+      <h2 style="font-family: 'Montserrat', sans-serif; font-size: 1.4rem; color: #fff; margin-bottom: 6px;">
+        Currículo Artístico Completo
+      </h2>
+      <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 16px;">
+        Histórico profissional, formação e participações em produções audiovisuais e teatrais.
+      </p>
+
+      <div id="publicCurriculum" style="background: #0f1523; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 22px; color: var(--text-sub); font-size: 0.95rem; line-height: 1.8; white-space: pre-line;">
+        Nenhum currículo detalhado cadastrado.
+      </div>
+
+      <!-- AVISO LEGAL DE RESPONSABILIDADE DAS INFORMAÇÕES -->
+      <div style="margin-top: 25px; padding: 14px 18px; background: rgba(148, 163, 184, 0.06); border-radius: 8px; border: 1px solid rgba(148, 163, 184, 0.2); font-size: 0.82rem; color: #94a3b8; line-height: 1.5; text-align: center;">
+        ⚖️ <strong>Aviso Legal:</strong> Todas as informações, dados curriculares, número de DRT, fotografias, vídeos e canais de contato divulgados nesta página são fornecidos e de <strong>exclusiva e total responsabilidade do próprio artista titular do perfil</strong>. A plataforma CASTING PRO não se responsabiliza pelo teor das informações declaradas.
+      </div>
+    </section>
+
+  </main>
+
+  <!-- LIGHTBOX PARA FOTOS AMPLIADAS -->
+  <div id="lightbox" class="lightbox-overlay">
+    <button class="lightbox-close" id="btnFecharLightbox">&times;</button>
+    <img id="lightboxImg" src="" alt="Foto Ampliada" class="lightbox-img">
+  </div>
+
+  <footer class="footer">
+    <div class="footer-container">
+      <div>
+        <strong style="color: #fff;">CASTING PRO</strong> • Portfólio Verificado de Artistas
+      </div>
+      <div>
+        <a href="/" style="color: var(--primary); text-decoration: none;">Ver todos os talentos</a>
+      </div>
+    </div>
+    <div style="max-width: 1200px; margin: 18px auto 0; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.08); text-align: center; font-size: 0.88rem; color: #94a3b8;">
+      <span style="color: #38bdf8; font-weight: 600;">Copyright &copy; 2026</span> - Todos os direitos reservados. <strong>CASTING PRO</strong>
+    </div>
+  </footer>
+
+  <script src="/js/api.js"></script>
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const artistId = urlParams.get('id') || 'art-101';
+
+    let artistData = null;
+
+    async function loadPublicProfile() {
+      try {
+        artistData = await API.getArtista(artistId, false);
+        renderProfile();
+      } catch (err) {
+        document.querySelector('.main-wrapper').innerHTML = `
+          <div class="card" style="text-align: center; padding: 60px 20px;">
+            <h2 style="color: var(--danger); font-size: 1.6rem; margin-bottom: 12px;">Perfil Indisponível</h2>
+            <p style="color: var(--text-sub); max-width: 500px; margin: 0 auto 20px;">${err.message}</p>
+            <a href="/" class="btn btn-primary">Voltar para a Vitrine de Artistas</a>
+          </div>
+        `;
+      }
+    }
+
+    function renderProfile() {
+      document.title = `${artistData.nome_artistico} • CASTING PRO`;
+      document.getElementById('publicMainPhoto').src = artistData.foto_perfil;
+      document.getElementById('publicName').textContent = artistData.nome_artistico;
+      document.getElementById('publicCategory').textContent = artistData.categoria || 'Artista';
+
+      const drtEl = document.getElementById('publicDrt');
+      if (artistData.drt) {
+        drtEl.textContent = `DRT ${artistData.drt}`;
+        drtEl.style.display = 'inline-flex';
+      } else {
+        drtEl.style.display = 'none';
+      }
+
+      document.getElementById('publicLocation').textContent = `📍 ${artistData.cidade || 'São Paulo'} - ${artistData.estado || 'SP'}`;
+      document.getElementById('publicBio').textContent = artistData.biografia || 'Biografia em atualização pelo artista.';
+      document.getElementById('publicCurriculum').textContent = artistData.curriculo || 'Currículo em atualização.';
+
+      // Características Físicas
+      const c = artistData.caracteristicas || {};
+      const specs = [
+        { label: 'Altura', val: c.altura },
+        { label: 'Peso', val: c.peso },
+        { label: 'Olhos', val: c.olhos },
+        { label: 'Cabelos', val: c.cabelos },
+        { label: 'Manequim', val: c.manequim },
+        { label: 'Calçado', val: c.calcado },
+        { label: 'Etnia', val: c.etnia }
+      ].filter(s => Boolean(s.val));
+
+      document.getElementById('specsContainer').innerHTML = specs.length > 0
+        ? specs.map(s => `
+            <div class="spec-item">
+              <span class="spec-label">${s.label}</span>
+              <span class="spec-val">${s.val}</span>
+            </div>
+          `).join('')
+        : `<div style="grid-column: 1 / -1; color: var(--text-muted); font-size: 0.85rem;">Características físicas não informadas.</div>`;
+
+      // Habilidades
+      const skillsWrap = document.getElementById('publicSkillsWrap');
+      const habs = artistData.habilidades || [];
+      skillsWrap.innerHTML = habs.length > 0
+        ? habs.map(h => `<span class="artist-tag" style="font-size: 0.85rem; padding: 4px 10px;">${h}</span>`).join('')
+        : `<span style="color: var(--text-muted); font-size: 0.85rem;">Não informadas.</span>`;
+
+      // Galeria (Até 7 fotos)
+      const galGrid = document.getElementById('publicGalleryGrid');
+      const fotos = artistData.fotos_apresentacao || [];
+      document.getElementById('galleryCounterPill').textContent = `${fotos.length} fotos adicionais`;
+
+      if (fotos.length === 0) {
+        galGrid.innerHTML = `
+          <div style="grid-column: 1 / -1; text-align: center; padding: 30px; color: var(--text-muted);">
+            O artista ainda não adicionou fotos complementares de apresentação.
+          </div>
+        `;
+      } else {
+        galGrid.innerHTML = fotos.map(f => `
+          <div class="public-gallery-item" onclick="abrirLightbox('${f.url}')">
+            <img src="${f.url}" alt="${f.legenda || 'Foto de Apresentação'}" loading="lazy">
+            ${f.legenda ? `<div class="gallery-caption-overlay">${f.legenda}</div>` : ''}
+          </div>
+        `).join('');
+      }
+
+      // Vídeos (Até 2)
+      const vidGrid = document.getElementById('publicVideosGrid');
+      const vids = (artistData.videos || []).slice(0, 2);
+
+      if (vids.length === 0) {
+        vidGrid.innerHTML = `
+          <div style="grid-column: 1 / -1; text-align: center; padding: 30px; color: var(--text-muted);">
+            Nenhum vídeo cadastrado no momento.
+          </div>
+        `;
+      } else {
+        vidGrid.innerHTML = vids.map(v => {
+          const isDirectVideo = v.url.endsWith('.mp4') || v.url.endsWith('.webm') || v.url.endsWith('.mov') || v.url.startsWith('/uploads/') || v.tipo === 'mp4_upload';
+          let playerHtml = '';
+
+          if (isDirectVideo) {
+            playerHtml = `
+              <div class="video-frame-wrap" style="background: #000;">
+                <video controls preload="metadata" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain;">
+                  <source src="${v.url}" type="video/mp4">
+                  Seu navegador não suporta a reprodução deste vídeo.
+                </video>
+              </div>
+            `;
+          } else {
+            let embedUrl = v.url;
+            if (v.url.includes('youtube.com/watch?v=')) {
+              const id = v.url.split('v=')[1]?.split('&')[0];
+              embedUrl = `https://www.youtube.com/embed/${id}`;
+            } else if (v.url.includes('youtu.be/')) {
+              const id = v.url.split('youtu.be/')[1]?.split('?')[0];
+              embedUrl = `https://www.youtube.com/embed/${id}`;
+            }
+
+            playerHtml = `
+              <div class="video-frame-wrap">
+                <iframe src="${embedUrl}" allowfullscreen></iframe>
+              </div>
+            `;
+          }
+
+          return `
+            <div class="video-card">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <strong style="color: #fff; font-size: 1.05rem;">${v.titulo || 'Vídeo de Trabalho'}</strong>
+                <span class="status-badge ${isDirectVideo ? 'status-ativo' : 'status-cadastro_iniciado'}" style="font-size: 0.72rem;">
+                  ${isDirectVideo ? '📁 VÍDEO MP4' : '▶️ YOUTUBE'}
+                </span>
+              </div>
+              ${playerHtml}
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    // Compartilhamento
+    document.getElementById('btnShare').addEventListener('click', () => {
+      const url = window.location.href;
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(url);
+        alert('Link do perfil copiado para a área de transferência!');
+      } else {
+        prompt('Copie o link abaixo:', url);
+      }
+    });
+
+    document.getElementById('btnWhatsApp').addEventListener('click', () => {
+      const tel = (artistData.telefone || '').replace(/\D/g, '');
+      const msg = encodeURIComponent(`Olá ${artistData.nome_artistico}! Encontrei seu perfil no CASTING PRO e gostaria de conversar sobre uma oportunidade de trabalho.`);
+      if (tel) {
+        window.open(`https://wa.me/55${tel}?text=${msg}`, '_blank');
+      } else {
+        alert('Contato direto por WhatsApp: utilize o formulário corporativo ou contate a agência produtora.');
+      }
+    });
+
+    // Lightbox
+    window.abrirLightbox = function(url) {
+      document.getElementById('lightboxImg').src = url;
+      document.getElementById('lightbox').classList.add('active');
+    };
+
+    document.getElementById('btnFecharLightbox').addEventListener('click', () => {
+      document.getElementById('lightbox').classList.remove('active');
+    });
+
+    document.getElementById('lightbox').addEventListener('click', (e) => {
+      if (e.target.id === 'lightbox') {
+        document.getElementById('lightbox').classList.remove('active');
+      }
+    });
+
+    loadPublicProfile();
+  </script>
+</body>
+</html>

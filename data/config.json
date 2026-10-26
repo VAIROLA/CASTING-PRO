@@ -1,0 +1,14 @@
+{
+  "platform_name": "CASTING PRO",
+  "initial_fee": 20.00,
+  "monthly_fee": 10.00,
+  "currency": "BRL",
+  "symbol": "R$",
+  "max_presentation_photos": 7,
+  "max_videos": 2,
+  "billing_cycle_days": 30,
+  "grace_period_days": 5,
+  "pix_key": "financeiro@castingpro.com.br",
+  "active_payment_gateway": "mercado_pago_simulado",
+  "updated_at": "2026-10-26T17:40:00.000Z"
+}

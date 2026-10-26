@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro Profissional • CASTING PRO</title>
+  <link rel="icon" type="image/jpeg" href="/img/logo.jpg">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/css/main.css">
+  <style>
+    .step-indicator {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 35px;
+    }
+    .step-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    .step-item.active {
+      color: #fff;
+    }
+    .step-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--bg-card-alt);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+    .step-item.active .step-circle {
+      background: var(--primary);
+      color: #000;
+      border-color: var(--primary);
+      box-shadow: 0 0 12px var(--primary-glow);
+    }
+    .pricing-table-box {
+      background: #0f1523;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      margin: 25px 0;
+    }
+    .pricing-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .pricing-item:last-child {
+      border-bottom: none;
+    }
+    .qr-container {
+      background: #fff;
+      padding: 16px;
+      border-radius: 12px;
+      display: inline-block;
+      margin: 15px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="/" class="brand-logo">
+        <img src="/img/logo.jpg" alt="Logo CASTING PRO" class="brand-logo-img">
+        <div class="brand-text-stack">
+          <span class="brand-title-casting">CASTING</span>
+          <span class="brand-title-pro">— PRO —</span>
+        </div>
+        <span class="brand-badge">CADASTRO</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="/">Voltar à Vitrine</a></li>
+        <li><a href="/painel-artista.html">Já tenho conta</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="main-wrapper" style="max-width: 760px;">
+
+    <!-- STEPS -->
+    <div class="step-indicator">
+      <div id="stepHeader1" class="step-item active">
+        <span class="step-circle">1</span>
+        <span>Dados Iniciais</span>
+      </div>
+      <div id="stepHeader2" class="step-item">
+        <span class="step-circle">2</span>
+        <span>Condições Comerciais</span>
+      </div>
+      <div id="stepHeader3" class="step-item">
+        <span class="step-circle">3</span>
+        <span>Pagamento Inicial (R$ 20)</span>
+      </div>
+    </div>
+
+    <!-- ETAPA 1: DADOS INICIAIS -->
+    <div id="step1Card" class="card">
+      <h2 style="font-family: 'Montserrat', sans-serif; font-size: 1.5rem; color: #fff; margin-bottom: 6px;">
+        Criar Perfil de Artista
+      </h2>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 24px;">
+        Informe seus dados essenciais para iniciar o cadastro no catálogo de talentos.
+      </p>
+
+      <form id="formCadastro">
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Nome Completo *</label>
+            <input type="text" id="nome_completo" class="form-input" required placeholder="Ex: Larissa Vasconcelos de Melo">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nome Artístico</label>
+            <input type="text" id="nome_artistico" class="form-input" placeholder="Ex: Larissa Vasconcelos">
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">E-mail Profissional *</label>
+            <input type="email" id="email" class="form-input" required placeholder="seuemail@exemplo.com">
+          </div>
+          <div class="form-group">
+            <label class="form-label">WhatsApp / Telefone *</label>
+            <input type="text" id="telefone" class="form-input" required placeholder="(11) 98765-4321">
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Categoria Principal *</label>
+            <select id="categoria" class="form-select" required>
+              <option value="">Selecione sua categoria...</option>
+              <option value="Ator / Atriz (Teatro, Cinema e TV)">Ator / Atriz (Teatro, Cinema e TV)</option>
+              <option value="Artista da Música / Cantor(a) / Músico(a)">Artista da Música / Cantor(a) / Músico(a)</option>
+              <option value="Técnico(a) de Som para Shows & Eventos">Técnico(a) de Som para Shows & Eventos</option>
+              <option value="Técnico(a) de Teatro & Palco / Luz">Técnico(a) de Teatro & Palco / Luz</option>
+              <option value="Técnico(a) de Cinema, TV & Audiovisual">Técnico(a) de Cinema, TV & Audiovisual</option>
+              <option value="Modelo Publicitário(a) / Comercial">Modelo Publicitário(a) / Comercial</option>
+              <option value="Dublador(a) / Locutor(a)">Dublador(a) / Locutor(a)</option>
+              <option value="Bailarino(a) / Dançarino(a)">Bailarino(a) / Dançarino(a)</option>
+              <option value="Apresentador(a) / Repórter">Apresentador(a) / Repórter</option>
+              <option value="Outro Segmento Artístico / Técnico">Outro Segmento Artístico / Técnico</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Registro Profissional (DRT)</label>
+            <input type="text" id="drt" class="form-input" placeholder="Ex: 0045892/SP (se possuir)">
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Cidade *</label>
+            <input type="text" id="cidade" class="form-input" required value="São Paulo">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Estado (UF) *</label>
+            <select id="estado" class="form-select" required>
+              <option value="SP">São Paulo (SP)</option>
+              <option value="RJ">Rio de Janeiro (RJ)</option>
+              <option value="MG">Minas Gerais (MG)</option>
+              <option value="PR">Paraná (PR)</option>
+              <option value="RS">Rio Grande do Sul (RS)</option>
+              <option value="BA">Bahia (BA)</option>
+              <option value="DF">Distrito Federal (DF)</option>
+              <option value="OUTRO">Outro Estado</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+          <button type="button" id="btnAvancarCondicoes" class="btn btn-primary btn-lg">
+            Avançar para Condições Comerciais →
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- ETAPA 2: CONDIÇÕES COMERCIAIS OBRIGATÓRIAS -->
+    <div id="step2Card" class="card" style="display: none;">
+      <h2 style="font-family: 'Montserrat', sans-serif; font-size: 1.5rem; color: #fff; margin-bottom: 6px;">
+        Condições Comerciais Transparentes
+      </h2>
+      <p style="color: var(--text-muted); font-size: 0.9rem;">
+        Em conformidade com a política oficial do CASTING PRO, conheça as taxas e regras contratuais antes de prosseguir.
+      </p>
+
+      <div class="pricing-table-box">
+        <div class="pricing-item">
+          <div>
+            <strong style="color: #fff; font-size: 1.05rem;">1. Taxa Única de Cadastro Inicial</strong><br>
+            <span style="color: var(--text-muted); font-size: 0.85rem;">Cobrada uma única vez. Libera a ficha técnica, foto de perfil, galeria de até 7 fotos e 2 vídeos.</span>
+          </div>
+          <div style="text-align: right;">
+            <span style="font-size: 1.3rem; font-weight: 800; color: #f59e0b;">R$ 20,00</span><br>
+            <span style="font-size: 0.75rem; color: #10b981; font-weight: 700;">PAGO HOJE</span>
+          </div>
+        </div>
+
+        <div class="pricing-item">
+          <div>
+            <strong style="color: #fff; font-size: 1.05rem;">2. Mensalidade de Manutenção do Perfil</strong><br>
+            <span style="color: var(--text-muted); font-size: 0.85rem;">Garante a veiculação pública contínua, hospedagem otimizada das fotografias e visibilidade para produtores.</span>
+          </div>
+          <div style="text-align: right;">
+            <span style="font-size: 1.3rem; font-weight: 800; color: #38bdf8;">R$ 10,00 / mês</span><br>
+            <span style="font-size: 0.75rem; color: var(--text-muted);">Inicia após 30 dias</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="background: rgba(245, 158, 11, 0.08); border-left: 4px solid #f59e0b; padding: 16px; border-radius: 4px; margin-bottom: 20px; font-size: 0.88rem; line-height: 1.5; color: var(--text-sub);">
+        <strong style="color: #fff;">Regras de Transparência e Retenção:</strong><br>
+        • A taxa inicial de R$ 20,00 não será cobrada novamente em renovações mensais.<br>
+        • Em caso de eventual atraso futuro na mensalidade, seus dados, fotos e vídeos <strong>nunca serão excluídos</strong>. Ocorrerá apenas a pausa temporária da exibição pública até a regularização.<br>
+        • Cancelamento pode ser solicitado a qualquer momento pelo seu painel financeiro sem multas.
+      </div>
+
+      <!-- CLÁUSULA DE ISENÇÃO DE RESPONSABILIDADE -->
+      <div style="background: rgba(239, 68, 68, 0.12); border-left: 4px solid #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); padding: 16px; border-radius: 6px; margin-bottom: 24px; font-size: 0.88rem; line-height: 1.5; color: #fca5a5;">
+        <strong style="color: #fff; font-size: 0.95rem;">⚖️ Isenção de Responsabilidade sobre o Cadastro:</strong><br>
+        A plataforma CASTING PRO atua exclusivamente como ferramenta de hospedagem e catálogo de divulgação artística. A plataforma <strong>NÃO SE RESPONSABILIZA</strong> pela veracidade, legalidade, exatidão ou autenticidade das informações, número de DRT, fotografias, vídeos, habilidades ou contatos telefônicos cadastrados, sendo estes de <strong>INTEIRA E TOTAL RESPONSABILIDADE DO PRÓPRIO ARTISTA</strong> declarante.
+      </div>
+
+      <div class="form-group" style="margin-bottom: 25px;">
+        <label style="display: flex; align-items: flex-start; gap: 12px; cursor: pointer;">
+          <input type="checkbox" id="concordoTermos" style="width: 20px; height: 20px; accent-color: #f59e0b; margin-top: 3px;">
+          <span style="font-size: 0.92rem; color: #fff; line-height: 1.4;">
+            Li e concordo com as condições comerciais (R$ 20,00 inicial + R$ 10,00/mês a cada 30 dias) e declaro que todas as informações, fotos e dados cadastrados são de minha <strong>exclusiva e total responsabilidade</strong>.
+          </span>
+        </label>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <button type="button" id="btnVoltarPasso1" class="btn btn-secondary">← Voltar aos Dados</button>
+        <button type="button" id="btnConfirmarCadastro" class="btn btn-primary btn-lg" disabled>
+          Confirmar e Ir para Pagamento (R$ 20,00) →
+        </button>
+      </div>
+    </div>
+
+    <!-- ETAPA 3: CHECKOUT E PAGAMENTO INICIAL (R$ 20,00) -->
+    <div id="step3Card" class="card" style="display: none; text-align: center;">
+      <span class="status-badge status-aguardando_pagamento" style="margin-bottom: 15px;">AGUARDANDO PAGAMENTO INICIAL</span>
+      <h2 style="font-family: 'Montserrat', sans-serif; font-size: 1.6rem; color: #fff; margin-bottom: 8px;">
+        Pagamento da Taxa de Adesão: <span style="color: #f59e0b;">R$ 20,00</span>
+      </h2>
+      <p style="color: var(--text-muted); font-size: 0.92rem; max-width: 520px; margin: 0 auto 20px;">
+        Realize o pagamento instantâneo via PIX ou Cartão de Crédito. A confirmação é processada de forma segura pelo gateway de pagamentos.
+      </p>
+
+      <div style="display: flex; justify-content: center; gap: 15px; margin-bottom: 20px;">
+        <button type="button" id="tabPix" class="btn btn-primary btn-sm">Pagar com PIX (Instantâneo)</button>
+        <button type="button" id="tabCartao" class="btn btn-secondary btn-sm">Pagar com Cartão</button>
+      </div>
+
+      <!-- ÁREA PIX -->
+      <div id="areaPix">
+        <div class="qr-container">
+          <!-- QR Code gerado por API pública segura para simulação -->
+          <img id="qrImg" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=CASTING-PRO-R20-TAXA-INICIAL" alt="QR Code PIX R$ 20,00" style="display: block;">
+        </div>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px;">Ou copie a chave PIX Copia e Cola:</p>
+        <div style="display: flex; gap: 8px; max-width: 460px; margin: 0 auto 25px;">
+          <input type="text" id="pixCopiaCola" class="form-input" readonly value="00020126580014br.gov.bcb.pix0136financeiro@castingpro.com.br520400005303986540520.005802BR5911CASTING PRO" style="font-size: 0.82rem;">
+          <button type="button" id="btnCopiarPix" class="btn btn-secondary btn-sm">Copiar</button>
+        </div>
+      </div>
+
+      <!-- ÁREA CARTÃO -->
+      <div id="areaCartao" style="display: none; max-width: 440px; margin: 0 auto 25px; text-align: left;">
+        <div class="form-group">
+          <label class="form-label">Número do Cartão</label>
+          <input type="text" id="numCartao" class="form-input" placeholder="4532 •••• •••• 8934" value="4532 8920 1142 8934">
+        </div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Validade</label>
+            <input type="text" class="form-input" placeholder="MM/AA" value="12/29">
+          </div>
+          <div class="form-group">
+            <label class="form-label">CVV</label>
+            <input type="text" class="form-input" placeholder="123" value="789">
+          </div>
+        </div>
+      </div>
+
+      <!-- SIMULAÇÃO DO WEBHOOK DO GATEWAY (Para o usuário demonstrar e aprovar na hora) -->
+      <div style="background: #0b0f17; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 18px; margin-top: 15px;">
+        <p style="font-size: 0.85rem; color: var(--text-sub); margin-bottom: 12px;">
+          ⚡ <strong>Confirmação Automática por Webhook Seguro:</strong><br>
+          No ambiente de testes e homologação, clique no botão abaixo para simular a resposta do gateway bancário.
+        </p>
+        <button type="button" id="btnSimularConfirmacao" class="btn btn-success btn-lg" style="width: 100%; max-width: 380px;">
+          ✓ Simular Confirmação do Pagamento (R$ 20)
+        </button>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div>
+        <strong style="color: #fff; font-size: 1.1rem;">CASTING PRO</strong> • Plataforma Profissional de Elenco e Portfólio<br>
+        <span style="font-size: 0.8rem; color: var(--text-muted);">Modelo comercial: Taxa inicial R$ 20,00 (única) + Mensalidade recorrente R$ 10,00/mês.</span>
+      </div>
+      <div style="display: flex; gap: 15px;">
+        <a href="/" style="color: var(--text-sub); text-decoration: none;">Vitrine de Artistas</a>
+        <a href="/painel-artista.html" style="color: var(--text-sub); text-decoration: none;">Área do Artista</a>
+      </div>
+    </div>
+    <div style="max-width: 1200px; margin: 18px auto 0; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.08); text-align: center; font-size: 0.88rem; color: #94a3b8;">
+      <span style="color: #38bdf8; font-weight: 600;">Copyright &copy; 2026</span> - Todos os direitos reservados. <strong>CASTING PRO</strong>
+    </div>
+  </footer>
+
+  <script src="/js/api.js"></script>
+  <script>
+    let createdArtistId = null;
+
+    // Navegação Passo 1 -> Passo 2
+    document.getElementById('btnAvancarCondicoes').addEventListener('click', () => {
+      const nome = document.getElementById('nome_completo').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const categoria = document.getElementById('categoria').value;
+
+      if (!nome || !email || !categoria) {
+        alert('Por favor, preencha os campos obrigatórios (Nome, E-mail e Categoria).');
+        return;
+      }
+
+      document.getElementById('step1Card').style.display = 'none';
+      document.getElementById('step2Card').style.display = 'block';
+
+      document.getElementById('stepHeader1').classList.remove('active');
+      document.getElementById('stepHeader2').classList.add('active');
+    });
+
+    // Voltar Passo 2 -> Passo 1
+    document.getElementById('btnVoltarPasso1').addEventListener('click', () => {
+      document.getElementById('step2Card').style.display = 'none';
+      document.getElementById('step1Card').style.display = 'block';
+
+      document.getElementById('stepHeader2').classList.remove('active');
+      document.getElementById('stepHeader1').classList.add('active');
+    });
+
+    // Termos Checkbox
+    document.getElementById('concordoTermos').addEventListener('change', (e) => {
+      document.getElementById('btnConfirmarCadastro').disabled = !e.target.checked;
+    });
+
+    // Criar Cadastro no Backend
+    document.getElementById('btnConfirmarCadastro').addEventListener('click', async () => {
+      const btn = document.getElementById('btnConfirmarCadastro');
+      btn.disabled = true;
+      btn.textContent = 'Processando...';
+
+      const dados = {
+        nome_completo: document.getElementById('nome_completo').value.trim(),
+        nome_artistico: document.getElementById('nome_artistico').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        telefone: document.getElementById('telefone').value.trim(),
+        categoria: document.getElementById('categoria').value,
+        drt: document.getElementById('drt').value.trim(),
+        cidade: document.getElementById('cidade').value.trim(),
+        estado: document.getElementById('estado').value
+      };
+
+      try {
+        const resp = await API.cadastrar(dados);
+        createdArtistId = resp.artistId;
+
+        if (resp.cobranca && resp.cobranca.pix_copia_cola) {
+          document.getElementById('pixCopiaCola').value = resp.cobranca.pix_copia_cola;
+        }
+
+        document.getElementById('step2Card').style.display = 'none';
+        document.getElementById('step3Card').style.display = 'block';
+
+        document.getElementById('stepHeader2').classList.remove('active');
+        document.getElementById('stepHeader3').classList.add('active');
+
+      } catch (err) {
+        alert('Erro ao registrar cadastro: ' + err.message);
+        btn.disabled = false;
+        btn.textContent = 'Confirmar e Ir para Pagamento (R$ 20,00) →';
+      }
+    });
+
+    // Tabs PIX vs Cartão
+    const tabPix = document.getElementById('tabPix');
+    const tabCartao = document.getElementById('tabCartao');
+    const areaPix = document.getElementById('areaPix');
+    const areaCartao = document.getElementById('areaCartao');
+
+    tabPix.addEventListener('click', () => {
+      tabPix.classList.add('btn-primary');
+      tabPix.classList.remove('btn-secondary');
+      tabCartao.classList.remove('btn-primary');
+      tabCartao.classList.add('btn-secondary');
+      areaPix.style.display = 'block';
+      areaCartao.style.display = 'none';
+    });
+
+    tabCartao.addEventListener('click', () => {
+      tabCartao.classList.add('btn-primary');
+      tabCartao.classList.remove('btn-secondary');
+      tabPix.classList.remove('btn-primary');
+      tabPix.classList.add('btn-secondary');
+      areaPix.style.display = 'none';
+      areaCartao.style.display = 'block';
+    });
+
+    // Copiar PIX
+    document.getElementById('btnCopiarPix').addEventListener('click', () => {
+      const input = document.getElementById('pixCopiaCola');
+      input.select();
+      document.execCommand('copy');
+      alert('Chave PIX copiada para a área de transferência!');
+    });
+
+    // Confirmação Segura do Pagamento Inicial
+    document.getElementById('btnSimularConfirmacao').addEventListener('click', async () => {
+      const btn = document.getElementById('btnSimularConfirmacao');
+      btn.disabled = true;
+      btn.textContent = 'Verificando com o Provedor...';
+
+      try {
+        const metodo = areaPix.style.display !== 'none' ? 'PIX' : 'Cartão de Crédito';
+        const res = await API.confirmarPagamentoInicial(createdArtistId, metodo);
+
+        localStorage.setItem('casting_artist_id', createdArtistId);
+
+        const zapLink = res.notificacoes?.whatsapp_link;
+        const emailDest = res.notificacoes?.email_destinatario;
+
+        // Renderiza card de boas-vindas com links
+        document.getElementById('step3Card').innerHTML = `
+          <div style="padding: 25px 15px; text-align: center;">
+            <div style="font-size: 3.5rem; margin-bottom: 10px;">🎉</div>
+            <span class="status-badge status-ativo" style="margin-bottom: 12px; font-size: 0.9rem;">PAGAMENTO CONFIRMADO!</span>
+            <h2 style="font-family: 'Montserrat', sans-serif; font-size: 1.8rem; color: #fff; margin-bottom: 12px;">
+              Boas-Vindas ao CASTING PRO!
+            </h2>
+            <p style="color: var(--text-sub); font-size: 1rem; max-width: 520px; margin: 0 auto 25px; line-height: 1.6;">
+              Seu acesso profissional foi desbloqueado com sucesso. As notificações automáticas de confirmação foram emitidas.
+            </p>
+
+            <div style="background: #0f1523; border: 1.5px solid rgba(245, 158, 11, 0.35); border-radius: 12px; padding: 20px; max-width: 500px; margin: 0 auto 25px; text-align: left;">
+              <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 14px;">
+                <span style="font-size: 1.6rem;">📧</span>
+                <div>
+                  <strong style="color: #fff; font-size: 0.95rem;">E-mail de Boas-Vindas Enviado</strong><br>
+                  <span style="color: #38bdf8; font-size: 0.85rem;">${emailDest || 'Seu e-mail cadastrado'}</span>
+                </div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <span style="font-size: 1.6rem;">💬</span>
+                <div>
+                  <strong style="color: #fff; font-size: 0.95rem;">Notificação no WhatsApp Pronta</strong><br>
+                  <span style="color: #34d399; font-size: 0.85rem;">Mensagem oficial com dados de acesso e orientações</span>
+                </div>
+              </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 12px; max-width: 420px; margin: 0 auto;">
+              ${zapLink ? `
+                <a href="${zapLink}" target="_blank" class="btn btn-success btn-lg" style="box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);">
+                  💬 Abrir Boas-Vindas no WhatsApp
+                </a>
+              ` : ''}
+              <a href="/painel-artista.html?id=${createdArtistId}" class="btn btn-primary btn-lg">
+                🚀 Acessar Meu Painel e Enviar Fotos &rarr;
+              </a>
+            </div>
+          </div>
+        `;
+
+      } catch (err) {
+        alert('Falha na confirmação: ' + err.message);
+        btn.disabled = false;
+        btn.textContent = '✓ Simular Confirmação do Pagamento (R$ 20)';
+      }
+    });
+  </script>
+</body>
+</html>

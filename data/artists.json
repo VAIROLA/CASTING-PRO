@@ -1,0 +1,519 @@
+[
+  {
+    "id": "art-101",
+    "nome_completo": "Larissa Vasconcelos de Melo",
+    "nome_artistico": "Larissa Vasconcelos",
+    "email": "larissa.melo@exemplo.com",
+    "telefone": "(11) 98765-4321",
+    "cidade": "São Paulo",
+    "estado": "SP",
+    "categoria": "Atriz / Modelo Publicitária",
+    "drt": "0045892/SP",
+    "biografia": "Atriz formada pelo Célia Helena com mais de 7 anos de experiência em teatro e audiovisual. Protagonizou 3 peças teatrais, atuou em minisséries e participou de campanhas publicitárias nacionais para grandes marcas de cosméticos e moda. Fluência em inglês e espanhol, com formação vocal lírica e popular.",
+    "curriculo": "• Série 'Sob a Luz do Farol' (2025) - Personagem Helena (Coadjuvante)\n• Peça 'Vozes da Cidade' (Direção Marco Antônio, 2024) - Protagonista\n• Campanha Natura Ekos (2025)\n• Campanha Banco Inter (2024)\n• Formação: Bacharelado em Artes Cênicas (Célia Helena, 2019-2022)\n• Workshop Internacional de Interpretação para Cinema com Fátima Toledo (2023)",
+    "caracteristicas": {
+      "altura": "1.74 m",
+      "peso": "58 kg",
+      "olhos": "Castanhos claros",
+      "cabelos": "Castanhos escuros, ondulados",
+      "manequim": "38",
+      "calcado": "37",
+      "etnia": "Branca"
+    },
+    "habilidades": [
+      "Canto Mezzo-Soprano",
+      "Dança Contemporânea",
+      "Inglês Fluente",
+      "Espanhol Avançado",
+      "Dublagem",
+      "Direção de Carro e Moto"
+    ],
+    "foto_perfil": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80",
+    "fotos_apresentacao": [
+      {
+        "id": 1,
+        "url": "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80",
+        "legenda": "Retrato natural com luz suave"
+      },
+      {
+        "id": 2,
+        "url": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80",
+        "legenda": "Corpo inteiro - Moda urbana"
+      },
+      {
+        "id": 3,
+        "url": "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=800&q=80",
+        "legenda": "Expressão dramática para cinema"
+      },
+      {
+        "id": 4,
+        "url": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80",
+        "legenda": "Close comercial com sorriso"
+      },
+      {
+        "id": 5,
+        "url": "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=800&q=80",
+        "legenda": "Perfil caracterização de época"
+      },
+      {
+        "id": 6,
+        "url": "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=800&q=80",
+        "legenda": "Estilo executiva contemporânea"
+      },
+      {
+        "id": 7,
+        "url": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=80",
+        "legenda": "Retrato estúdio preto e branco"
+      }
+    ],
+    "videos": [
+      {
+        "id": 1,
+        "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "titulo": "Showreel de Dramaturgia 2026"
+      },
+      {
+        "id": 2,
+        "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "titulo": "Monólogo Clássico - Shakespeare"
+      }
+    ],
+    "status": "ativo",
+    "publicado": true,
+    "financeiro": {
+      "taxa_inicial_paga": true,
+      "taxa_inicial_valor": 20,
+      "taxa_inicial_data": "2026-09-15T14:30:00.000Z",
+      "mensalidade_valor": 10,
+      "plano": "Manutenção Mensal Casting Pro",
+      "forma_pagamento": "Cartão de Crédito",
+      "cartao_final": "8934",
+      "data_inicio": "2026-09-15T14:30:00.000Z",
+      "proxima_cobranca": "2026-11-15T14:30:00.000Z",
+      "historico": [
+        {
+          "id": "TX-1001",
+          "data": "2026-09-15T14:30:00.000Z",
+          "tipo": "taxa_inicial",
+          "descricao": "Taxa de Cadastro Inicial Obrigatória",
+          "valor": 20,
+          "status": "pago",
+          "metodo": "Cartão de Crédito",
+          "comprovante_id": "REC-0915-101"
+        },
+        {
+          "id": "TX-1002",
+          "data": "2026-10-15T14:30:00.000Z",
+          "tipo": "mensalidade",
+          "descricao": "Mensalidade de Manutenção - Mês 2",
+          "valor": 10,
+          "status": "pago",
+          "metodo": "Cartão de Crédito",
+          "comprovante_id": "REC-1015-101"
+        }
+      ]
+    }
+  },
+  {
+    "id": "art-102",
+    "nome_completo": "Thiago Mendes de Albuquerque",
+    "nome_artistico": "Thiago Albuquerque",
+    "email": "thiago.albuquerque@exemplo.com",
+    "telefone": "(21) 97654-3210",
+    "cidade": "Rio de Janeiro",
+    "estado": "RJ",
+    "categoria": "Ator / Dublador",
+    "drt": "0087411/RJ",
+    "biografia": "Ator carioca com sólida vivência em cinema independente e teatro de comédia e drama. Dublador profissional credenciado, voz presente em produções de streaming e games.",
+    "curriculo": "• Longa-metragem 'Mar Revolto' (2024) - Protagonista\n• Série Original Globoplay (2023) - Participação especial\n• Dublagem de Personagens em games AAA e animações (2022-2026)\n• Escola de Atores Wolf Maya (2018)",
+    "caracteristicas": {
+      "altura": "1.82 m",
+      "peso": "77 kg",
+      "olhos": "Verdes",
+      "cabelos": "Castanhos, curtos",
+      "manequim": "42",
+      "calcado": "41",
+      "etnia": "Branca"
+    },
+    "habilidades": [
+      "Dublagem Profissional",
+      "Locução Comercial",
+      "Artes Marciais (Jiu-Jitsu)",
+      "Violão Popular",
+      "Sotaques Regionais (Nordeste, Sul, RJ, SP)"
+    ],
+    "foto_perfil": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80",
+    "fotos_apresentacao": [
+      {
+        "id": 1,
+        "url": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800&q=80",
+        "legenda": "Retrato cinematográfico drama"
+      },
+      {
+        "id": 2,
+        "url": "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=800&q=80",
+        "legenda": "Sorriso comercial descontraído"
+      },
+      {
+        "id": 3,
+        "url": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=800&q=80",
+        "legenda": "Executivo / Caracterização de negócios"
+      },
+      {
+        "id": 4,
+        "url": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=800&q=80",
+        "legenda": "Corpo inteiro casual"
+      }
+    ],
+    "videos": [
+      {
+        "id": 1,
+        "titulo": "Reel de Interpretação Cinema & TV",
+        "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+      }
+    ],
+    "status": "ativo",
+    "publicado": true,
+    "financeiro": {
+      "taxa_inicial_paga": true,
+      "taxa_inicial_valor": 20,
+      "taxa_inicial_data": "2026-08-20T11:00:00.000Z",
+      "mensalidade_valor": 10,
+      "plano": "Manutenção Mensal Casting Pro",
+      "forma_pagamento": "PIX Recorrente",
+      "data_inicio": "2026-08-20T11:00:00.000Z",
+      "proxima_cobranca": "2026-11-20T11:00:00.000Z",
+      "historico": [
+        {
+          "id": "TX-0820",
+          "data": "2026-08-20T11:00:00.000Z",
+          "tipo": "taxa_inicial",
+          "descricao": "Taxa de Cadastro Inicial Obrigatória",
+          "valor": 20,
+          "status": "pago",
+          "metodo": "PIX",
+          "comprovante_id": "REC-0820-102"
+        },
+        {
+          "id": "TX-0920",
+          "data": "2026-09-20T11:00:00.000Z",
+          "tipo": "mensalidade",
+          "descricao": "Mensalidade de Manutenção - Mês 2",
+          "valor": 10,
+          "status": "pago",
+          "metodo": "PIX",
+          "comprovante_id": "REC-0920-102"
+        },
+        {
+          "id": "TX-1020",
+          "data": "2026-10-20T11:00:00.000Z",
+          "tipo": "mensalidade",
+          "descricao": "Mensalidade de Manutenção - Mês 3",
+          "valor": 10,
+          "status": "pago",
+          "metodo": "PIX",
+          "comprovante_id": "REC-1020-102"
+        }
+      ]
+    }
+  },
+  {
+    "id": "art-103",
+    "nome_completo": "Beatriz Ferreira Camargo",
+    "nome_artistico": "Bia Camargo",
+    "email": "bia.camargo@exemplo.com",
+    "telefone": "(31) 99123-7890",
+    "cidade": "Belo Horizonte",
+    "estado": "MG",
+    "categoria": "Cantora / Performer / Dançarina",
+    "drt": "0031922/MG",
+    "biografia": "Cantora, bailarina contemporânea e atriz de musicais. Participou de grandes montagens no eixo SP-Rio e gravações de videoclipes musicais.",
+    "curriculo": "• Musical 'Sons do Asfalto' (2025) - Elenco principal\n• Turnê Show Solo 'Raízes' (2024)\n• Bailarina no Grupo Corpo (2021-2023)",
+    "caracteristicas": {
+      "altura": "1.68 m",
+      "peso": "55 kg",
+      "olhos": "Negros",
+      "cabelos": "Cachos volumosos, castanho escuro",
+      "manequim": "36",
+      "calcado": "36",
+      "etnia": "Negra"
+    },
+    "habilidades": [
+      "Canto Soprano",
+      "Ballet Clássico e Contemporâneo",
+      "Piano Intermediário",
+      "Sapateado",
+      "Expressão Corporal"
+    ],
+    "foto_perfil": "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=800&q=80",
+    "fotos_apresentacao": [
+      {
+        "id": 1,
+        "url": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80",
+        "legenda": "Retrato autêntico em palco"
+      },
+      {
+        "id": 2,
+        "url": "https://images.unsplash.com/photo-1589156280159-27698a70f29e?auto=format&fit=crop&w=800&q=80",
+        "legenda": "Movimento de dança - Estúdio"
+      },
+      {
+        "id": 3,
+        "url": "https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?auto=format&fit=crop&w=800&q=80",
+        "legenda": "Caracterização cênica musical"
+      }
+    ],
+    "videos": [
+      {
+        "id": 1,
+        "titulo": "Apresentação Ao Vivo - Teatro Municipal",
+        "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+      }
+    ],
+    "status": "pagamento_pendente",
+    "publicado": true,
+    "financeiro": {
+      "taxa_inicial_paga": true,
+      "taxa_inicial_valor": 20,
+      "taxa_inicial_data": "2026-09-24T18:00:00.000Z",
+      "mensalidade_valor": 10,
+      "plano": "Manutenção Mensal Casting Pro",
+      "forma_pagamento": "Cartão de Crédito",
+      "cartao_final": "3119",
+      "data_inicio": "2026-09-24T18:00:00.000Z",
+      "proxima_cobranca": "2026-10-24T18:00:00.000Z",
+      "historico": [
+        {
+          "id": "TX-0924",
+          "data": "2026-09-24T18:00:00.000Z",
+          "tipo": "taxa_inicial",
+          "descricao": "Taxa de Cadastro Inicial Obrigatória",
+          "valor": 20,
+          "status": "pago",
+          "metodo": "Cartão de Crédito",
+          "comprovante_id": "REC-0924-103"
+        },
+        {
+          "id": "TX-1024",
+          "data": "2026-10-24T18:00:00.000Z",
+          "tipo": "mensalidade",
+          "descricao": "Mensalidade de Manutenção - Mês 2",
+          "valor": 10,
+          "status": "pendente",
+          "metodo": "Cartão de Crédito (Falha temporária de limite)",
+          "comprovante_id": null
+        }
+      ]
+    }
+  },
+  {
+    "id": "art-104",
+    "nome_completo": "Gabriel Siqueira Rocha",
+    "nome_artistico": "Gabriel Rocha",
+    "email": "gabriel.rocha@exemplo.com",
+    "telefone": "(41) 99888-5544",
+    "cidade": "Curitiba",
+    "estado": "PR",
+    "categoria": "Ator / Apresentador",
+    "drt": "0012488/PR",
+    "biografia": "Apresentador de TV e eventos corporativos, ator publicitário com mais de 30 comerciais veiculados.",
+    "curriculo": "• Apresentador Programa Cultural TV Sul (2023-2025)\n• Comerciais Renault, O Boticário e Electrolux",
+    "caracteristicas": {
+      "altura": "1.79 m",
+      "peso": "74 kg",
+      "olhos": "Castanhos",
+      "cabelos": "Pretos",
+      "manequim": "40",
+      "calcado": "40",
+      "etnia": "Branca"
+    },
+    "habilidades": [
+      "Teleprompter",
+      "Improvisação",
+      "Media Training",
+      "Inglês Fluente"
+    ],
+    "foto_perfil": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80",
+    "fotos_apresentacao": [
+      {
+        "id": 1,
+        "url": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=800&q=80",
+        "legenda": "Apresentação em palco"
+      }
+    ],
+    "videos": [],
+    "status": "ativo",
+    "publicado": false,
+    "financeiro": {
+      "taxa_inicial_paga": true,
+      "taxa_inicial_valor": 20,
+      "taxa_inicial_data": "2026-10-26T23:09:44.076Z",
+      "mensalidade_valor": 10,
+      "plano": "Manutenção Mensal Casting Pro",
+      "forma_pagamento": "PIX",
+      "data_inicio": "2026-10-26T23:09:44.076Z",
+      "proxima_cobranca": "2026-11-25T23:09:44.076Z",
+      "historico": [
+        {
+          "id": "TX-1026-01",
+          "data": "2026-10-26T23:09:44.076Z",
+          "tipo": "taxa_inicial",
+          "descricao": "Taxa de Cadastro Inicial (Aguardando PIX)",
+          "valor": 20,
+          "status": "pago",
+          "metodo": "PIX",
+          "comprovante_id": "REC-INI-184078"
+        }
+      ]
+    },
+    "notificacoes": {
+      "boas_vindas": {
+        "enviado_em": "2026-10-26T23:09:44.080Z",
+        "email": true,
+        "email_destinatario": "gabriel.rocha@exemplo.com",
+        "whatsapp": true,
+        "whatsapp_destinatario": "(41) 99888-5544",
+        "whatsapp_link": "https://wa.me/5541998885544?text=%F0%9F%8C%9F%20*BEM-VINDO(A)%20AO%20CASTING%20PRO!*%20%F0%9F%8C%9F%0A%0AOl%C3%A1%2C%20*Gabriel%20Rocha*!%0A%0AConfirmamos%20com%20sucesso%20a%20sua%20ades%C3%A3o%20%C3%A0%20maior%20vitrine%20profissional%20de%20talentos%20para%20Cinema%2C%20TV%2C%20Teatro%20e%20Shows!%0A%0A%F0%9F%92%B3%20*Taxa%20de%20Ades%C3%A3o%3A*%20R%24%2020%2C00%20(Confirmada%20%E2%9C%93)%0A%F0%9F%93%85%20*Manuten%C3%A7%C3%A3o%20Mensal%3A*%20R%24%2010%2C00%20(Inicia%20em%2030%20dias)%0A%0A%F0%9F%91%89%20*Pr%C3%B3ximo%20Passo%20Obrigat%C3%B3rio%3A*%0AAcesse%20o%20seu%20painel%20exclusivo%20para%20cadastrar%20sua%20Foto%20Principal%20de%20Perfil%20(obrigat%C3%B3ria)%2C%20suas%20fotos%20de%20apresenta%C3%A7%C3%A3o%20(at%C3%A9%207)%20e%20seus%20v%C3%ADdeos%3A%0A%F0%9F%94%97%20http%3A%2F%2Flocalhost%3A3300%2Fpainel-artista.html%3Fid%3Dart-104%0A%0ASeja%20muito%20bem-vindo(a)%20e%20boas%20produ%C3%A7%C3%B5es!%0A*Equipe%20CASTING%20PRO%20Oficial*%20%F0%9F%8E%AC%E2%9C%A8"
+      }
+    }
+  },
+  {
+    "id": "art-105",
+    "nome_completo": "Ricardo Silveira Antunes",
+    "nome_artistico": "Ricardo Silveira",
+    "email": "ricardo.som@exemplo.com",
+    "telefone": "(11) 98122-3344",
+    "cidade": "São Paulo",
+    "estado": "SP",
+    "categoria": "Técnico de Som & Iluminação para Shows",
+    "drt": "0059120/SP",
+    "biografia": "Técnico de áudio, PA, monitor e iluminação com mais de 12 anos de experiência em turnês de bandas nacionais, festivais e peças teatrais. Especialista em mesas digitais Yamaha, Behringer e sistemas DMX.",
+    "curriculo": "• Engenheiro de Som - Turnê Nacional 'Vozes do Brasil' (2024-2025)\n• Operador de Som e Luz - Teatro Alfa e Teatro Sérgio Cardoso (2021-2024)\n• Técnico de Som de Palco - Festival Lollapalooza Palco Alternativo (2023)",
+    "caracteristicas": {
+      "altura": "1.78 m",
+      "peso": "80 kg",
+      "olhos": "Castanhos",
+      "cabelos": "Grisalhos",
+      "manequim": "42",
+      "calcado": "41",
+      "etnia": "Branca"
+    },
+    "habilidades": [
+      "Operação de Mesas Digitais (Yamaha CL/QL, Soundcraft, X32)",
+      "Alinhamento de Sistemas de Som (PA e Monitor)",
+      "Desenho de Iluminação Cênica (Avolites / GrandMA)",
+      "Montagem de Palco e Rigging",
+      "Coordenação Técnica de Shows e Teatro"
+    ],
+    "foto_perfil": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80",
+    "fotos_apresentacao": [
+      {
+        "id": 1,
+        "url": "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=800&q=80",
+        "legenda": "Operação de mesa de som ao vivo"
+      },
+      {
+        "id": 2,
+        "url": "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=800&q=80",
+        "legenda": "Iluminação cênica de palco"
+      }
+    ],
+    "videos": [],
+    "status": "ativo",
+    "publicado": true,
+    "financeiro": {
+      "taxa_inicial_paga": true,
+      "taxa_inicial_valor": 20,
+      "taxa_inicial_data": "2026-09-10T12:00:00.000Z",
+      "mensalidade_valor": 10,
+      "plano": "Manutenção Mensal Casting Pro",
+      "forma_pagamento": "PIX",
+      "data_inicio": "2026-09-10T12:00:00.000Z",
+      "proxima_cobranca": "2026-11-10T12:00:00.000Z",
+      "historico": [
+        {
+          "id": "TX-0910-105",
+          "data": "2026-09-10T12:00:00.000Z",
+          "tipo": "taxa_inicial",
+          "descricao": "Taxa de Cadastro Inicial Obrigatória",
+          "valor": 20,
+          "status": "pago",
+          "metodo": "PIX",
+          "comprovante_id": "REC-0910-105"
+        },
+        {
+          "id": "TX-1010-105",
+          "data": "2026-10-10T12:00:00.000Z",
+          "tipo": "mensalidade",
+          "descricao": "Mensalidade de Manutenção - Mês 2",
+          "valor": 10,
+          "status": "pago",
+          "metodo": "PIX",
+          "comprovante_id": "REC-1010-105"
+        }
+      ]
+    }
+  },
+  {
+    "id": "art-106",
+    "nome_completo": "Marcos Vinícius Guimarães",
+    "nome_artistico": "Marcos Vinícius",
+    "email": "marcos.musica@exemplo.com",
+    "telefone": "(21) 99344-5566",
+    "cidade": "Rio de Janeiro",
+    "estado": "RJ",
+    "categoria": "Artista da Música / Guitarrista / Teatro Musical",
+    "drt": "0022415/RJ",
+    "biografia": "Músico instrumentista, guitarrista, violonista e arranjador. Atua em orquestras de teatro musical, gravações em estúdio e shows ao vivo com grandes nomes da MPB e do Pop Rock.",
+    "curriculo": "• Guitarrista Principal no Musical 'O Rei da Noite' (2024-2025)\n• Gravação de guitarras e violões para trilhas sonoras de séries (2023)\n• Graduado em Música e Composição pela UNIRIO",
+    "caracteristicas": {
+      "altura": "1.80 m",
+      "peso": "75 kg",
+      "olhos": "Castanhos",
+      "cabelos": "Pretos ondulados",
+      "manequim": "40",
+      "calcado": "41",
+      "etnia": "Parda"
+    },
+    "habilidades": [
+      "Guitarra Elétrica e Acústica",
+      "Violão de 6 e 7 Cordas",
+      "Leitura à Primeira Vista de Partituras",
+      "Arranjos Cênicos para Musicais",
+      "Backing Vocal"
+    ],
+    "foto_perfil": "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80",
+    "fotos_apresentacao": [
+      {
+        "id": 1,
+        "url": "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=800&q=80",
+        "legenda": "Apresentação em palco com guitarra"
+      }
+    ],
+    "videos": [],
+    "status": "ativo",
+    "publicado": true,
+    "financeiro": {
+      "taxa_inicial_paga": true,
+      "taxa_inicial_valor": 20,
+      "taxa_inicial_data": "2026-10-02T15:00:00.000Z",
+      "mensalidade_valor": 10,
+      "plano": "Manutenção Mensal Casting Pro",
+      "forma_pagamento": "Cartão de Crédito",
+      "data_inicio": "2026-10-02T15:00:00.000Z",
+      "proxima_cobranca": "2026-11-02T15:00:00.000Z",
+      "historico": [
+        {
+          "id": "TX-1002-106",
+          "data": "2026-10-02T15:00:00.000Z",
+          "tipo": "taxa_inicial",
+          "descricao": "Taxa de Cadastro Inicial Obrigatória",
+          "valor": 20,
+          "status": "pago",
+          "metodo": "Cartão de Crédito",
+          "comprovante_id": "REC-1002-106"
+        }
+      ]
+    }
+  }
+]

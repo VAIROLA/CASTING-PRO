@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel do Artista • CASTING PRO</title>
+  <link rel="icon" type="image/jpeg" href="/img/logo.jpg">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/css/main.css">
+  <style>
+    .panel-header {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      margin-bottom: 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    .tabs-nav {
+      display: flex;
+      gap: 10px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 25px;
+      overflow-x: auto;
+      padding-bottom: 5px;
+    }
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-weight: 600;
+      padding: 10px 18px;
+      cursor: pointer;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .tab-btn:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .tab-btn.active {
+      color: #0b0f17;
+      background: var(--primary);
+    }
+    .profile-photo-box {
+      display: flex;
+      gap: 30px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .avatar-preview-lg {
+      width: 170px;
+      height: 220px;
+      border-radius: var(--radius-md);
+      background: #0f1523;
+      border: 2px solid var(--border);
+      overflow: hidden;
+      position: relative;
+    }
+    .avatar-preview-lg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .crop-controls {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .table-responsive {
+      width: 100%;
+      overflow-x: auto;
+    }
+    .custom-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+    .custom-table th {
+      background: #0f1523;
+      color: var(--text-muted);
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .custom-table td {
+      padding: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--text-sub);
+    }
+    /* Modal de upload */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      max-width: 520px;
+      width: 100%;
+      padding: 24px;
+      position: relative;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="/" class="brand-logo">
+        <img src="/img/logo.jpg" alt="Logo CASTING PRO" class="brand-logo-img">
+        <div class="brand-text-stack">
+          <span class="brand-title-casting">CASTING</span>
+          <span class="brand-title-pro">— PRO —</span>
+        </div>
+        <span class="brand-badge">ÁREA DO ARTISTA</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="/">Vitrine Pública</a></li>
+        <li><a href="#" id="linkVerPerfilPublico" target="_blank" style="color: #38bdf8;">Visualizar Meu Perfil Público ↗</a></li>
+        <li><a href="/admin.html">Painel Admin</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="main-wrapper">
+
+    <!-- SELETOR RÁPIDO DE ARTISTA (Para facilidade de testes) -->
+    <div style="background: rgba(56, 189, 248, 0.08); border: 1px solid rgba(56, 189, 248, 0.25); border-radius: var(--radius-sm); padding: 10px 16px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; font-size: 0.88rem; flex-wrap: wrap; gap: 10px;">
+      <span>👤 Alternar conta de demonstração:</span>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;" id="quickArtistSwitcher">
+        <!-- Renderizado dinamicamente -->
+      </div>
+    </div>
+
+    <!-- PANEL HEADER / STATUS GERAL -->
+    <header class="panel-header">
+      <div>
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+          <h1 id="artistHeaderName" style="font-family: 'Montserrat', sans-serif; font-size: 1.6rem; color: #fff;">
+            Carregando...
+          </h1>
+          <span id="artistStatusBadge" class="status-badge status-ativo">ATIVO</span>
+        </div>
+        <p id="artistHeaderSub" style="color: var(--text-muted); font-size: 0.9rem;">
+          ID: <span id="artistHeaderId">-</span> • <span id="artistHeaderCat">-</span>
+        </p>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+        <div id="publishToggleWrap">
+          <button type="button" id="btnTogglePublicar" class="btn btn-secondary">
+            Pausar Exibição
+          </button>
+        </div>
+        <a id="btnLinkPublico" href="#" target="_blank" class="btn btn-primary">
+          Ver Perfil na Vitrine ↗
+        </a>
+      </div>
+    </header>
+
+    <!-- ALERTAS DE PENDÊNCIA -->
+    <div id="alertBox" style="display: none; padding: 14px 18px; border-radius: var(--radius-sm); margin-bottom: 20px; font-size: 0.92rem;"></div>
+
+    <!-- NAVEGAÇÃO DE ABAS -->
+    <div class="tabs-nav">
+      <button class="tab-btn active" data-tab="tabPortfolio">
+        📸 Portfólio Fotográfico & Vídeos
+      </button>
+      <button class="tab-btn" data-tab="tabDados">
+        📝 Dados Artísticos & Currículo
+      </button>
+      <button class="tab-btn" data-tab="tabAssinatura">
+        💳 Minha Assinatura (Financeiro)
+      </button>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- ABA 1: PORTFÓLIO FOTOGRÁFICO & VÍDEOS -->
+    <!-- ============================================== -->
+    <section id="tabPortfolio" class="tab-content">
+
+      <!-- FOTOGRAFIA PRINCIPAL DE PERFIL (OBRIGATÓRIA) -->
+      <div class="card" style="margin-bottom: 25px;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
+          <div>
+            <h2 style="font-family: 'Montserrat', sans-serif; font-size: 1.25rem; color: #fff; display: flex; align-items: center; gap: 8px;">
+              ⭐ Fotografia Principal de Perfil
+              <span style="font-size: 0.72rem; background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); padding: 2px 8px; border-radius: 6px;">OBRIGATÓRIA PARA PUBLICAÇÃO</span>
+            </h2>
+            <p style="color: var(--text-muted); font-size: 0.88rem; margin-top: 4px;">
+              Exibida com destaque no topo do seu perfil e como miniatura oficial nos resultados de busca de diretores de elenco.
+            </p>
+          </div>
+        </div>
+
+        <div class="profile-photo-box">
+          <div class="avatar-preview-lg">
+            <img id="mainProfilePhotoImg" src="https://via.placeholder.com/300x400?text=Sem+Foto" alt="Foto Principal">
+          </div>
+          <div style="flex: 1; min-width: 250px;">
+            <p style="font-size: 0.88rem; color: var(--text-sub); margin-bottom: 15px;">
+              Formatos aceitos: <strong>JPG, PNG ou WebP</strong> (até 10 MB).<br>
+              Recomendamos foto de rosto ou meio-corpo com boa iluminação e nitidez.
+            </p>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+              <button type="button" id="btnUploadFotoPrincipal" class="btn btn-primary btn-sm">
+                📷 Alterar Fotografia Principal
+              </button>
+              <button type="button" id="btnAjustarFotoPrincipal" class="btn btn-secondary btn-sm">
+                ✂️ Ferramenta de Enquadramento
+              </button>
+            </div>
+            <input type="file" id="inputFotoPrincipal" accept="image/jpeg,image/png,image/webp" style="display: none;">
+          </div>
+        </div>
+      </div>
+
+      <!-- SEÇÃO: MINHAS FOTOS DE APRESENTAÇÃO (ATÉ 7 FOTOS) -->
+      <div class="card" style="margin-bottom: 25px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+          <div>
+            <h2 style="font-family: 'Montserrat', sans-serif; font-size: 1.25rem; color: #fff;">
+              MINHAS FOTOS DE APRESENTAÇÃO
+            </h2>
+            <p style="color: var(--text-muted); font-size: 0.88rem;">
+              Adicione até <strong>7 fotografias adicionais</strong> para demonstrar diferentes expressões, corpo inteiro, caracterizações e trabalhos anteriores.
+            </p>
+          </div>
+          <div style="background: #0f1523; border: 1px solid var(--border); border-radius: 8px; padding: 6px 14px; font-weight: 700; color: #f59e0b; font-size: 0.9rem;">
+            📸 <span id="presentationCounter">0 de 7 fotos preenchidas</span>
+          </div>
+        </div>
+
+        <!-- GRADE COM OS 7 SLOTS IDENTIFICADOS -->
+        <div id="presentationSlotsGrid" class="slots-container">
+          <!-- 7 Slots renderizados pelo JS -->
+        </div>
+      </div>
+
+      <!-- VÍDEOS DE TRABALHOS (ATÉ 2: YOUTUBE OU MP4 DO COMPUTADOR) -->
+      <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px;">
+          <div>
+            <h2 style="font-family: 'Montserrat', sans-serif; font-size: 1.25rem; color: #fff;">
+              Vídeos de Trabalhos (Até 2 vídeos)
+            </h2>
+            <p style="color: var(--text-muted); font-size: 0.88rem;">
+              Você pode adicionar seus vídeos de 2 formas: <strong>via Link do YouTube</strong> OU <strong>subindo o arquivo MP4 diretamente do seu computador</strong>.
+            </p>
+          </div>
+        </div>
+
+        <div id="videosContainer" style="display: flex; flex-direction: column; gap: 15px;">
+          <!-- Renderizado via JS -->
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ============================================== -->
+    <!-- ABA 2: DADOS ARTÍSTICOS & CURRÍCULO -->
+    <!-- ============================================== -->
+    <section id="tabDados" class="tab-content" style="display: none;">
+      <div class="card">
+        <h2 style="font-family: 'Montserrat', sans-serif; font-size: 1.3rem; color: #fff; margin-bottom: 18px;">
+          Ficha Técnica & Informações Profissionais
+        </h2>
+
+        <form id="formDadosArtisticos">
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Nome Artístico</label>
+              <input type="text" id="dadosNomeArtistico" class="form-input">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Categoria Principal</label>
+              <input type="text" id="dadosCategoria" class="form-input">
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Registro DRT</label>
+              <input type="text" id="dadosDrt" class="form-input" placeholder="000000/UF">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Telefone / WhatsApp de Contato</label>
+              <input type="text" id="dadosTelefone" class="form-input">
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Cidade</label>
+              <input type="text" id="dadosCidade" class="form-input">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Estado (UF)</label>
+              <input type="text" id="dadosEstado" class="form-input">
+            </div>
+          </div>
+
+          <h3 style="font-size: 1.1rem; color: #fff; margin: 20px 0 12px; border-top: 1px solid var(--border); padding-top: 18px;">
+            Características Físicas
+          </h3>
+          <div class="grid-4">
+            <div class="form-group">
+              <label class="form-label">Altura</label>
+              <input type="text" id="caracAltura" class="form-input" placeholder="Ex: 1.75 m">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Peso</label>
+              <input type="text" id="caracPeso" class="form-input" placeholder="Ex: 65 kg">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Olhos</label>
+              <input type="text" id="caracOlhos" class="form-input" placeholder="Castanhos, verdes...">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Cabelos</label>
+              <input type="text" id="caracCabelos" class="form-input" placeholder="Pretos, castanhos...">
+            </div>
+          </div>
+
+          <div class="grid-3">
+            <div class="form-group">
+              <label class="form-label">Manequim</label>
+              <input type="text" id="caracManequim" class="form-input" placeholder="Ex: 38">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Calçado</label>
+              <input type="text" id="caracCalcado" class="form-input" placeholder="Ex: 37">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Etnia Declarada</label>
+              <input type="text" id="caracEtnia" class="form-input" placeholder="Branca, Negra, Parda...">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Habilidades Artísticas (separadas por vírgula)</label>
+            <input type="text" id="dadosHabilidades" class="form-input" placeholder="Ex: Canto, Dança, Sotaque Nordestino, Dublagem, Esgrima">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Biografia Profissional</label>
+            <textarea id="dadosBiografia" class="form-textarea" rows="4" placeholder="Conte sua trajetória, formação artística e principais destaques..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Currículo Artístico Estruturado</label>
+            <textarea id="dadosCurriculo" class="form-textarea" rows="6" placeholder="• Trabalhos em Audiovisual / Cinema&#10;• Espetáculos Teatrais&#10;• Campanhas Publicitárias&#10;• Formação Acadêmica"></textarea>
+          </div>
+
+          <!-- AVISO DE RESPONSABILIDADE DO ARTISTA -->
+          <div style="background: rgba(245, 158, 11, 0.08); border-left: 4px solid #f59e0b; border: 1px solid rgba(245, 158, 11, 0.25); padding: 14px 18px; border-radius: 6px; margin: 20px 0; font-size: 0.85rem; color: #cbd5e1; line-height: 1.5;">
+            ⚖️ <strong>Termo de Responsabilidade Cadastral:</strong> Todas as informações fornecidas, fotografias, vídeos, registro de DRT, qualificações e contatos são de <strong>inteira e exclusiva responsabilidade do próprio artista</strong>. A plataforma CASTING PRO não se responsabiliza pelo conteúdo inserido e atua unicamente como catálogo profissional de veiculação.
+          </div>
+
+          <button type="button" id="btnSalvarDadosArtisticos" class="btn btn-primary btn-lg">
+            💾 Salvar Alterações do Perfil
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ============================================== -->
+    <!-- ABA 3: MINHA ASSINATURA (FINANCEIRO DO ARTISTA) -->
+    <!-- ============================================== -->
+    <section id="tabAssinatura" class="tab-content" style="display: none;">
+
+      <!-- CARDS DE RESUMO FINANCEIRO -->
+      <div class="grid-3" style="margin-bottom: 25px;">
+        <div class="card" style="background: #0f1523;">
+          <span style="color: var(--text-muted); font-size: 0.85rem; font-weight: 600;">TAXA DE CADASTRO</span>
+          <div style="font-size: 1.8rem; font-weight: 800; color: #f59e0b; margin: 4px 0;">R$ 20,00</div>
+          <span id="taxaInicialStatusLabel" style="font-size: 0.78rem; color: #10b981; font-weight: 700;">✓ PAGA NA CONTRATAÇÃO</span>
+        </div>
+
+        <div class="card" style="background: #0f1523;">
+          <span style="color: var(--text-muted); font-size: 0.85rem; font-weight: 600;">MENSALIDADE DE MANUTENÇÃO</span>
+          <div style="font-size: 1.8rem; font-weight: 800; color: #38bdf8; margin: 4px 0;">R$ 10,00 <span style="font-size: 0.9rem; color: var(--text-muted);">/ mês</span></div>
+          <span style="font-size: 0.78rem; color: var(--text-muted);">Cobrada a cada 30 dias</span>
+        </div>
+
+        <div class="card" style="background: #0f1523;">
+          <span style="color: var(--text-muted); font-size: 0.85rem; font-weight: 600;">PRÓXIMA COBRANÇA</span>
+          <div id="financeiroProxData" style="font-size: 1.4rem; font-weight: 700; color: #fff; margin: 8px 0;">-</div>
+          <span id="financeiroFormaLabel" style="font-size: 0.78rem; color: var(--text-sub);">Forma: Cartão de Crédito</span>
+        </div>
+      </div>
+
+      <!-- DETALHES DA ASSINATURA -->
+      <div class="card" style="margin-bottom: 25px;">
+        <h2 style="font-family: 'Montserrat', sans-serif; font-size: 1.25rem; color: #fff; margin-bottom: 15px;">
+          Situação da Assinatura
+        </h2>
+
+        <div style="background: #0b0f17; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 18px; margin-bottom: 20px;">
+          <div class="grid-2">
+            <div>
+              <p style="color: var(--text-muted); font-size: 0.85rem;">Plano Ativo:</p>
+              <strong style="color: #fff; font-size: 1.05rem;" id="planoNome">Assinatura Profissional Casting Pro</strong>
+            </div>
+            <div>
+              <p style="color: var(--text-muted); font-size: 0.85rem;">Status Atual:</p>
+              <div id="statusAssinaturaWrap" style="margin-top: 4px;">-</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+          <button type="button" id="btnRegularizarPagamento" class="btn btn-success" style="display: none;">
+            💳 Pagar / Regularizar Mensalidade (R$ 10,00)
+          </button>
+          <button type="button" id="btnCancelarAssinatura" class="btn btn-danger btn-outline">
+            ⚠️ Solicitar Cancelamento da Assinatura
+          </button>
+        </div>
+
+        <!-- Política de Cancelamento e Retenção -->
+        <div style="background: rgba(148, 163, 184, 0.08); border-radius: var(--radius-sm); padding: 14px; margin-top: 18px; font-size: 0.85rem; color: var(--text-sub);">
+          <strong>Política de Transparência:</strong> Ao cancelar, seu perfil permanece publicado até o encerramento do ciclo mensal pago. Suas fotos, vídeos e currículo <strong>permanecerão intactos e seguros</strong> no sistema. Caso deseje reativar no futuro, basta regularizar a mensalidade sem necessidade de recadastro.
+        </div>
+      </div>
+
+      <!-- HISTÓRICO DE PAGAMENTOS & COMPROVANTES -->
+      <div class="card">
+        <h2 style="font-family: 'Montserrat', sans-serif; font-size: 1.25rem; color: #fff; margin-bottom: 15px;">
+          Histórico Financeiro & Comprovantes Fiscais
+        </h2>
+
+        <div class="table-responsive">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>Descrição do Pagamento</th>
+                <th>Tipo</th>
+                <th>Valor</th>
+                <th>Método</th>
+                <th>Status</th>
+                <th>Recibo Oficial</th>
+              </tr>
+            </thead>
+            <tbody id="historicoPagamentosBody">
+              <!-- Renderizado via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div>
+        <strong style="color: #fff; font-size: 1.1rem;">CASTING PRO</strong> • Painel Exclusivo de Gestão do Artista<br>
+        <span style="font-size: 0.8rem; color: var(--text-muted);">Suas fotos, vídeos e dados cadastrais salvos em ambiente seguro com backup contínuo.</span>
+      </div>
+      <div style="display: flex; gap: 15px;">
+        <a href="/" style="color: var(--primary); text-decoration: none; font-weight: 600;">Ver Vitrine Pública</a>
+        <a href="/admin.html" style="color: var(--text-sub); text-decoration: none;">Gestão Financeira</a>
+      </div>
+    </div>
+    <div style="max-width: 1200px; margin: 18px auto 0; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.08); text-align: center; font-size: 0.88rem; color: #94a3b8;">
+      <span style="color: #38bdf8; font-weight: 600;">Copyright &copy; 2026</span> - Todos os direitos reservados. <strong>CASTING PRO</strong>
+    </div>
+  </footer>
+
+  <!-- MODAL DE UPLOAD / AJUSTE DE FOTO DE APRESENTAÇÃO -->
+  <div id="modalUploadSlot" class="modal-backdrop">
+    <div class="modal-box">
+      <h3 id="modalSlotTitle" style="color: #fff; margin-bottom: 12px; font-size: 1.2rem;">Adicionar Foto de Apresentação</h3>
+      
+      <div class="form-group">
+        <label class="form-label">Arquivo de Imagem (JPG, PNG ou WebP)</label>
+        <input type="file" id="modalInputFile" class="form-input" accept="image/jpeg,image/png,image/webp">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Ou URL Direta de Imagem</label>
+        <input type="text" id="modalInputUrl" class="form-input" placeholder="https://exemplo.com/minha-foto.jpg">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Legenda da Foto</label>
+        <input type="text" id="modalInputLegenda" class="form-input" placeholder="Ex: Retrato clássico, Corpo inteiro, Comercial">
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+        <button type="button" id="btnFecharModalSlot" class="btn btn-secondary">Cancelar</button>
+        <button type="button" id="btnSalvarModalSlot" class="btn btn-primary">Salvar Fotografia</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script>
+    let currentArtist = null;
+    let targetSlot = null; // Para substituir ou adicionar em slot específico
+
+    // Pegar ID da URL ou do localStorage
+    const urlParams = new URLSearchParams(window.location.search);
+    let activeArtistId = urlParams.get('id') || localStorage.getItem('casting_artist_id') || 'art-101';
+
+    // Navegação de Abas
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.tab).style.display = 'block';
+      });
+    });
+
+    // Alternador rápido para testar vários perfis
+    async function loadArtistSwitcher() {
+      try {
+        const switcher = document.getElementById('quickArtistSwitcher');
+        const list = [
+          { id: 'art-101', name: 'Larissa (Ativa)', status: 'ativo' },
+          { id: 'art-102', name: 'Thiago (Ativo)', status: 'ativo' },
+          { id: 'art-103', name: 'Bia (Mensalidade Pendente)', status: 'pagamento_pendente' },
+          { id: 'art-104', name: 'Gabriel (Aguardando R$20)', status: 'aguardando_pagamento' }
+        ];
+
+        switcher.innerHTML = list.map(item => `
+          <button type="button" class="btn btn-sm ${item.id === activeArtistId ? 'btn-primary' : 'btn-secondary'}" onclick="switchArtist('${item.id}')">
+            ${item.name}
+          </button>
+        `).join('');
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    window.switchArtist = function(id) {
+      activeArtistId = id;
+      localStorage.setItem('casting_artist_id', id);
+      window.history.replaceState({}, '', `/painel-artista.html?id=${id}`);
+      loadArtistData();
+      loadArtistSwitcher();
+    };
+
+    // Carregar Dados do Artista
+    async function loadArtistData() {
+      try {
+        currentArtist = await API.getArtista(activeArtistId, true);
+        renderHeader();
+        renderMainPhoto();
+        renderPresentationSlots();
+        renderVideos();
+        renderFormData();
+        renderFinancial();
+      } catch (err) {
+        alert('Erro ao carregar artista: ' + err.message);
+      }
+    }
+
+    // Renderizar Cabeçalho & Status
+    function renderHeader() {
+      document.getElementById('artistHeaderName').textContent = currentArtist.nome_artistico || currentArtist.nome_completo;
+      document.getElementById('artistHeaderId').textContent = currentArtist.id;
+      document.getElementById('artistHeaderCat').textContent = currentArtist.categoria || 'Não definida';
+
+      const badge = document.getElementById('artistStatusBadge');
+      badge.className = `status-badge status-${currentArtist.status}`;
+      badge.textContent = currentArtist.status.replace('_', ' ').toUpperCase();
+
+      const btnPub = document.getElementById('btnTogglePublicar');
+      if (currentArtist.publicado) {
+        btnPub.textContent = '👁️ Perfil Publicado (Clique p/ Pausar)';
+        btnPub.className = 'btn btn-success btn-sm';
+      } else {
+        btnPub.textContent = '🔒 Perfil Oculto (Clique p/ Publicar)';
+        btnPub.className = 'btn btn-secondary btn-sm';
+      }
+
+      const linkPub = document.getElementById('btnLinkPublico');
+      const topLink = document.getElementById('linkVerPerfilPublico');
+      linkPub.href = `/perfil-publico.html?id=${currentArtist.id}`;
+      topLink.href = `/perfil-publico.html?id=${currentArtist.id}`;
+
+      // Alertas
+      const alertBox = document.getElementById('alertBox');
+      if (!currentArtist.financeiro?.taxa_inicial_paga) {
+        alertBox.style.display = 'block';
+        alertBox.style.background = 'rgba(245, 158, 11, 0.15)';
+        alertBox.style.border = '1px solid rgba(245, 158, 11, 0.4)';
+        alertBox.style.color = '#fbbf24';
+        alertBox.innerHTML = `⚠️ <strong>Taxa inicial de R$ 20,00 pendente:</strong> Efetue o pagamento da adesão para liberar a publicação pública do seu portfólio. <button onclick="window.location.href='/cadastro.html'" class="btn btn-primary btn-sm" style="margin-left: 10px;">Pagar R$ 20,00</button>`;
+      } else if (!currentArtist.foto_perfil) {
+        alertBox.style.display = 'block';
+        alertBox.style.background = 'rgba(239, 68, 68, 0.15)';
+        alertBox.style.border = '1px solid rgba(239, 68, 68, 0.4)';
+        alertBox.style.color = '#f87171';
+        alertBox.innerHTML = `⚠️ <strong>Fotografia Principal Obrigatória:</strong> Você precisa cadastrar sua foto principal de perfil para poder publicar seu perfil na vitrine.`;
+      } else if (currentArtist.status === 'pagamento_pendente') {
+        alertBox.style.display = 'block';
+        alertBox.style.background = 'rgba(249, 115, 22, 0.15)';
+        alertBox.style.border = '1px solid rgba(249, 115, 22, 0.4)';
+        alertBox.style.color = '#fb923c';
+        alertBox.innerHTML = `⚠️ <strong>Mensalidade de Manutenção Pendente (R$ 10,00):</strong> Houve uma pendência no ciclo mensal. Regularize para manter sua vitrine ativa.`;
+      } else {
+        alertBox.style.display = 'none';
+      }
+    }
+
+    // Toggle Publicar
+    document.getElementById('btnTogglePublicar').addEventListener('click', async () => {
+      try {
+        const novoStatus = !currentArtist.publicado;
+        const res = await API.togglePublicacao(currentArtist.id, novoStatus);
+        alert(res.message);
+        loadArtistData();
+      } catch (err) {
+        alert('Bloqueio de Publicação: ' + err.message);
+      }
+    });
+
+    // Foto Principal
+    function renderMainPhoto() {
+      const img = document.getElementById('mainProfilePhotoImg');
+      img.src = currentArtist.foto_perfil || 'https://via.placeholder.com/300x400?text=Sem+Foto+Principal';
+    }
+
+    document.getElementById('btnUploadFotoPrincipal').addEventListener('click', () => {
+      document.getElementById('inputFotoPrincipal').click();
+    });
+
+    document.getElementById('inputFotoPrincipal').addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      try {
+        const res = await API.uploadFotoPerfil(currentArtist.id, file);
+        alert(res.message);
+        loadArtistData();
+      } catch (err) {
+        alert('Erro no upload: ' + err.message);
+      }
+    });
+
+    document.getElementById('btnAjustarFotoPrincipal').addEventListener('click', () => {
+      const novaUrl = prompt('Insira a URL de uma foto ou confirme o recorte da atual:', currentArtist.foto_perfil || '');
+      if (novaUrl && novaUrl !== currentArtist.foto_perfil) {
+        API.uploadFotoPerfil(currentArtist.id, novaUrl).then(res => {
+          alert('Foto principal ajustada com sucesso!');
+          loadArtistData();
+        }).catch(err => alert(err.message));
+      }
+    });
+
+    // ==========================================
+    // REQUISITO MASTER #5: MINHAS FOTOS DE APRESENTAÇÃO (7 SLOTS EXATOS)
+    // ==========================================
+    function renderPresentationSlots() {
+      const grid = document.getElementById('presentationSlotsGrid');
+      const counter = document.getElementById('presentationCounter');
+      const fotos = currentArtist.fotos_apresentacao || [];
+
+      counter.textContent = `${fotos.length} de 7 fotos preenchidas`;
+
+      let html = '';
+      for (let slot = 1; slot <= 7; slot++) {
+        const foto = fotos[slot - 1]; // 0-indexed
+
+        if (foto) {
+          html += `
+            <div class="photo-slot filled">
+              <span class="slot-number-badge">Espaço ${slot}</span>
+              <img src="${foto.url}" alt="${foto.legenda || 'Foto ' + slot}" class="slot-img">
+              <div class="slot-actions">
+                <span style="color: #fff; font-size: 0.8rem; font-weight: 600; text-align: center; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width: 90%;">
+                  ${foto.legenda || 'Sem legenda'}
+                </span>
+                <div style="display: flex; gap: 6px;">
+                  <button type="button" class="btn btn-secondary btn-sm" onclick="abrirModalSlot(${slot}, true)">
+                    Substituir
+                  </button>
+                  <button type="button" class="btn btn-danger btn-sm" onclick="excluirFotoApresentacao('${foto.id}')">
+                    Excluir
+                  </button>
+                </div>
+              </div>
+            </div>
+          `;
+        } else {
+          html += `
+            <div class="photo-slot">
+              <span class="slot-number-badge">Espaço ${slot}</span>
+              <div style="text-align: center; padding: 20px;">
+                <div style="font-size: 2rem; margin-bottom: 8px; color: var(--text-muted);">➕</div>
+                <button type="button" class="btn btn-primary btn-sm" onclick="abrirModalSlot(${slot}, false)">
+                  Adicionar Foto ${slot}
+                </button>
+              </div>
+            </div>
+          `;
+        }
+      }
+
+      grid.innerHTML = html;
+    }
+
+    // Modal Slot
+    window.abrirModalSlot = function(slot, isSubstituicao) {
+      const fotos = currentArtist.fotos_apresentacao || [];
+      // Se não for substituição e já tiver 7 fotos preenchidas, trava estrita (Regra Master #5)
+      if (!isSubstituicao && fotos.length >= 7) {
+        alert('⚠️ Limite de 7 fotografias de apresentação atingido!\n\nO perfil permite 1 foto principal obrigatória mais até 7 fotos de apresentação. Para adicionar uma nova imagem, remova ou substitua uma existente.');
+        return;
+      }
+
+      targetSlot = slot;
+      document.getElementById('modalSlotTitle').textContent = isSubstituicao 
+        ? `Substituir Espaço ${slot} de Apresentação`
+        : `Adicionar Foto no Espaço ${slot} de Apresentação`;
+      document.getElementById('modalInputUrl').value = '';
+      document.getElementById('modalInputFile').value = '';
+      document.getElementById('modalInputLegenda').value = '';
+      document.getElementById('modalUploadSlot').style.display = 'flex';
+    };
+
+    document.getElementById('btnFecharModalSlot').addEventListener('click', () => {
+      document.getElementById('modalUploadSlot').style.display = 'none';
+    });
+
+    document.getElementById('btnSalvarModalSlot').addEventListener('click', async () => {
+      const file = document.getElementById('modalInputFile').files[0];
+      const url = document.getElementById('modalInputUrl').value.trim();
+      const legenda = document.getElementById('modalInputLegenda').value.trim();
+
+      if (!file && !url) {
+        alert('Selecione um arquivo de imagem ou informe uma URL.');
+        return;
+      }
+
+      try {
+        const payload = file || url;
+        const res = await API.uploadFotoApresentacao(currentArtist.id, payload, targetSlot, legenda);
+        alert(res.message);
+        document.getElementById('modalUploadSlot').style.display = 'none';
+        loadArtistData();
+      } catch (err) {
+        alert('Erro: ' + err.message);
+      }
+    });
+
+    window.excluirFotoApresentacao = async function(fotoId) {
+      if (!confirm('Deseja realmente remover esta foto da galeria?')) return;
+      try {
+        const res = await API.excluirFotoApresentacao(currentArtist.id, fotoId);
+        alert(res.message);
+        loadArtistData();
+      } catch (err) {
+        alert('Erro ao excluir: ' + err.message);
+      }
+    };
+
+    // ==========================================
+    // VÍDEOS DE TRABALHOS (ATÉ 2 - YOUTUBE OU ARQUIVO MP4)
+    // ==========================================
+    function renderVideos() {
+      const cont = document.getElementById('videosContainer');
+      const vids = currentArtist.videos || [];
+
+      let html = '<div class="grid-2">';
+
+      for (let slot = 1; slot <= 2; slot++) {
+        const vid = vids[slot - 1];
+
+        if (vid) {
+          const isDirect = vid.url.startsWith('/uploads/') || vid.url.endsWith('.mp4') || vid.tipo === 'mp4_upload';
+          let previewHtml = '';
+
+          if (isDirect) {
+            previewHtml = `
+              <div style="height: 180px; background: #000; border-radius: 8px; overflow: hidden; margin: 10px 0;">
+                <video controls style="width: 100%; height: 100%; object-fit: contain;">
+                  <source src="${vid.url}" type="video/mp4">
+                </video>
+              </div>
+            `;
+          } else {
+            let embedUrl = vid.url;
+            if (vid.url.includes('youtube.com/watch?v=')) {
+              embedUrl = `https://www.youtube.com/embed/${vid.url.split('v=')[1]?.split('&')[0]}`;
+            } else if (vid.url.includes('youtu.be/')) {
+              embedUrl = `https://www.youtube.com/embed/${vid.url.split('youtu.be/')[1]?.split('?')[0]}`;
+            }
+            previewHtml = `
+              <div style="height: 180px; background: #000; border-radius: 8px; overflow: hidden; margin: 10px 0;">
+                <iframe src="${embedUrl}" style="width: 100%; height: 100%; border: none;"></iframe>
+              </div>
+            `;
+          }
+
+          html += `
+            <div style="background: #0f1523; border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: 18px;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="status-badge ${isDirect ? 'status-ativo' : 'status-cadastro_iniciado'}">
+                  ${isDirect ? '📁 MP4 ENVIADO DO PC' : '▶️ LINK YOUTUBE'}
+                </span>
+                <span style="font-weight: 700; color: #fff; font-size: 0.9rem;">Espaço Vídeo ${slot}</span>
+              </div>
+              <p style="color: #fff; font-weight: 700; margin-top: 8px; font-size: 1rem;">${vid.titulo || 'Vídeo ' + slot}</p>
+              ${previewHtml}
+              <button type="button" class="btn btn-danger btn-sm" onclick="removerVideoSlot(${slot})">
+                🗑️ Excluir / Substituir Vídeo ${slot}
+              </button>
+            </div>
+          `;
+        } else {
+          html += `
+            <div style="background: #0f1523; border: 2px dashed var(--border); border-radius: var(--radius-sm); padding: 18px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <span class="status-badge status-aguardando_pagamento">ESPAÇO VÍDEO ${slot} DISPONÍVEL</span>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">2 Formas permitidas</span>
+              </div>
+
+              <!-- ABAS DE ESCOLHA (YOUTUBE OU MP4) -->
+              <div style="display: flex; gap: 8px; margin-bottom: 14px;">
+                <button type="button" id="tabYtBtn_${slot}" class="btn btn-sm btn-primary" onclick="alternarAbaVideo(${slot}, 'yt')">
+                  ▶️ YouTube
+                </button>
+                <button type="button" id="tabMp4Btn_${slot}" class="btn btn-sm btn-secondary" onclick="alternarAbaVideo(${slot}, 'mp4')">
+                  📁 Subir MP4 do Computador
+                </button>
+              </div>
+
+              <!-- OPÇÃO 1: YOUTUBE -->
+              <div id="boxYt_${slot}">
+                <div class="form-group" style="margin-bottom: 10px;">
+                  <label class="form-label" style="font-size: 0.82rem;">Link do Vídeo no YouTube</label>
+                  <input type="text" id="inputYtUrl_${slot}" class="form-input" placeholder="https://www.youtube.com/watch?v=...">
+                </div>
+                <div class="form-group" style="margin-bottom: 12px;">
+                  <label class="form-label" style="font-size: 0.82rem;">Título do Vídeo</label>
+                  <input type="text" id="inputYtTit_${slot}" class="form-input" placeholder="Ex: Showreel de Interpretação 2026">
+                </div>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="salvarLinkYt(${slot})">
+                  ✓ Salvar Link do YouTube
+                </button>
+              </div>
+
+              <!-- OPÇÃO 2: SUBIR ARQUIVO MP4 -->
+              <div id="boxMp4_${slot}" style="display: none;">
+                <div class="form-group" style="margin-bottom: 10px;">
+                  <label class="form-label" style="font-size: 0.82rem;">Selecione o arquivo de vídeo do seu computador (.mp4, .webm ou .mov)</label>
+                  <input type="file" id="inputMp4File_${slot}" class="form-input" accept="video/mp4,video/webm,video/quicktime">
+                </div>
+                <div class="form-group" style="margin-bottom: 12px;">
+                  <label class="form-label" style="font-size: 0.82rem;">Título do Vídeo</label>
+                  <input type="text" id="inputMp4Tit_${slot}" class="form-input" placeholder="Ex: Cena Dramática Monólogo">
+                </div>
+                <button type="button" id="btnUploadMp4_${slot}" class="btn btn-primary btn-sm" onclick="enviarArquivoMp4(${slot})">
+                  📤 Subir Arquivo MP4 do Computador
+                </button>
+              </div>
+
+            </div>
+          `;
+        }
+      }
+
+      html += '</div>';
+      cont.innerHTML = html;
+    }
+
+    window.alternarAbaVideo = function(slot, modo) {
+      const boxYt = document.getElementById(`boxYt_${slot}`);
+      const boxMp4 = document.getElementById(`boxMp4_${slot}`);
+      const btnYt = document.getElementById(`tabYtBtn_${slot}`);
+      const btnMp4 = document.getElementById(`tabMp4Btn_${slot}`);
+
+      if (modo === 'yt') {
+        boxYt.style.display = 'block';
+        boxMp4.style.display = 'none';
+        btnYt.className = 'btn btn-sm btn-primary';
+        btnMp4.className = 'btn btn-sm btn-secondary';
+      } else {
+        boxYt.style.display = 'none';
+        boxMp4.style.display = 'block';
+        btnYt.className = 'btn btn-sm btn-secondary';
+        btnMp4.className = 'btn btn-sm btn-primary';
+      }
+    };
+
+    window.salvarLinkYt = async function(slot) {
+      const url = document.getElementById(`inputYtUrl_${slot}`).value.trim();
+      const titulo = document.getElementById(`inputYtTit_${slot}`).value.trim() || `Vídeo ${slot}`;
+
+      if (!url) {
+        alert('Por favor, informe a URL do YouTube.');
+        return;
+      }
+
+      const vids = currentArtist.videos ? [...currentArtist.videos] : [];
+      const novoVid = { id: Date.now(), url, titulo, tipo: 'youtube' };
+      vids[slot - 1] = novoVid;
+
+      try {
+        const res = await API.atualizarPerfil(currentArtist.id, { videos: vids.slice(0, 2) });
+        alert(res.message);
+        loadArtistData();
+      } catch (err) {
+        alert(err.message);
+      }
+    };
+
+    window.enviarArquivoMp4 = async function(slot) {
+      const fileInput = document.getElementById(`inputMp4File_${slot}`);
+      const titulo = document.getElementById(`inputMp4Tit_${slot}`).value.trim() || `Vídeo ${slot} (MP4)`;
+      const file = fileInput.files[0];
+
+      if (!file) {
+        alert('Selecione um arquivo de vídeo (.mp4) do seu computador.');
+        return;
+      }
+
+      const btn = document.getElementById(`btnUploadMp4_${slot}`);
+      btn.disabled = true;
+      btn.textContent = 'Enviando arquivo MP4...';
+
+      try {
+        const res = await API.uploadVideo(currentArtist.id, file, slot, titulo);
+        alert(res.message);
+        loadArtistData();
+      } catch (err) {
+        alert('Erro no envio do vídeo: ' + err.message);
+        btn.disabled = false;
+        btn.textContent = '📤 Subir Arquivo MP4 do Computador';
+      }
+    };
+
+    window.removerVideoSlot = async function(slot) {
+      if (!confirm(`Deseja realmente excluir o Vídeo ${slot}?`)) return;
+      try {
+        const res = await API.excluirVideo(currentArtist.id, slot);
+        alert(res.message);
+        loadArtistData();
+      } catch (err) {
+        alert(err.message);
+      }
+    };
+
+    // ==========================================
+    // DADOS ARTÍSTICOS
+    // ==========================================
+    function renderFormData() {
+      document.getElementById('dadosNomeArtistico').value = currentArtist.nome_artistico || '';
+      document.getElementById('dadosCategoria').value = currentArtist.categoria || '';
+      document.getElementById('dadosDrt').value = currentArtist.drt || '';
+      document.getElementById('dadosTelefone').value = currentArtist.telefone || '';
+      document.getElementById('dadosCidade').value = currentArtist.cidade || '';
+      document.getElementById('dadosEstado').value = currentArtist.estado || '';
+
+      const c = currentArtist.caracteristicas || {};
+      document.getElementById('caracAltura').value = c.altura || '';
+      document.getElementById('caracPeso').value = c.peso || '';
+      document.getElementById('caracOlhos').value = c.olhos || '';
+      document.getElementById('caracCabelos').value = c.cabelos || '';
+      document.getElementById('caracManequim').value = c.manequim || '';
+      document.getElementById('caracCalcado').value = c.calcado || '';
+      document.getElementById('caracEtnia').value = c.etnia || '';
+
+      document.getElementById('dadosHabilidades').value = (currentArtist.habilidades || []).join(', ');
+      document.getElementById('dadosBiografia').value = currentArtist.biografia || '';
+      document.getElementById('dadosCurriculo').value = currentArtist.curriculo || '';
+    }
+
+    document.getElementById('btnSalvarDadosArtisticos').addEventListener('click', async () => {
+      const habilidades = document.getElementById('dadosHabilidades').value
+        .split(',')
+        .map(h => h.trim())
+        .filter(Boolean);
+
+      const payload = {
+        nome_artistico: document.getElementById('dadosNomeArtistico').value.trim(),
+        categoria: document.getElementById('dadosCategoria').value.trim(),
+        drt: document.getElementById('dadosDrt').value.trim(),
+        telefone: document.getElementById('dadosTelefone').value.trim(),
+        cidade: document.getElementById('dadosCidade').value.trim(),
+        estado: document.getElementById('dadosEstado').value.trim(),
+        caracteristicas: {
+          altura: document.getElementById('caracAltura').value.trim(),
+          peso: document.getElementById('caracPeso').value.trim(),
+          olhos: document.getElementById('caracOlhos').value.trim(),
+          cabelos: document.getElementById('caracCabelos').value.trim(),
+          manequim: document.getElementById('caracManequim').value.trim(),
+          calcado: document.getElementById('caracCalcado').value.trim(),
+          etnia: document.getElementById('caracEtnia').value.trim()
+        },
+        habilidades,
+        biografia: document.getElementById('dadosBiografia').value.trim(),
+        curriculo: document.getElementById('dadosCurriculo').value.trim()
+      };
+
+      try {
+        const res = await API.atualizarPerfil(currentArtist.id, payload);
+        alert(res.message);
+        loadArtistData();
+      } catch (err) {
+        alert(err.message);
+      }
+    });
+
+    // ==========================================
+    // REQUISITO MASTER #7: MINHA ASSINATURA (FINANCEIRO)
+    // ==========================================
+    function renderFinancial() {
+      const fin = currentArtist.financeiro || {};
+
+      document.getElementById('taxaInicialStatusLabel').innerHTML = fin.taxa_inicial_paga
+        ? `✓ PAGA EM ${new Date(fin.taxa_inicial_data || Date.now()).toLocaleDateString('pt-BR')}`
+        : `<span style="color: #f59e0b;">⏳ AGUARDANDO PAGAMENTO INICIAL</span>`;
+
+      document.getElementById('financeiroProxData').textContent = fin.proxima_cobranca
+        ? new Date(fin.proxima_cobranca).toLocaleDateString('pt-BR')
+        : 'Após ativação';
+
+      document.getElementById('financeiroFormaLabel').textContent = `Forma: ${fin.forma_pagamento || 'PIX'}${fin.cartao_final ? ' (Final ' + fin.cartao_final + ')' : ''}`;
+
+      document.getElementById('statusAssinaturaWrap').innerHTML = `
+        <span class="status-badge status-${currentArtist.status}">
+          ${currentArtist.status.replace('_', ' ').toUpperCase()}
+        </span>
+      `;
+
+      // Botão regularizar se pendente
+      const btnReg = document.getElementById('btnRegularizarPagamento');
+      if (['pagamento_pendente', 'pagamento_atrasado'].includes(currentArtist.status)) {
+        btnReg.style.display = 'inline-flex';
+      } else {
+        btnReg.style.display = 'none';
+      }
+
+      // Histórico
+      const tbody = document.getElementById('historicoPagamentosBody');
+      const hist = fin.historico || [];
+
+      if (hist.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted);">Nenhum pagamento registrado ainda.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = hist.map(tx => `
+        <tr>
+          <td>${new Date(tx.data).toLocaleDateString('pt-BR')}</td>
+          <td><strong style="color: #fff;">${tx.descricao}</strong></td>
+          <td><span class="status-badge ${tx.tipo === 'taxa_inicial' ? 'status-cadastro_iniciado' : 'status-preenchimento_perfil'}">${tx.tipo === 'taxa_inicial' ? 'TAXA INICIAL' : 'MENSALIDADE'}</span></td>
+          <td><strong style="color: #fff;">R$ ${parseFloat(tx.valor).toFixed(2)}</strong></td>
+          <td>${tx.metodo || 'PIX'}</td>
+          <td><span class="status-badge ${tx.status === 'pago' ? 'status-ativo' : 'status-pagamento_pendente'}">${tx.status.toUpperCase()}</span></td>
+          <td>
+            ${tx.status === 'pago' ? `
+              <a href="/api/recibos/${tx.id}" target="_blank" class="btn btn-outline btn-sm" style="color: #38bdf8; border-color: rgba(56, 189, 248, 0.4);">
+                📄 Ver Recibo
+              </a>
+            ` : '-'}
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // Ações Financeiras
+    document.getElementById('btnRegularizarPagamento').addEventListener('click', async () => {
+      try {
+        const res = await API.regularizarMensalidade(currentArtist.id, 'PIX Instantâneo');
+        alert(res.message);
+        loadArtistData();
+      } catch (err) {
+        alert(err.message);
+      }
+    });
+
+    document.getElementById('btnCancelarAssinatura').addEventListener('click', async () => {
+      const motivo = prompt('Por qual motivo deseja encerrar a renovação automática da assinatura?', 'Pausa temporária de carreira');
+      if (motivo === null) return;
+
+      try {
+        const res = await API.cancelarAssinatura(currentArtist.id, motivo);
+        alert(res.message);
+        loadArtistData();
+      } catch (err) {
+        alert(err.message);
+      }
+    });
+
+    // Iniciar
+    loadArtistSwitcher();
+    loadArtistData();
+  </script>
+</body>
+</html>
