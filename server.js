@@ -434,7 +434,59 @@ async function enviarNotificacoesBoasVindas(artist, req) {
         </div>
       `;
 
-      if (transporter) {
+      // 1. Tenta envio real via Resend (chave lida com segurança de variável de ambiente)
+      const resendApiKey = process.env.RESEND_API_KEY;
+      const fromEmail = process.env.RESEND_FROM || 'Casting Pro <onboarding@resend.dev>';
+
+      if (resendApiKey) {
+        try {
+          const https = require('https');
+          const payload = JSON.stringify({
+            from: fromEmail,
+            to: [artist.email],
+            subject: `🎬 Bem-vindo(a) ao CASTING PRO, ${nome}! Seu acesso está liberado`,
+            html: htmlEmail
+          });
+
+          await new Promise((resolve, reject) => {
+            const reqResend = https.request({
+              hostname: 'api.resend.com',
+              path: '/emails',
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${resendApiKey}`,
+                'Content-Type': 'application/json',
+                'Content-Length': Buffer.byteLength(payload)
+              }
+            }, (resR) => {
+              let respData = '';
+              resR.on('data', chunk => respData += chunk);
+              resR.on('end', () => {
+                if (resR.statusCode >= 200 && resR.statusCode < 300) {
+                  console.log(`[RESEND E-MAIL REAL] Enviado para ${artist.email}:`, respData);
+                  resultado.email = true;
+                  resultado.email_provedor = 'Resend';
+                  resolve(true);
+                } else {
+                  console.warn(`[RESEND AVISO] Status ${resR.statusCode}:`, respData);
+                  resolve(false);
+                }
+              });
+            });
+            reqResend.on('error', err => {
+              console.warn('[RESEND ERRO CONEXAO]:', err.message);
+              resolve(false);
+            });
+            reqResend.write(payload);
+            reqResend.end();
+          });
+        } catch (eResend) {
+          console.warn('[RESEND EXCEPTION]:', eResend.message);
+        }
+      }
+
+      // 2. Se falhar ou não tiver Resend, tenta SMTP
+      if (!resultado.email && transporter) {
         await transporter.sendMail({
           from: `"CASTING PRO" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
           to: artist.email,
@@ -442,8 +494,8 @@ async function enviarNotificacoesBoasVindas(artist, req) {
           html: htmlEmail
         });
         resultado.email = true;
-      } else {
-        console.log(`[E-MAIL BOAS-VINDAS] Disparado com sucesso para ${artist.email} (Nome: ${nome})`);
+      } else if (!resultado.email) {
+        console.log(`[E-MAIL BOAS-VINDAS] Registrado para ${artist.email} (Nome: ${nome})`);
         resultado.email = true;
         resultado.email_simulado = true;
       }

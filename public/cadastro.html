@@ -475,27 +475,27 @@
               Seu acesso profissional foi desbloqueado com sucesso. As notificações automáticas de confirmação foram emitidas.
             </p>
 
-            <div style="background: #0f1523; border: 1.5px solid rgba(245, 158, 11, 0.35); border-radius: 12px; padding: 20px; max-width: 500px; margin: 0 auto 25px; text-align: left;">
+            <div style="background: #180914; border: 1.5px solid rgba(245, 158, 11, 0.45); border-radius: 12px; padding: 20px; max-width: 500px; margin: 0 auto 25px; text-align: left;">
               <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 14px;">
                 <span style="font-size: 1.6rem;">📧</span>
                 <div>
                   <strong style="color: #fff; font-size: 0.95rem;">E-mail de Boas-Vindas Enviado</strong><br>
-                  <span style="color: #38bdf8; font-size: 0.85rem;">${emailDest || 'Seu e-mail cadastrado'}</span>
+                  <span style="color: #fb7185; font-size: 0.85rem;">Enviado para ${emailDest || 'seu e-mail cadastrado'}</span>
                 </div>
               </div>
               <div style="display: flex; align-items: center; gap: 12px;">
                 <span style="font-size: 1.6rem;">💬</span>
                 <div>
-                  <strong style="color: #fff; font-size: 0.95rem;">Notificação no WhatsApp Pronta</strong><br>
-                  <span style="color: #34d399; font-size: 0.85rem;">Mensagem oficial com dados de acesso e orientações</span>
+                  <strong style="color: #fff; font-size: 0.95rem;">Confirmação no seu WhatsApp</strong><br>
+                  <span style="color: #34d399; font-size: 0.85rem;">Clique no botão abaixo para receber e salvar as orientações de acesso no seu WhatsApp</span>
                 </div>
               </div>
             </div>
 
             <div style="display: flex; flex-direction: column; gap: 12px; max-width: 420px; margin: 0 auto;">
               ${zapLink ? `
-                <a href="${zapLink}" target="_blank" class="btn btn-success btn-lg" style="box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);">
-                  💬 Abrir Boas-Vindas no WhatsApp
+                <a href="${zapLink}" target="_blank" class="btn btn-success btn-lg" style="box-shadow: 0 0 20px rgba(16, 185, 129, 0.4); text-decoration: none;">
+                  💬 Salvar Boas-Vindas no Meu WhatsApp
                 </a>
               ` : ''}
               <a href="/painel-artista.html?id=${createdArtistId}" class="btn btn-primary btn-lg">
