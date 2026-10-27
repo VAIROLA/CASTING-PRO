@@ -806,8 +806,8 @@
 
           if (isDirect) {
             previewHtml = `
-              <div class="video-responsive-container">
-                <video controls preload="metadata">
+              <div style="position: relative; width: 100%; padding-bottom: 56.25%; height: 0; background: #000; border-radius: 10px; overflow: hidden; margin: 12px 0 16px; border: 1.5px solid rgba(245, 158, 11, 0.45); box-shadow: 0 8px 30px rgba(0,0,0,0.8);">
+                <video controls preload="metadata" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain;">
                   <source src="${vid.url}" type="video/mp4">
                   Seu navegador não suporta este vídeo.
                 </video>
@@ -821,8 +821,8 @@
               embedUrl = `https://www.youtube.com/embed/${vid.url.split('youtu.be/')[1]?.split('?')[0]}`;
             }
             previewHtml = `
-              <div class="video-responsive-container">
-                <iframe src="${embedUrl}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+              <div style="position: relative; width: 100%; padding-bottom: 56.25%; height: 0; background: #000; border-radius: 10px; overflow: hidden; margin: 12px 0 16px; border: 1.5px solid rgba(245, 158, 11, 0.45); box-shadow: 0 8px 30px rgba(0,0,0,0.8);">
+                <iframe src="${embedUrl}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
               </div>
             `;
           }
