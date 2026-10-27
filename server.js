@@ -176,9 +176,9 @@ app.get('/api/artistas', (req, res) => {
   const { categoria, busca, cidade } = req.query;
 
   // Regra Master: Só aparecem na vitrine pública artistas com perfil completo, publicado,
-  // taxa inicial paga e mensalidade ativa ou em tolerância ('ativo' ou 'pagamento_pendente')
+  // taxa inicial paga (ou cortesia/isento) e mensalidade ativa ou em tolerância ('ativo' ou 'pagamento_pendente')
   let publicList = artists.filter(a => {
-    const isPaid = a.financeiro && a.financeiro.taxa_inicial_paga;
+    const isPaid = (a.financeiro && a.financeiro.taxa_inicial_paga) || a.isento === true || a.tipo_cadastro === 'cortesia';
     const isPublic = a.publicado === true;
     const hasPhoto = Boolean(a.foto_perfil);
     const validStatus = ['ativo', 'pagamento_pendente'].includes(a.status);
@@ -234,7 +234,9 @@ app.get('/api/artistas/:id', (req, res) => {
 
   const isOwnerOrAdmin = req.query.privado === 'true';
 
-  if (!isOwnerOrAdmin && (!artist.publicado || !artist.financeiro.taxa_inicial_paga || !['ativo', 'pagamento_pendente'].includes(artist.status))) {
+  const isPaid = (artist.financeiro && artist.financeiro.taxa_inicial_paga) || artist.isento === true || artist.tipo_cadastro === 'cortesia';
+
+  if (!isOwnerOrAdmin && (!artist.publicado || !isPaid || !['ativo', 'pagamento_pendente'].includes(artist.status))) {
     return res.status(403).json({
       error: "Este perfil não está público no momento.",
       motivo: "Aguardando conclusão dos requisitos de publicação ou regularização de assinatura."
@@ -1164,14 +1166,38 @@ app.get('/api/admin/metricas', requireAdminAuth, (req, res) => {
   let assinaturasCanceladas = 0;
   let pagamentosPendentes = 0;
   let pagamentosAtrasados = 0;
+  let artistasCortesia = 0;
 
   let receitaTaxasIniciais = 0;
   let receitaRecorrenteMensal = 0;
 
   const todasTransacoes = [];
+  const listaCortesia = [];
 
   artists.forEach(a => {
-    // Contagem de status
+    // SE FOR ARTISTA ISENTO / CORTESIA: NÃO É CONTABILIZADO NAS MÉTRICAS FINANCEIRAS COMERCIAIS
+    if (a.isento === true || a.tipo_cadastro === 'cortesia' || (a.financeiro && a.financeiro.isento === true)) {
+      artistasCortesia++;
+      listaCortesia.push({
+        id: a.id,
+        nome_artistico: a.nome_artistico || a.nome_completo,
+        nome_completo: a.nome_completo,
+        email: a.email,
+        telefone: a.telefone || '',
+        categoria: a.categoria || 'Geral',
+        cidade: a.cidade || '',
+        estado: a.estado || '',
+        drt: a.drt || '',
+        foto_perfil: a.foto_perfil || '',
+        motivo_isencao: a.motivo_isencao || 'Convidado VIP / Não Pagante',
+        criado_em: a.criado_em || new Date().toISOString(),
+        status: a.status,
+        publicado: a.publicado
+      });
+      return; // Isolamento total da contabilidade comercial (R$ 0,00)
+    }
+
+    // Contagem de status comerciais
     if (a.status === 'cadastro_iniciado' || a.status === 'aguardando_pagamento') cadastrosIniciados++;
     if (a.status === 'ativo') assinaturasAtivas++;
     if (a.status === 'cancelamento_solicitado' || a.status === 'cancelado') assinaturasCanceladas++;
@@ -1208,6 +1234,8 @@ app.get('/api/admin/metricas', requireAdminAuth, (req, res) => {
   res.json({
     totais: {
       total_artistas: artists.length,
+      total_comerciais: artists.length - artistasCortesia,
+      artistas_cortesia: artistasCortesia,
       cadastros_iniciados: cadastrosIniciados,
       taxas_iniciais_pagas: taxasIniciaisPagas,
       assinaturas_ativas: assinaturasAtivas,
@@ -1223,6 +1251,7 @@ app.get('/api/admin/metricas', requireAdminAuth, (req, res) => {
       receita_total: receitaTaxasIniciais + receitaRecorrenteMensal,
       mrr_projetado: assinaturasAtivas * config.monthly_fee
     },
+    artistas_cortesia: listaCortesia,
     transacoes: todasTransacoes.slice(0, 50),
     config
   });
@@ -1282,6 +1311,125 @@ app.post('/api/admin/simular-ciclo', requireAdminAuth, (req, res) => {
     success: true,
     message: `Simulação '${acao}' executada no artista ${artist.nome_artistico}!`,
     artista: artist
+  });
+});
+
+// ==========================================
+// 12. GESTÃO DE ARTISTAS CORTESIA / NÃO PAGANTES (NÃO CONTABILIZADOS)
+// ==========================================
+
+// Listar todos os artistas cortesia
+app.get('/api/admin/artistas-cortesia', requireAdminAuth, (req, res) => {
+  const artists = readJSON(ARTISTS_FILE, []);
+  const cortesias = artists.filter(a => a.isento === true || a.tipo_cadastro === 'cortesia' || (a.financeiro && a.financeiro.isento === true));
+  res.json(cortesias);
+});
+
+// Cadastrar novo artista cortesia (100% Isento, sem cobrança, fora do MRR/contabilidade)
+app.post('/api/admin/artistas-cortesia', requireAdminAuth, (req, res) => {
+  const {
+    nome_artistico,
+    nome_completo,
+    email,
+    senha,
+    telefone,
+    categoria,
+    cidade,
+    estado,
+    drt,
+    biografia,
+    motivo_isencao,
+    foto_perfil
+  } = req.body || {};
+
+  if (!nome_artistico || !email || !senha) {
+    return res.status(400).json({ error: 'Nome artístico, e-mail e senha são obrigatórios.' });
+  }
+
+  const cleanEmail = email.trim().toLowerCase();
+  const artists = readJSON(ARTISTS_FILE, []);
+
+  // Verificar se o e-mail já existe
+  const exists = artists.find(a => (a.email || '').toLowerCase() === cleanEmail);
+  if (exists) {
+    return res.status(400).json({ error: 'Já existe um artista cadastrado com este e-mail.' });
+  }
+
+  const newId = 'art-cortesia-' + Date.now().toString(36) + '-' + Math.floor(Math.random() * 1000);
+
+  const newCortesiaArtist = {
+    id: newId,
+    nome_completo: (nome_completo || nome_artistico).trim(),
+    nome_artistico: nome_artistico.trim(),
+    email: cleanEmail,
+    senha: senha.trim(),
+    telefone: (telefone || '').trim(),
+    cidade: (cidade || 'Rio de Janeiro').trim(),
+    estado: (estado || 'RJ').trim().toUpperCase(),
+    categoria: categoria || 'Ator / Atriz',
+    drt: (drt || '').trim(),
+    biografia: (biografia || 'Artista convidado oficial do CASTING PRO. Perfil profissional ativo.').trim(),
+    curriculo: '',
+    caracteristicas: {
+      altura: '',
+      peso: '',
+      olhos: '',
+      cabelos: '',
+      manequim: '',
+      calcado: '',
+      etnia: ''
+    },
+    habilidades: [],
+    foto_perfil: foto_perfil && foto_perfil.startsWith('http') ? foto_perfil : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80',
+    fotos_apresentacao: [],
+    videos: [],
+    status: 'ativo',
+    publicado: true,
+    isento: true,
+    tipo_cadastro: 'cortesia',
+    motivo_isencao: (motivo_isencao || 'Convidado Especial / Elenco Parceria').trim(),
+    criado_em: new Date().toISOString(),
+    financeiro: {
+      isento: true,
+      plano: 'Cortesia VIP / Convidado Especial',
+      taxa_inicial_paga: true,
+      taxa_inicial_valor: 0,
+      taxa_inicial_data: new Date().toISOString(),
+      mensalidade_valor: 0,
+      forma_pagamento: 'Isenção Administrativa (Tony de Luc)',
+      data_inicio: new Date().toISOString(),
+      proxima_cobranca: null,
+      historico: []
+    }
+  };
+
+  artists.push(newCortesiaArtist);
+  writeJSON(ARTISTS_FILE, artists);
+
+  res.status(201).json({
+    success: true,
+    message: `Artista cortesia '${newCortesiaArtist.nome_artistico}' cadastrado com sucesso! Ele não será contabilizado no faturamento e já tem acesso liberado ao painel.`,
+    artista: newCortesiaArtist
+  });
+});
+
+// Remover artista cortesia
+app.delete('/api/admin/artistas-cortesia/:id', requireAdminAuth, (req, res) => {
+  const { id } = req.params;
+  const artists = readJSON(ARTISTS_FILE, []);
+  const index = artists.findIndex(a => a.id === id);
+
+  if (index === -1) {
+    return res.status(404).json({ error: 'Artista não encontrado.' });
+  }
+
+  const removed = artists.splice(index, 1)[0];
+  writeJSON(ARTISTS_FILE, artists);
+
+  res.json({
+    success: true,
+    message: `Artista cortesia '${removed.nome_artistico}' removido com sucesso.`,
+    artista: removed
   });
 });
 

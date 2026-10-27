@@ -252,5 +252,44 @@ const API = {
       body: JSON.stringify(config)
     });
     return res.json();
+  },
+
+  async cadastrarArtistaCortesia(dados) {
+    const token = localStorage.getItem('casting_admin_token') || '';
+    const res = await fetch(`${this.baseURL}/api/admin/artistas-cortesia`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(dados)
+    });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error || 'Erro ao cadastrar artista cortesia');
+    return json;
+  },
+
+  async getArtistasCortesia() {
+    const token = localStorage.getItem('casting_admin_token') || '';
+    const res = await fetch(`${this.baseURL}/api/admin/artistas-cortesia`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    if (!res.ok) throw new Error('Erro ao buscar lista de artistas cortesia');
+    return res.json();
+  },
+
+  async excluirArtistaCortesia(id) {
+    const token = localStorage.getItem('casting_admin_token') || '';
+    const res = await fetch(`${this.baseURL}/api/admin/artistas-cortesia/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error || 'Erro ao excluir artista cortesia');
+    return json;
   }
 };

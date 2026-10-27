@@ -236,6 +236,156 @@
         <div id="mAssinaturasCanceladas" class="metric-value" style="color: #94a3b8;">0</div>
         <span class="metric-sub">Dados e portfólio preservados</span>
       </div>
+
+      <div class="metric-card" style="border: 1px solid rgba(245, 158, 11, 0.45); background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(15, 23, 42, 0.9));">
+        <span class="metric-label" style="color: #fbbf24; font-weight: 700;">🎭 Artistas Cortesia / Isentos</span>
+        <div id="mArtistasCortesia" class="metric-value" style="color: #fbbf24;">0</div>
+        <span class="metric-sub" style="color: #cbd5e1;">Isentos 100% • Fora da Contabilidade Financeira</span>
+      </div>
+    </section>
+
+    <!-- ============================================== -->
+    <!-- ÁREA DE ARTISTAS CORTESIA (NÃO CONTABILIZADOS) -->
+    <!-- ============================================== -->
+    <section class="card" id="secaoArtistasCortesia" style="border: 2px solid rgba(245, 158, 11, 0.4); background: linear-gradient(180deg, #121829 0%, #0c111e 100%); margin-bottom: 30px; box-shadow: 0 8px 30px rgba(0,0,0,0.5);">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 15px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 18px; margin-bottom: 22px;">
+        <div>
+          <div style="display: inline-flex; align-items: center; gap: 6px; background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.4); color: #fbbf24; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; margin-bottom: 8px;">
+            ★ ÁREA EXCLUSIVA DE GESTÃO DO DIRETOR
+          </div>
+          <h2 style="font-family: 'Montserrat', sans-serif; font-size: 1.45rem; color: #fff; margin: 0;">
+            🎭 Cadastro de Artistas Cortesia & Não Pagantes
+          </h2>
+          <p style="color: #94a3b8; font-size: 0.88rem; margin: 6px 0 0; line-height: 1.5; max-width: 850px;">
+            Este é o espaço exclusivo para cadastrar artistas convidados, parcerias ou elenco que <strong>NÃO SERÃO CONTABILIZADOS</strong> no faturamento. 
+            Eles não pagam taxa de adesão, não geram cobrança mensal e já entram com o perfil <strong>100% ativo na vitrine</strong> e acesso exclusivo com e-mail e senha.
+          </p>
+        </div>
+        <button type="button" class="btn btn-primary" onclick="toggleFormCortesia()" id="btnToggleFormCortesia" style="background: linear-gradient(135deg, #f59e0b, #d97706); border: none; font-weight: 700;">
+          ➕ Cadastrar Novo Artista Cortesia
+        </button>
+      </div>
+
+      <!-- FORMULÁRIO DE CADASTRO CORTESIA (EXPANSÍVEL) -->
+      <div id="boxFormCortesia" style="display: block; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(245, 158, 11, 0.25); border-radius: var(--radius-sm); padding: 22px; margin-bottom: 25px;">
+        <h3 style="font-family: 'Montserrat', sans-serif; font-size: 1.1rem; color: #fbbf24; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+          📝 Preencha os Dados do Artista Convidado:
+        </h3>
+
+        <div id="cortesiaFormError" style="display: none; background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.5); color: #fca5a5; padding: 10px 14px; border-radius: 6px; font-size: 0.85rem; margin-bottom: 16px;"></div>
+        <div id="cortesiaFormSuccess" style="display: none; background: rgba(16, 185, 129, 0.2); border: 1px solid rgba(16, 185, 129, 0.5); color: #6ee7b7; padding: 10px 14px; border-radius: 6px; font-size: 0.85rem; margin-bottom: 16px;"></div>
+
+        <form id="formNovoArtistaCortesia" onsubmit="handleCadastrarCortesia(event)">
+          <div class="grid-3" style="gap: 15px; margin-bottom: 15px;">
+            <div class="form-group">
+              <label class="form-label">Nome Artístico / De Cena *</label>
+              <input type="text" id="cortesiaNomeArtistico" class="form-input" required placeholder="Ex: Clara Mendes">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nome Completo</label>
+              <input type="text" id="cortesiaNomeCompleto" class="form-input" placeholder="Ex: Clara Mendes de Souza">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Categoria Principal *</label>
+              <select id="cortesiaCategoria" class="form-input" required>
+                <option value="Ator / Atriz">Ator / Atriz</option>
+                <option value="Ator">Ator</option>
+                <option value="Atriz">Atriz</option>
+                <option value="Modelo">Modelo</option>
+                <option value="Cantor / Cantora">Cantor / Cantora</option>
+                <option value="Apresentador(a)">Apresentador(a)</option>
+                <option value="Dançarino(a)">Dançarino(a)</option>
+                <option value="Locutor(a)">Locutor(a)</option>
+                <option value="Figurante">Figurante</option>
+                <option value="Cineasta / Diretor(a)">Cineasta / Diretor(a)</option>
+                <option value="Outro">Outro</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid-3" style="gap: 15px; margin-bottom: 15px;">
+            <div class="form-group">
+              <label class="form-label">E-mail de Login do Artista *</label>
+              <input type="email" id="cortesiaEmail" class="form-input" required placeholder="artista@exemplo.com">
+              <small style="color: var(--text-muted); font-size: 0.75rem;">O artista usará este e-mail para entrar no painel.</small>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Senha de Acesso do Artista *</label>
+              <input type="text" id="cortesiaSenha" class="form-input" required placeholder="Ex: artista2026">
+              <small style="color: var(--text-muted); font-size: 0.75rem;">Você define e passa para ele.</small>
+            </div>
+            <div class="form-group">
+              <label class="form-label">WhatsApp / Telefone</label>
+              <input type="text" id="cortesiaTelefone" class="form-input" placeholder="(21) 99999-9999">
+            </div>
+          </div>
+
+          <div class="grid-3" style="gap: 15px; margin-bottom: 15px;">
+            <div class="form-group">
+              <label class="form-label">Cidade / Estado</label>
+              <div style="display: flex; gap: 8px;">
+                <input type="text" id="cortesiaCidade" class="form-input" style="flex: 2;" placeholder="Cidade (ex: Maricá)">
+                <input type="text" id="cortesiaEstado" class="form-input" style="flex: 1;" placeholder="RJ" maxlength="2">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">DRT / Registro Profissional</label>
+              <input type="text" id="cortesiaDrt" class="form-input" placeholder="Ex: 001234/RJ (se tiver)">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Motivo da Cortesia / Convidado</label>
+              <input type="text" id="cortesiaMotivo" class="form-input" placeholder="Ex: Convidado Especial Tony de Luc">
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 15px;">
+            <label class="form-label">URL da Foto Principal (ou deixe em branco para foto padrão profissional)</label>
+            <input type="url" id="cortesiaFotoPerfil" class="form-input" placeholder="https://images.unsplash.com/... (ou deixe em branco)">
+          </div>
+
+          <div class="form-group" style="margin-bottom: 20px;">
+            <label class="form-label">Biografia Curta / Apresentação</label>
+            <textarea id="cortesiaBiografia" class="form-input" rows="2" placeholder="Breve resumo da trajetória ou perfil do artista convidado..."></textarea>
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; gap: 12px;">
+            <button type="submit" id="btnSubmitCortesia" class="btn btn-primary" style="background: linear-gradient(135deg, #10b981, #059669); border: none; padding: 12px 24px; font-weight: 700; font-size: 0.95rem;">
+              ✨ Salvar & Liberar Artista Cortesia na Vitrine
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- TABELA DE ARTISTAS CORTESIA -->
+      <div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+          <h3 style="font-family: 'Montserrat', sans-serif; font-size: 1.1rem; color: #fff; margin: 0;">
+            Elenco Cortesia & Não Pagantes (<span id="contagemArtistasCortesia">0</span>)
+          </h3>
+          <span style="font-size: 0.8rem; color: #fbbf24; background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); padding: 3px 10px; border-radius: 12px;">
+            Totalmente Isento de Mensalidade
+          </span>
+        </div>
+
+        <div class="table-responsive">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Foto</th>
+                <th>Nome Artístico</th>
+                <th>E-mail & Login</th>
+                <th>Categoria / Local</th>
+                <th>Motivo Isenção</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="cortesiaTableBody">
+              <!-- Renderizado via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
     </section>
 
     <!-- FERRAMENTA DE SIMULAÇÃO DE WEBHOOK / CICLO BANCÁRIO -->
@@ -388,6 +538,7 @@
         badge.style.display = 'inline-flex';
 
         renderMetrics();
+        renderCortesiaTable();
         renderTransactions();
         populateSimSelect();
       } catch (err) {
@@ -415,11 +566,131 @@
       document.getElementById('mPagamentosPendentes').textContent = totais.pagamentos_pendentes;
       document.getElementById('mPagamentosAtrasados').textContent = totais.pagamentos_atrasados;
       document.getElementById('mAssinaturasCanceladas').textContent = totais.assinaturas_canceladas;
+      if (document.getElementById('mArtistasCortesia')) {
+        document.getElementById('mArtistasCortesia').textContent = totais.artistas_cortesia || 0;
+      }
+      if (document.getElementById('contagemArtistasCortesia')) {
+        document.getElementById('contagemArtistasCortesia').textContent = totais.artistas_cortesia || 0;
+      }
 
       if (config) {
         document.getElementById('confInitialFee').value = config.initial_fee || 20.00;
         document.getElementById('confMonthlyFee').value = config.monthly_fee || 10.00;
         document.getElementById('confGracePeriod').value = config.grace_period_days || 5;
+      }
+    }
+
+    function renderCortesiaTable() {
+      const tbody = document.getElementById('cortesiaTableBody');
+      const cortesias = adminData.artistas_cortesia || [];
+
+      if (cortesias.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 22px;">Nenhum artista cortesia cadastrado até o momento. Utilize o formulário acima para cadastrar novos convidados isentos.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = cortesias.map(art => `
+        <tr>
+          <td>
+            <img src="${art.foto_perfil || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80'}" alt="${art.nome_artistico}" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid #fbbf24;">
+          </td>
+          <td>
+            <strong style="color: #fff; font-size: 0.95rem;">${art.nome_artistico}</strong><br>
+            <span style="font-size: 0.75rem; color: #94a3b8;">${art.nome_completo || ''}</span>
+          </td>
+          <td>
+            <span style="color: #38bdf8; font-size: 0.85rem;">${art.email}</span><br>
+            <span style="font-size: 0.75rem; color: #cbd5e1;">Tel: ${art.telefone || 'Não informado'}</span>
+          </td>
+          <td>
+            <span style="color: #fff;">${art.categoria || 'Geral'}</span><br>
+            <span style="font-size: 0.75rem; color: #94a3b8;">${art.cidade ? art.cidade + '/' + art.estado : 'Brasil'}</span>
+          </td>
+          <td>
+            <span style="font-size: 0.82rem; color: #fbbf24;">★ ${art.motivo_isencao || 'Convidado Especial'}</span>
+          </td>
+          <td>
+            <span class="status-badge status-ativo" style="background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4);">
+              ✓ ATIVO NA VITRINE
+            </span>
+          </td>
+          <td>
+            <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+              <a href="/perfil-publico.html?id=${art.id}" target="_blank" class="btn btn-outline btn-sm" style="font-size: 0.75rem; padding: 4px 8px; color: #38bdf8;">
+                👁️ Ver Perfil
+              </a>
+              <button type="button" onclick="excluirArtistaCortesia('${art.id}', '${art.nome_artistico}')" class="btn btn-danger btn-sm" style="font-size: 0.75rem; padding: 4px 8px;">
+                🗑️ Remover
+              </button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function toggleFormCortesia() {
+      const box = document.getElementById('boxFormCortesia');
+      const btn = document.getElementById('btnToggleFormCortesia');
+      if (box.style.display === 'none') {
+        box.style.display = 'block';
+        btn.textContent = '✖ Fechar Formulário';
+      } else {
+        box.style.display = 'none';
+        btn.textContent = '➕ Cadastrar Novo Artista Cortesia';
+      }
+    }
+
+    async function handleCadastrarCortesia(e) {
+      e.preventDefault();
+      const errEl = document.getElementById('cortesiaFormError');
+      const succEl = document.getElementById('cortesiaFormSuccess');
+      const btn = document.getElementById('btnSubmitCortesia');
+
+      errEl.style.display = 'none';
+      succEl.style.display = 'none';
+      btn.disabled = true;
+      btn.textContent = 'Cadastrando artista cortesia...';
+
+      const payload = {
+        nome_artistico: document.getElementById('cortesiaNomeArtistico').value.trim(),
+        nome_completo: document.getElementById('cortesiaNomeCompleto').value.trim(),
+        categoria: document.getElementById('cortesiaCategoria').value,
+        email: document.getElementById('cortesiaEmail').value.trim(),
+        senha: document.getElementById('cortesiaSenha').value.trim(),
+        telefone: document.getElementById('cortesiaTelefone').value.trim(),
+        cidade: document.getElementById('cortesiaCidade').value.trim(),
+        estado: document.getElementById('cortesiaEstado').value.trim(),
+        drt: document.getElementById('cortesiaDrt').value.trim(),
+        motivo_isencao: document.getElementById('cortesiaMotivo').value.trim(),
+        foto_perfil: document.getElementById('cortesiaFotoPerfil').value.trim(),
+        biografia: document.getElementById('cortesiaBiografia').value.trim()
+      };
+
+      try {
+        const res = await API.cadastrarArtistaCortesia(payload);
+        succEl.textContent = res.message || 'Artista cortesia cadastrado com sucesso!';
+        succEl.style.display = 'block';
+        document.getElementById('formNovoArtistaCortesia').reset();
+        await loadAdminData();
+      } catch (err) {
+        errEl.textContent = err.message || 'Erro ao cadastrar artista cortesia.';
+        errEl.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '✨ Salvar & Liberar Artista Cortesia na Vitrine';
+      }
+    }
+
+    async function excluirArtistaCortesia(id, nome) {
+      if (!confirm(`Tem certeza que deseja remover o artista cortesia '${nome}'? O perfil sairá da vitrine pública.`)) {
+        return;
+      }
+      try {
+        const res = await API.excluirArtistaCortesia(id);
+        alert(res.message);
+        await loadAdminData();
+      } catch (err) {
+        alert('Erro ao excluir: ' + err.message);
       }
     }
 

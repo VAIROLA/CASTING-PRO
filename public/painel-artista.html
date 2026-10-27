@@ -602,7 +602,7 @@
 
       // Alertas
       const alertBox = document.getElementById('alertBox');
-      if (!currentArtist.financeiro?.taxa_inicial_paga) {
+      if (!currentArtist.financeiro?.taxa_inicial_paga && !currentArtist.isento && currentArtist.tipo_cadastro !== 'cortesia') {
         alertBox.style.display = 'block';
         alertBox.style.background = 'rgba(245, 158, 11, 0.15)';
         alertBox.style.border = '1px solid rgba(245, 158, 11, 0.4)';
@@ -1031,6 +1031,24 @@
     // ==========================================
     function renderFinancial() {
       const fin = currentArtist.financeiro || {};
+
+      if (currentArtist.isento || currentArtist.tipo_cadastro === 'cortesia' || fin.isento) {
+        document.getElementById('taxaInicialStatusLabel').innerHTML = `<span style="color: #fbbf24; font-weight: 700;">★ CORTESIA / CONVIDADO VIP (ISENTO)</span>`;
+        document.getElementById('financeiroProxData').innerHTML = `<span style="color: #10b981; font-weight: 600; font-size: 1.1rem;">Isento de Cobranças</span>`;
+        document.getElementById('financeiroFormaLabel').textContent = 'Plano: Convidado VIP / Isenção Total';
+        document.getElementById('statusAssinaturaWrap').innerHTML = `
+          <span class="status-badge" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4);">
+            ★ CONVIDADO VIP (ISENTO)
+          </span>
+        `;
+        const btnReg = document.getElementById('btnRegularizarPagamento');
+        if (btnReg) btnReg.style.display = 'none';
+        const tbody = document.getElementById('historicoPagamentosBody');
+        if (tbody) {
+          tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: #fbbf24; padding: 20px; font-weight: 600;">✨ Perfil oficial concedido como Cortesia VIP pela Direção do CASTING PRO. Isento de taxas e mensalidades.</td></tr>`;
+        }
+        return;
+      }
 
       document.getElementById('taxaInicialStatusLabel').innerHTML = fin.taxa_inicial_paga
         ? `✓ PAGA EM ${new Date(fin.taxa_inicial_data || Date.now()).toLocaleDateString('pt-BR')}`
