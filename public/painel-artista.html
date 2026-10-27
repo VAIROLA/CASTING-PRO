@@ -531,7 +531,7 @@
 
     // Pegar ID da URL ou do localStorage
     const urlParams = new URLSearchParams(window.location.search);
-    let activeArtistId = urlParams.get('id') || localStorage.getItem('casting_artist_id') || 'art-101';
+    let activeArtistId = urlParams.get('id') || localStorage.getItem('casting_artist_id') || 'art-ailton';
 
     // Navegação de Abas
     document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -543,15 +543,15 @@
       });
     });
 
-    // Alternador rápido para testar vários perfis
+    // Alternador de contas
     async function loadArtistSwitcher() {
       try {
         const switcher = document.getElementById('quickArtistSwitcher');
         const list = [
-          { id: 'art-101', name: 'Larissa (Ativa)', status: 'ativo' },
-          { id: 'art-102', name: 'Thiago (Ativo)', status: 'ativo' },
-          { id: 'art-103', name: 'Bia (Mensalidade Pendente)', status: 'pagamento_pendente' },
-          { id: 'art-104', name: 'Gabriel (Aguardando R$20)', status: 'aguardando_pagamento' }
+          { id: 'art-ailton', name: '⭐ Tony de Luc (Meu Perfil)', status: 'ativo' },
+          { id: 'art-102', name: 'Thiago Albuquerque', status: 'ativo' },
+          { id: 'art-103', name: 'Bia Camargo', status: 'ativo' },
+          { id: 'art-106', name: 'Marcos Vinícius', status: 'ativo' }
         ];
 
         switcher.innerHTML = list.map(item => `

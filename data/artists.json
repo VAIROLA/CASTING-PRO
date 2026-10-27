@@ -1,5 +1,74 @@
 [
   {
+    "id": "art-ailton",
+    "nome_completo": "Ailton Paulo dos Santos",
+    "nome_artistico": "Tony de Luc",
+    "email": "tonydeluc@portal-tvdiversidade-news.com",
+    "telefone": "(21) 96672-5240",
+    "cidade": "Maricá",
+    "estado": "RJ",
+    "categoria": "Cineasta / Diretor / Produtor",
+    "drt": "0045210/RJ",
+    "biografia": "Diretor cinematográfico, produtor executivo e curador audiovisual com ampla experiência em direção de elenco, cinema e produções televisivas.",
+    "curriculo": "• Diretor e Fundador da TV Diversidade\n• Professor e Idealizador do CINELAB Cinema & Audiovisual\n• Direção de curtas e longas metragens independentes premiados\n• Produção e captação de elenco para produções audiovisuais",
+    "caracteristicas": {
+      "altura": "1.78",
+      "peso": "78",
+      "olhos": "Castanhos",
+      "cabelos": "Pretos",
+      "manequim": "42",
+      "calcado": "41",
+      "etnia": "Moreno"
+    },
+    "habilidades": [
+      "Direção Cênica",
+      "Roteiro",
+      "Produção Executiva",
+      "Edição Audiovisual"
+    ],
+    "foto_perfil": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80",
+    "fotos_apresentacao": [
+      {
+        "id": "foto-1",
+        "url": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80",
+        "legenda": "Direção em Estúdio",
+        "ordem": 0
+      }
+    ],
+    "videos": [
+      {
+        "slot": 1,
+        "tipo": "youtube",
+        "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "titulo": "Showreel de Direção & Produção"
+      }
+    ],
+    "status": "ativo",
+    "publicado": true,
+    "criado_em": "2026-10-27T02:37:04.792Z",
+    "financeiro": {
+      "taxa_inicial_paga": true,
+      "taxa_inicial_valor": 20,
+      "taxa_inicial_data": "2026-10-27T02:37:04.793Z",
+      "mensalidade_valor": 10,
+      "plano": "Assinatura Profissional Casting Pro",
+      "forma_pagamento": "PagBank",
+      "data_inicio": "2026-10-27T02:37:04.793Z",
+      "proxima_cobranca": "2026-11-26T02:37:04.793Z",
+      "historico": [
+        {
+          "id": "TX-FUNDADOR",
+          "data": "2026-10-27T02:37:04.793Z",
+          "tipo": "taxa_inicial",
+          "descricao": "Taxa Inicial de Inscrição Oficial",
+          "valor": 20,
+          "status": "pago",
+          "metodo": "PagBank"
+        }
+      ]
+    }
+  },
+  {
     "id": "art-102",
     "nome_completo": "Thiago Mendes de Albuquerque",
     "nome_artistico": "Thiago Albuquerque",
