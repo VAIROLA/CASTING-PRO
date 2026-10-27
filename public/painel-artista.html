@@ -146,14 +146,6 @@
   <!-- MAIN -->
   <main class="main-wrapper">
 
-    <!-- SELETOR RÁPIDO DE ARTISTA (Para facilidade de testes) -->
-    <div style="background: rgba(56, 189, 248, 0.08); border: 1px solid rgba(56, 189, 248, 0.25); border-radius: var(--radius-sm); padding: 10px 16px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; font-size: 0.88rem; flex-wrap: wrap; gap: 10px;">
-      <span>👤 Alternar conta de demonstração:</span>
-      <div style="display: flex; gap: 8px; flex-wrap: wrap;" id="quickArtistSwitcher">
-        <!-- Renderizado dinamicamente -->
-      </div>
-    </div>
-
     <!-- PANEL HEADER / STATUS GERAL -->
     <header class="panel-header">
       <div>
@@ -543,25 +535,8 @@
       });
     });
 
-    // Alternador de contas
     async function loadArtistSwitcher() {
-      try {
-        const switcher = document.getElementById('quickArtistSwitcher');
-        const list = [
-          { id: 'art-ailton', name: '⭐ Tony de Luc (Meu Perfil)', status: 'ativo' },
-          { id: 'art-102', name: 'Thiago Albuquerque', status: 'ativo' },
-          { id: 'art-103', name: 'Bia Camargo', status: 'ativo' },
-          { id: 'art-106', name: 'Marcos Vinícius', status: 'ativo' }
-        ];
-
-        switcher.innerHTML = list.map(item => `
-          <button type="button" class="btn btn-sm ${item.id === activeArtistId ? 'btn-primary' : 'btn-secondary'}" onclick="switchArtist('${item.id}')">
-            ${item.name}
-          </button>
-        `).join('');
-      } catch (e) {
-        console.error(e);
-      }
+      // Removido: cada artista acessa exclusivamente seu próprio perfil
     }
 
     window.switchArtist = function(id) {
