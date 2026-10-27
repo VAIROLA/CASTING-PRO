@@ -175,14 +175,12 @@ app.get('/api/artistas', (req, res) => {
   const artists = readJSON(ARTISTS_FILE, []);
   const { categoria, busca, cidade } = req.query;
 
-  // Regra Master: Só aparecem na vitrine pública artistas com perfil completo, publicado,
-  // taxa inicial paga (ou cortesia/isento) e mensalidade ativa ou em tolerância ('ativo' ou 'pagamento_pendente')
+  // Regra Master: Só aparecem na vitrine pública artistas publicados e ativos (ou em tolerância)
   let publicList = artists.filter(a => {
     const isPaid = (a.financeiro && a.financeiro.taxa_inicial_paga) || a.isento === true || a.tipo_cadastro === 'cortesia';
     const isPublic = a.publicado === true;
-    const hasPhoto = Boolean(a.foto_perfil);
     const validStatus = ['ativo', 'pagamento_pendente'].includes(a.status);
-    return isPaid && isPublic && hasPhoto && validStatus;
+    return isPaid && isPublic && validStatus;
   });
 
   if (categoria && categoria !== 'todos') {
@@ -212,7 +210,7 @@ app.get('/api/artistas', (req, res) => {
     estado: a.estado,
     drt: a.drt,
     telefone: a.telefone || '',
-    foto_perfil: a.foto_perfil,
+    foto_perfil: a.foto_perfil || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80',
     total_fotos_apresentacao: (a.fotos_apresentacao || []).length,
     habilidades: a.habilidades || [],
     caracteristicas: a.caracteristicas || {}
@@ -1268,8 +1266,14 @@ app.get('/api/admin/artistas-cortesia', requireAdminAuth, (req, res) => {
   res.json(cortesias);
 });
 
-// Cadastrar novo artista cortesia (100% Isento, sem cobrança, fora do MRR/contabilidade, com suporte a upload de arquivo direto do PC/celular)
-app.post('/api/admin/artistas-cortesia', requireAdminAuth, upload.single('foto'), (req, res) => {
+// Upload configurado para cadastro de artistas cortesia (1 foto perfil + até 5 fotos apresentação)
+const cortesiaUpload = upload.fields([
+  { name: 'foto_perfil', maxCount: 1 },
+  { name: 'fotos_apresentacao', maxCount: 5 }
+]);
+
+// Cadastrar novo artista cortesia (100% Isento, sem cobrança, 1 foto perfil + até 5 fotos + até 2 vídeos)
+app.post('/api/admin/artistas-cortesia', requireAdminAuth, cortesiaUpload, (req, res) => {
   const {
     nome_artistico,
     nome_completo,
@@ -1281,15 +1285,20 @@ app.post('/api/admin/artistas-cortesia', requireAdminAuth, upload.single('foto')
     estado,
     drt,
     biografia,
-    foto_url
+    foto_url,
+    video_1_url,
+    video_1_titulo,
+    video_2_url,
+    video_2_titulo
   } = req.body || {};
 
-  if (!nome_artistico || !email || !senha) {
-    return res.status(400).json({ error: 'Nome artístico, e-mail e senha são obrigatórios.' });
+  if (!nome_artistico || !nome_artistico.trim()) {
+    return res.status(400).json({ error: 'O Nome Artístico é obrigatório.' });
   }
 
-  const cleanEmail = email.trim().toLowerCase();
   const artists = readJSON(ARTISTS_FILE, []);
+  const cleanEmail = email && email.trim() ? email.trim().toLowerCase() : `artista.${Date.now()}@castingpro.com.br`;
+  const cleanSenha = senha && senha.trim() ? senha.trim() : 'casting123';
 
   // Verificar se o e-mail já existe
   const exists = artists.find(a => (a.email || '').toLowerCase() === cleanEmail);
@@ -1297,12 +1306,45 @@ app.post('/api/admin/artistas-cortesia', requireAdminAuth, upload.single('foto')
     return res.status(400).json({ error: 'Já existe um artista cadastrado com este e-mail.' });
   }
 
-  // Foto de perfil: arquivo enviado do computador/celular OU url OU padrão
+  // 1. Foto de perfil principal
   let fotoPerfilFinal = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80';
-  if (req.file) {
+  if (req.files && req.files['foto_perfil'] && req.files['foto_perfil'][0]) {
+    fotoPerfilFinal = `/uploads/${req.files['foto_perfil'][0].filename}`;
+  } else if (req.file) {
     fotoPerfilFinal = `/uploads/${req.file.filename}`;
   } else if (foto_url && foto_url.startsWith('http')) {
     fotoPerfilFinal = foto_url.trim();
+  }
+
+  // 2. Fotos de apresentação (Até 5 fotos)
+  const fotosApresentacaoList = [];
+  if (req.files && req.files['fotos_apresentacao']) {
+    req.files['fotos_apresentacao'].forEach((f, idx) => {
+      fotosApresentacaoList.push({
+        id: Date.now() + idx,
+        url: `/uploads/${f.filename}`,
+        legenda: `Foto de apresentação ${idx + 1}`
+      });
+    });
+  }
+
+  // 3. Vídeos (Até 2 vídeos)
+  const videosList = [];
+  if (video_1_url && video_1_url.trim()) {
+    videosList.push({
+      id: 1,
+      titulo: (video_1_titulo || 'Vídeo de Apresentação 1').trim(),
+      url: video_1_url.trim(),
+      tipo: 'youtube'
+    });
+  }
+  if (video_2_url && video_2_url.trim()) {
+    videosList.push({
+      id: 2,
+      titulo: (video_2_titulo || 'Vídeo de Apresentação 2').trim(),
+      url: video_2_url.trim(),
+      tipo: 'youtube'
+    });
   }
 
   const newId = 'art-cortesia-' + Date.now().toString(36) + '-' + Math.floor(Math.random() * 1000);
@@ -1312,7 +1354,7 @@ app.post('/api/admin/artistas-cortesia', requireAdminAuth, upload.single('foto')
     nome_completo: (nome_completo || nome_artistico).trim(),
     nome_artistico: nome_artistico.trim(),
     email: cleanEmail,
-    senha: senha.trim(),
+    senha: cleanSenha,
     telefone: (telefone || '').trim(),
     cidade: (cidade || 'Rio de Janeiro').trim(),
     estado: (estado || 'RJ').trim().toUpperCase(),
@@ -1331,8 +1373,8 @@ app.post('/api/admin/artistas-cortesia', requireAdminAuth, upload.single('foto')
     },
     habilidades: [],
     foto_perfil: fotoPerfilFinal,
-    fotos_apresentacao: [],
-    videos: [],
+    fotos_apresentacao: fotosApresentacaoList,
+    videos: videosList,
     status: 'ativo',
     publicado: true,
     isento: true,

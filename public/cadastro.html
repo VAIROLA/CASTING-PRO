@@ -317,17 +317,6 @@
         </div>
       </div>
 
-      <!-- SIMULAÇÃO DO WEBHOOK DO GATEWAY (Para o usuário demonstrar e aprovar na hora) -->
-      <div style="background: #0b0f17; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 18px; margin-top: 15px;">
-        <p style="font-size: 0.85rem; color: var(--text-sub); margin-bottom: 12px;">
-          ⚡ <strong>Confirmação Automática por Webhook Seguro:</strong><br>
-          No ambiente de testes e homologação, clique no botão abaixo para simular a resposta do gateway bancário.
-        </p>
-        <button type="button" id="btnSimularConfirmacao" class="btn btn-success btn-lg" style="width: 100%; max-width: 380px;">
-          ✓ Simular Confirmação do Pagamento (R$ 20)
-        </button>
-      </div>
-
     </div>
 
   </main>
@@ -439,6 +428,7 @@
         btn.textContent = 'Confirmar e Ir para Pagamento (R$ 20,00) →';
       }
     });
+    }
 
     // Tabs PIX vs Cartão
     const tabPix = document.getElementById('tabPix');
@@ -473,7 +463,9 @@
     });
 
     // Confirmação Segura do Pagamento Inicial
-    document.getElementById('btnSimularConfirmacao').addEventListener('click', async () => {
+    const btnSim = document.getElementById('btnSimularConfirmacao');
+    if (btnSim) {
+      btnSim.addEventListener('click', async () => {
       const btn = document.getElementById('btnSimularConfirmacao');
       btn.disabled = true;
       btn.textContent = 'Verificando com o Provedor...';
@@ -535,6 +527,7 @@
         btn.textContent = '✓ Simular Confirmação do Pagamento (R$ 20)';
       }
     });
+    }
   </script>
 </body>
 </html>

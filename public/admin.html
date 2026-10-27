@@ -334,18 +334,43 @@
             </div>
           </div>
 
+          <!-- 1 FOTO DE PERFIL -->
           <div class="form-group" style="margin-bottom: 18px;">
-            <label class="form-label">📸 Foto Principal de Perfil (Direto do seu Computador ou Celular)</label>
+            <label class="form-label">📸 1 Foto Principal de Perfil (Direto do seu Computador ou Celular)</label>
             <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
               <input type="file" id="cortesiaFotoFile" accept="image/jpeg,image/png,image/webp" class="form-input" style="flex: 1; padding: 10px; cursor: pointer;" onchange="previewCortesiaFoto(event)">
               <div id="cortesiaPreviewWrap" style="display: none; align-items: center; gap: 10px;">
-                <img id="cortesiaFotoPreview" src="" alt="Prévia" style="width: 52px; height: 52px; border-radius: 50%; object-fit: cover; border: 2px solid #10b981;">
-                <span style="font-size: 0.8rem; color: #34d399; font-weight: 600;">✓ Foto Selecionada</span>
+                <img id="cortesiaFotoPreview" src="" alt="Prévia Perfil" style="width: 52px; height: 52px; border-radius: 50%; object-fit: cover; border: 2px solid #10b981;">
+                <span style="font-size: 0.8rem; color: #34d399; font-weight: 600;">✓ Foto de Perfil Selecionada</span>
               </div>
             </div>
             <small style="color: var(--text-muted); font-size: 0.78rem; margin-top: 5px; display: block;">
-              Selecione qualquer foto JPG, PNG ou WebP. Se não selecionar agora, o perfil entrará com foto padrão e o artista poderá trocar quando quiser pelo painel dele.
+              Selecione a foto principal. Se não selecionar agora, entrará com foto padrão profissional e poderá ser alterada a qualquer momento.
             </small>
+          </div>
+
+          <!-- ATÉ 5 FOTOS DE APRESENTAÇÃO (BOOK FOTOGRÁFICO) -->
+          <div class="form-group" style="margin-bottom: 18px;">
+            <label class="form-label">🖼️ Fotos de Apresentação (Até 5 Fotos do Book - Direto do Computador/Celular)</label>
+            <input type="file" id="cortesiaFotosApresentacaoFile" multiple accept="image/jpeg,image/png,image/webp" class="form-input" style="padding: 10px; cursor: pointer;" onchange="previewCortesiaGaleria(event)">
+            <div id="cortesiaGaleriaPreviewWrap" style="display: none; gap: 10px; margin-top: 10px; flex-wrap: wrap;"></div>
+            <small style="color: var(--text-muted); font-size: 0.78rem; margin-top: 5px; display: block;">
+              Você pode selecionar de 1 até 5 fotos simultâneas para compor o book de apresentação do artista.
+            </small>
+          </div>
+
+          <!-- ATÉ 2 VÍDEOS DE TRABALHO -->
+          <div class="grid-2" style="gap: 15px; margin-bottom: 18px;">
+            <div class="form-group">
+              <label class="form-label">🎬 Vídeo 1 de Trabalho (YouTube ou Link Direto)</label>
+              <input type="url" id="cortesiaVideo1Url" class="form-input" placeholder="https://www.youtube.com/watch?v=...">
+              <input type="text" id="cortesiaVideo1Titulo" class="form-input" style="margin-top: 6px; font-size: 0.82rem;" placeholder="Título do Vídeo 1 (Ex: Monólogo Dramático)">
+            </div>
+            <div class="form-group">
+              <label class="form-label">🎬 Vídeo 2 de Trabalho (YouTube ou Link Direto)</label>
+              <input type="url" id="cortesiaVideo2Url" class="form-input" placeholder="https://www.youtube.com/watch?v=...">
+              <input type="text" id="cortesiaVideo2Titulo" class="form-input" style="margin-top: 6px; font-size: 0.82rem;" placeholder="Título do Vídeo 2 (Ex: Showreel Comercial / Ação)">
+            </div>
           </div>
 
           <div class="form-group" style="margin-bottom: 20px;">
@@ -619,6 +644,32 @@
       }
     }
 
+    function previewCortesiaGaleria(e) {
+      const files = e.target.files;
+      const wrap = document.getElementById('cortesiaGaleriaPreviewWrap');
+      wrap.innerHTML = '';
+      if (files && files.length > 0) {
+        wrap.style.display = 'flex';
+        const total = Math.min(files.length, 5);
+        for (let i = 0; i < total; i++) {
+          const reader = new FileReader();
+          reader.onload = function(evt) {
+            const thumb = document.createElement('img');
+            thumb.src = evt.target.result;
+            thumb.style.width = '48px';
+            thumb.style.height = '48px';
+            thumb.style.borderRadius = '6px';
+            thumb.style.objectFit = 'cover';
+            thumb.style.border = '1px solid #38bdf8';
+            wrap.appendChild(thumb);
+          };
+          reader.readAsDataURL(files[i]);
+        }
+      } else {
+        wrap.style.display = 'none';
+      }
+    }
+
     function toggleFormCortesia() {
       const box = document.getElementById('boxFormCortesia');
       const btn = document.getElementById('btnToggleFormCortesia');
@@ -654,10 +705,26 @@
       formData.append('drt', document.getElementById('cortesiaDrt').value.trim());
       formData.append('biografia', document.getElementById('cortesiaBiografia').value.trim());
 
+      // 1 Foto de Perfil
       const fileInput = document.getElementById('cortesiaFotoFile');
       if (fileInput && fileInput.files && fileInput.files[0]) {
-        formData.append('foto', fileInput.files[0]);
+        formData.append('foto_perfil', fileInput.files[0]);
       }
+
+      // Até 5 Fotos de Apresentação
+      const galeriaInput = document.getElementById('cortesiaFotosApresentacaoFile');
+      if (galeriaInput && galeriaInput.files) {
+        const total = Math.min(galeriaInput.files.length, 5);
+        for (let i = 0; i < total; i++) {
+          formData.append('fotos_apresentacao', galeriaInput.files[i]);
+        }
+      }
+
+      // Vídeos (Até 2)
+      formData.append('video_1_url', (document.getElementById('cortesiaVideo1Url').value || '').trim());
+      formData.append('video_1_titulo', (document.getElementById('cortesiaVideo1Titulo').value || '').trim());
+      formData.append('video_2_url', (document.getElementById('cortesiaVideo2Url').value || '').trim());
+      formData.append('video_2_titulo', (document.getElementById('cortesiaVideo2Titulo').value || '').trim());
 
       try {
         const res = await API.cadastrarArtistaCortesia(formData);
@@ -665,6 +732,8 @@
         succEl.style.display = 'block';
         document.getElementById('formNovoArtistaCortesia').reset();
         document.getElementById('cortesiaPreviewWrap').style.display = 'none';
+        document.getElementById('cortesiaGaleriaPreviewWrap').style.display = 'none';
+        document.getElementById('cortesiaGaleriaPreviewWrap').innerHTML = '';
         await loadAdminData();
       } catch (err) {
         errEl.textContent = err.message || 'Erro ao cadastrar artista cortesia.';
