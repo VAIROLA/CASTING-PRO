@@ -515,5 +515,66 @@
         }
       ]
     }
+  },
+  {
+    "id": "art-345244",
+    "nome_completo": "AILTON PAULO DOS SANTOS",
+    "nome_artistico": "TONY DE LUC",
+    "email": "tonydeluc@tv-diversidade.com",
+    "telefone": "(21) 96672-5240",
+    "cidade": "RIO DE JANEIRO",
+    "estado": "RJ",
+    "categoria": "Ator / Atriz (Teatro, Cinema e TV)",
+    "drt": "242",
+    "biografia": "",
+    "curriculo": "",
+    "caracteristicas": {
+      "altura": "",
+      "peso": "",
+      "olhos": "",
+      "cabelos": "",
+      "manequim": "",
+      "calcado": "",
+      "etnia": ""
+    },
+    "habilidades": [],
+    "foto_perfil": "",
+    "fotos_apresentacao": [],
+    "videos": [],
+    "status": "preenchimento_perfil",
+    "publicado": false,
+    "criado_em": "2026-10-27T01:25:45.244Z",
+    "financeiro": {
+      "taxa_inicial_paga": true,
+      "taxa_inicial_valor": 20,
+      "taxa_inicial_data": "2026-10-27T01:26:41.040Z",
+      "mensalidade_valor": 10,
+      "plano": "Assinatura Profissional Casting Pro",
+      "forma_pagamento": "Cartão de Crédito",
+      "data_inicio": "2026-10-27T01:26:41.040Z",
+      "proxima_cobranca": "2026-11-26T01:26:41.040Z",
+      "historico": [
+        {
+          "id": "TX-INIT-556547",
+          "data": "2026-10-27T01:26:41.040Z",
+          "tipo": "taxa_inicial",
+          "descricao": "Taxa Inicial Única de Cadastro (R$ 20.00)",
+          "valor": 20,
+          "status": "pago",
+          "metodo": "Cartão de Crédito",
+          "comprovante_id": "REC-INI-401040"
+        }
+      ]
+    },
+    "notificacoes": {
+      "boas_vindas": {
+        "enviado_em": "2026-10-27T01:26:41.041Z",
+        "email": true,
+        "email_destinatario": "tonydeluc@tv-diversidade.com",
+        "whatsapp": true,
+        "whatsapp_destinatario": "(21) 96672-5240",
+        "whatsapp_link": "https://wa.me/5521966725240?text=%F0%9F%8C%9F%20*BEM-VINDO(A)%20AO%20CASTING%20PRO!*%20%F0%9F%8C%9F%0A%0AOl%C3%A1%2C%20*TONY%20DE%20LUC*!%0A%0AConfirmamos%20com%20sucesso%20a%20sua%20ades%C3%A3o%20%C3%A0%20maior%20vitrine%20profissional%20de%20talentos%20para%20Cinema%2C%20TV%2C%20Teatro%20e%20Shows!%0A%0A%F0%9F%92%B3%20*Taxa%20de%20Ades%C3%A3o%3A*%20R%24%2020%2C00%20(Confirmada%20%E2%9C%93)%0A%F0%9F%93%85%20*Manuten%C3%A7%C3%A3o%20Mensal%3A*%20R%24%2010%2C00%20(Inicia%20em%2030%20dias)%0A%0A%F0%9F%91%89%20*Pr%C3%B3ximo%20Passo%20Obrigat%C3%B3rio%3A*%0AAcesse%20o%20seu%20painel%20exclusivo%20para%20cadastrar%20sua%20Foto%20Principal%20de%20Perfil%20(obrigat%C3%B3ria)%2C%20suas%20fotos%20de%20apresenta%C3%A7%C3%A3o%20(at%C3%A9%207)%20e%20seus%20v%C3%ADdeos%3A%0A%F0%9F%94%97%20http%3A%2F%2Flocalhost%3A3300%2Fpainel-artista.html%3Fid%3Dart-345244%0A%0ASeja%20muito%20bem-vindo(a)%20e%20boas%20produ%C3%A7%C3%B5es!%0A*Equipe%20CASTING%20PRO%20Oficial*%20%F0%9F%8E%AC%E2%9C%A8"
+      }
+    }
   }
 ]
