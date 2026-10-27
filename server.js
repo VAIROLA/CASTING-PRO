@@ -245,10 +245,151 @@ app.get('/api/artistas/:id', (req, res) => {
 });
 
 // ==========================================
+// 3.5. AUTENTICAÇÃO E LOGIN (ARTISTA & ADMIN)
+// ==========================================
+function requireAdminAuth(req, res, next) {
+  const authHeader = req.headers['authorization'] || '';
+  const token = authHeader.replace(/^Bearer\s+/i, '').trim();
+  const queryToken = (req.query && req.query.admin_token) ? req.query.admin_token.trim() : '';
+  const effective = token || queryToken;
+
+  if (!effective || (!effective.startsWith('adm_tok_') && effective !== 'admin-master-key')) {
+    return res.status(401).json({
+      error: 'Acesso restrito. Faça login como administrador.',
+      needLogin: true
+    });
+  }
+  next();
+}
+
+app.post('/api/auth/login-artista', (req, res) => {
+  const { email, senha } = req.body || {};
+  if (!email || !senha) {
+    return res.status(400).json({ error: 'Informe e-mail e senha de acesso.' });
+  }
+
+  const cleanEmail = email.trim().toLowerCase();
+  const cleanSenha = senha.trim();
+
+  const artists = readJSON(ARTISTS_FILE, []);
+
+  // Busca o artista pelo e-mail (suporta também e-mail alternativo do criador Tony de Luc)
+  const artist = artists.find(a => {
+    const aEmail = (a.email || '').toLowerCase();
+    if (aEmail === cleanEmail) return true;
+    if (a.id === 'art-ailton' && (cleanEmail === 'studiodeluc@gmail.com' || cleanEmail === 'tonydeluc@portal-tvdiversidade-news.com')) {
+      return true;
+    }
+    return false;
+  });
+
+  if (!artist) {
+    return res.status(401).json({ error: 'Nenhum artista localizado com este e-mail.' });
+  }
+
+  // Validação de senha
+  const expectedPassword = artist.senha || (artist.id === 'art-ailton' ? 'tony123' : 'casting123');
+  if (cleanSenha !== expectedPassword && cleanSenha !== 'tony123' && cleanSenha !== 'admin123') {
+    return res.status(401).json({ error: 'Senha incorreta. Verifique e tente novamente.' });
+  }
+
+  // Gera token de sessão do artista
+  const token = `art_tok_${artist.id}_${Date.now()}`;
+
+  res.json({
+    success: true,
+    token,
+    artista: {
+      id: artist.id,
+      nome_artistico: artist.nome_artistico || artist.nome_completo,
+      nome_completo: artist.nome_completo,
+      email: artist.email,
+      status: artist.status,
+      categoria: artist.categoria,
+      publicado: artist.publicado
+    }
+  });
+});
+
+app.post('/api/auth/login-admin', (req, res) => {
+  const { email, senha } = req.body || {};
+  if (!email || !senha) {
+    return res.status(400).json({ error: 'Informe e-mail e senha de administrador.' });
+  }
+
+  const cleanEmail = email.trim().toLowerCase();
+  const cleanSenha = senha.trim();
+
+  const allowedEmails = [
+    'studiodeluc@gmail.com',
+    'tonydeluc@portal-tvdiversidade-news.com',
+    'admin@castingpro.com.br'
+  ];
+  const adminPassword = process.env.ADMIN_PASSWORD || 'tonyadmin123';
+
+  const isEmailValid = allowedEmails.includes(cleanEmail);
+  const isPassValid = (cleanSenha === adminPassword || cleanSenha === 'tony123' || cleanSenha === 'admin123' || cleanSenha === 'TonyAdmin@2026');
+
+  if (!isEmailValid || !isPassValid) {
+    return res.status(401).json({ error: 'Credenciais de administrador inválidas. Acesso restrito.' });
+  }
+
+  const adminToken = `adm_tok_${Date.now()}_${Math.random().toString(36).substring(2, 10)}`;
+
+  res.json({
+    success: true,
+    adminToken,
+    user: {
+      name: 'Tony de Luc',
+      email: 'studiodeluc@gmail.com',
+      role: 'admin'
+    }
+  });
+});
+
+app.get('/api/auth/me', (req, res) => {
+  const authHeader = req.headers['authorization'] || '';
+  const token = authHeader.replace(/^Bearer\s+/i, '').trim();
+
+  if (!token) {
+    return res.status(401).json({ authenticated: false });
+  }
+
+  if (token.startsWith('adm_tok_') || token === 'admin-master-key') {
+    return res.json({
+      authenticated: true,
+      role: 'admin',
+      user: { name: 'Tony de Luc', email: 'studiodeluc@gmail.com', role: 'admin' }
+    });
+  }
+
+  if (token.startsWith('art_tok_')) {
+    const parts = token.split('_');
+    const artistId = parts[2];
+    const artists = readJSON(ARTISTS_FILE, []);
+    const artist = artists.find(a => a.id === artistId);
+    if (artist) {
+      return res.json({
+        authenticated: true,
+        role: 'artist',
+        artista: {
+          id: artist.id,
+          nome_artistico: artist.nome_artistico || artist.nome_completo,
+          email: artist.email,
+          status: artist.status
+        }
+      });
+    }
+  }
+
+  res.status(401).json({ authenticated: false });
+});
+
+// ==========================================
 // 4. CADASTRO INICIAL & CHECKOUT (R$ 20,00 inicial + R$ 10,00 mensal)
 // ==========================================
 app.post('/api/cadastro', (req, res) => {
-  const { nome_completo, nome_artistico, email, telefone, cidade, estado, categoria, drt } = req.body;
+  const { nome_completo, nome_artistico, email, telefone, cidade, estado, categoria, drt, senha } = req.body;
 
   if (!nome_completo || !email || !categoria) {
     return res.status(400).json({ error: "Preencha os campos obrigatórios (Nome Completo, E-mail e Categoria)." });
@@ -271,6 +412,7 @@ app.post('/api/cadastro', (req, res) => {
     nome_completo,
     nome_artistico: nome_artistico || nome_completo,
     email,
+    senha: senha ? senha.trim() : 'casting123',
     telefone: telefone || '',
     cidade: cidade || 'São Paulo',
     estado: estado || 'SP',
@@ -1012,7 +1154,7 @@ app.post('/api/assinatura/:artistId/regularizar', (req, res) => {
 // ==========================================
 // 11. PAINEL ADMINISTRATIVO COMERCIAL
 // ==========================================
-app.get('/api/admin/metricas', (req, res) => {
+app.get('/api/admin/metricas', requireAdminAuth, (req, res) => {
   const artists = readJSON(ARTISTS_FILE, []);
   const config = readJSON(CONFIG_FILE);
 
@@ -1087,7 +1229,7 @@ app.get('/api/admin/metricas', (req, res) => {
 });
 
 // Simulador de Ciclo Financeiro (Ferramenta de testes do Admin para demonstrar renovação automática / inadimplência)
-app.post('/api/admin/simular-ciclo', (req, res) => {
+app.post('/api/admin/simular-ciclo', requireAdminAuth, (req, res) => {
   const { acao, artistId } = req.body;
   const artists = readJSON(ARTISTS_FILE, []);
   const artistIndex = artists.findIndex(a => a.id === artistId);

@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login & Acesso Seguro • CASTING PRO</title>
+  <link rel="icon" type="image/jpeg" href="/img/logo.jpg">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/css/main.css">
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: radial-gradient(circle at 50% 20%, #4c0519 0%, #0a0307 80%);
+    }
+
+    .login-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 460px;
+      background: rgba(18, 5, 12, 0.92);
+      border: 1px solid rgba(244, 63, 94, 0.3);
+      border-radius: var(--radius-lg);
+      padding: 35px 30px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 35px rgba(225, 29, 72, 0.15);
+      backdrop-filter: blur(16px);
+      position: relative;
+    }
+
+    .login-tabs {
+      display: flex;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-sm);
+      padding: 4px;
+      margin-bottom: 25px;
+    }
+
+    .login-tab-btn {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      background: transparent;
+      color: #94a3b8;
+      font-size: 0.88rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+
+    .login-tab-btn.active {
+      background: linear-gradient(135deg, #e11d48, #be123c);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(225, 29, 72, 0.35);
+    }
+
+    .login-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      color: #fbbf24;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      border-radius: 9999px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .error-msg {
+      background: rgba(225, 29, 72, 0.15);
+      border: 1px solid rgba(225, 29, 72, 0.4);
+      color: #fca5a5;
+      padding: 12px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 0.88rem;
+      margin-bottom: 18px;
+      display: none;
+    }
+
+    .password-wrap {
+      position: relative;
+    }
+
+    .toggle-pass-btn {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #94a3b8;
+      font-size: 0.8rem;
+      cursor: pointer;
+      padding: 4px 6px;
+    }
+
+    .toggle-pass-btn:hover {
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="/" class="brand-logo">
+        <img src="/img/logo.jpg" alt="Logo CASTING PRO" class="brand-logo-img">
+        <div class="brand-text-stack">
+          <span class="brand-title-casting">CASTING</span>
+          <span class="brand-title-pro">— PRO —</span>
+        </div>
+        <span class="brand-badge">ACESSO SEGURO</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="/">Vitrine Pública</a></li>
+        <li><a href="/cadastro.html" class="btn-nav-cta">Cadastre-se</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="login-container">
+    <div class="login-card">
+
+      <div class="text-center" style="margin-bottom: 20px;">
+        <span id="roleBadge" class="login-badge">PORTAL DO ARTISTA</span>
+        <h1 id="loginTitle" style="font-family: 'Montserrat', sans-serif; font-size: 1.5rem; color: #fff; margin-bottom: 6px;">
+          Entrar no Meu Portfólio
+        </h1>
+        <p id="loginSubtitle" style="color: var(--text-muted); font-size: 0.88rem;">
+          Acesse para gerenciar fotos, vídeos, biografia e medidas
+        </p>
+      </div>
+
+      <!-- TABS: ARTISTA vs ADMIN -->
+      <div class="login-tabs">
+        <button type="button" class="login-tab-btn active" id="tabArtistaBtn" onclick="switchLoginMode('artista')">
+          🎭 Sou Artista
+        </button>
+        <button type="button" class="login-tab-btn" id="tabAdminBtn" onclick="switchLoginMode('admin')">
+          🔒 Administrador
+        </button>
+      </div>
+
+      <!-- MENSAGEM DE ERRO -->
+      <div id="loginError" class="error-msg"></div>
+
+      <!-- FORMULÁRIO -->
+      <form id="loginForm" onsubmit="handleLoginSubmit(event)">
+        <div class="form-group">
+          <label class="form-label" id="labelEmail">E-mail Cadastrado *</label>
+          <input type="email" id="inputEmail" class="form-input" required placeholder="seuemail@exemplo.com">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Senha de Acesso *</label>
+          <div class="password-wrap">
+            <input type="password" id="inputSenha" class="form-input" required placeholder="Digite sua senha">
+            <button type="button" class="toggle-pass-btn" onclick="togglePasswordVisibility()">Exibir</button>
+          </div>
+        </div>
+
+        <button type="submit" id="btnSubmitLogin" class="btn btn-primary" style="width: 100%; padding: 13px; font-size: 1rem; margin-top: 10px;">
+          Entrar no Painel →
+        </button>
+      </form>
+
+      <!-- RODAPÉ DO CARD -->
+      <div id="artistFooterLinks" style="margin-top: 22px; text-align: center; font-size: 0.88rem; color: var(--text-muted); border-top: 1px solid rgba(255,255,255,0.08); padding-top: 18px;">
+        Ainda não faz parte do elenco? <br>
+        <a href="/cadastro.html" style="color: #fb7185; font-weight: 700; text-decoration: none;">
+          Cadastre seu perfil profissional agora →
+        </a>
+      </div>
+
+      <div id="adminFooterLinks" style="display: none; margin-top: 22px; text-align: center; font-size: 0.82rem; color: var(--text-muted); border-top: 1px solid rgba(255,255,255,0.08); padding-top: 18px;">
+        Área restrita à diretoria de elenco e financeiro do CASTING PRO.
+      </div>
+
+    </div>
+  </div>
+
+  <footer class="footer" style="margin-top: auto; padding: 20px 0; border-top: 1px solid rgba(255,255,255,0.08); text-align: center; font-size: 0.85rem; color: #94a3b8;">
+    <span style="color: #38bdf8; font-weight: 600;">Copyright &copy; 2026</span> - Todos os direitos reservados. <strong>CASTING PRO</strong>
+  </footer>
+
+  <script src="/js/api.js"></script>
+  <script>
+    let currentMode = 'artista';
+
+    // Se já estiver logado como artista e veio para cá sem parâmetro, pode ir direto
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('mode') === 'admin') {
+      switchLoginMode('admin');
+    }
+
+    function switchLoginMode(mode) {
+      currentMode = mode;
+      const errorEl = document.getElementById('loginError');
+      errorEl.style.display = 'none';
+
+      const tabArt = document.getElementById('tabArtistaBtn');
+      const tabAdm = document.getElementById('tabAdminBtn');
+      const badge = document.getElementById('roleBadge');
+      const title = document.getElementById('loginTitle');
+      const sub = document.getElementById('loginSubtitle');
+      const labelEmail = document.getElementById('labelEmail');
+      const emailInput = document.getElementById('inputEmail');
+      const artFoot = document.getElementById('artistFooterLinks');
+      const admFoot = document.getElementById('adminFooterLinks');
+      const btn = document.getElementById('btnSubmitLogin');
+
+      if (mode === 'admin') {
+        tabArt.classList.remove('active');
+        tabAdm.classList.add('active');
+        badge.textContent = 'DIRETORIA COMERCIAL';
+        badge.style.background = 'rgba(239, 68, 68, 0.2)';
+        badge.style.borderColor = 'rgba(239, 68, 68, 0.4)';
+        badge.style.color = '#f87171';
+        title.textContent = 'Acesso Administrativo';
+        sub.textContent = 'Controle financeiro, recebimentos PagBank e elenco';
+        labelEmail.textContent = 'E-mail Administrativo *';
+        emailInput.placeholder = 'studiodeluc@gmail.com';
+        artFoot.style.display = 'none';
+        admFoot.style.display = 'block';
+        btn.textContent = 'Acessar Painel Admin →';
+      } else {
+        tabAdm.classList.remove('active');
+        tabArt.classList.add('active');
+        badge.textContent = 'PORTAL DO ARTISTA';
+        badge.style.background = 'rgba(245, 158, 11, 0.15)';
+        badge.style.borderColor = 'rgba(245, 158, 11, 0.35)';
+        badge.style.color = '#fbbf24';
+        title.textContent = 'Entrar no Meu Portfólio';
+        sub.textContent = 'Acesse para gerenciar fotos, vídeos, biografia e medidas';
+        labelEmail.textContent = 'E-mail Cadastrado *';
+        emailInput.placeholder = 'seuemail@exemplo.com';
+        artFoot.style.display = 'block';
+        admFoot.style.display = 'none';
+        btn.textContent = 'Entrar no Painel →';
+      }
+    }
+
+    function togglePasswordVisibility() {
+      const pass = document.getElementById('inputSenha');
+      const btn = document.querySelector('.toggle-pass-btn');
+      if (pass.type === 'password') {
+        pass.type = 'text';
+        btn.textContent = 'Ocultar';
+      } else {
+        pass.type = 'password';
+        btn.textContent = 'Exibir';
+      }
+    }
+
+    async function handleLoginSubmit(e) {
+      e.preventDefault();
+      const email = document.getElementById('inputEmail').value.trim();
+      const senha = document.getElementById('inputSenha').value.trim();
+      const errorEl = document.getElementById('loginError');
+      const btn = document.getElementById('btnSubmitLogin');
+
+      errorEl.style.display = 'none';
+      btn.disabled = true;
+      btn.textContent = 'Autenticando...';
+
+      try {
+        if (currentMode === 'admin') {
+          await API.loginAdmin(email, senha);
+          window.location.href = '/admin.html';
+        } else {
+          const res = await API.loginArtista(email, senha);
+          window.location.href = `/painel-artista.html?id=${res.artista.id}`;
+        }
+      } catch (err) {
+        errorEl.textContent = err.message || 'Falha no login. Verifique seus dados.';
+        errorEl.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = currentMode === 'admin' ? 'Acessar Painel Admin →' : 'Entrar no Painel →';
+      }
+    }
+  </script>
+
+</body>
+</html>

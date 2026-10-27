@@ -174,17 +174,74 @@ const API = {
     return res.json();
   },
 
+  async loginArtista(email, senha) {
+    const res = await fetch(`${this.baseURL}/api/auth/login-artista`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, senha })
+    });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error || 'Falha na autenticação do artista');
+    if (json.token && json.artista) {
+      localStorage.setItem('casting_auth_token', json.token);
+      localStorage.setItem('casting_artist_id', json.artista.id);
+      localStorage.setItem('casting_artist_name', json.artista.nome_artistico || json.artista.nome_completo);
+    }
+    return json;
+  },
+
+  async loginAdmin(email, senha) {
+    const res = await fetch(`${this.baseURL}/api/auth/login-admin`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, senha })
+    });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error || 'Credenciais de administrador inválidas');
+    if (json.adminToken) {
+      localStorage.setItem('casting_admin_token', json.adminToken);
+    }
+    return json;
+  },
+
+  logoutArtista() {
+    localStorage.removeItem('casting_auth_token');
+    localStorage.removeItem('casting_artist_id');
+    localStorage.removeItem('casting_artist_name');
+    window.location.href = '/login.html';
+  },
+
+  logoutAdmin() {
+    localStorage.removeItem('casting_admin_token');
+    window.location.href = '/admin.html';
+  },
+
   async getAdminMetricas() {
-    const res = await fetch(`${this.baseURL}/api/admin/metricas`);
+    const token = localStorage.getItem('casting_admin_token') || '';
+    const res = await fetch(`${this.baseURL}/api/admin/metricas`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    if (res.status === 401) {
+      throw new Error('AUTH_REQUIRED');
+    }
     return res.json();
   },
 
   async simularCiclo(acao, artistId) {
+    const token = localStorage.getItem('casting_admin_token') || '';
     const res = await fetch(`${this.baseURL}/api/admin/simular-ciclo`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
       body: JSON.stringify({ acao, artistId })
     });
+    if (res.status === 401) {
+      throw new Error('AUTH_REQUIRED');
+    }
     return res.json();
   },
 

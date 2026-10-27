@@ -138,7 +138,10 @@
       <ul class="nav-links">
         <li><a href="/">Vitrine Pública</a></li>
         <li><a href="#" id="linkVerPerfilPublico" target="_blank" style="color: #38bdf8;">Visualizar Meu Perfil Público ↗</a></li>
-        <li><a href="/admin.html">Painel Admin</a></li>
+        <li style="display: flex; align-items: center; gap: 8px;">
+          <span id="navArtistName" style="color: #fbbf24; font-size: 0.85rem; font-weight: 700;"></span>
+          <button type="button" onclick="API.logoutArtista()" class="btn btn-secondary btn-sm" style="padding: 4px 10px; font-size: 0.78rem;">Sair</button>
+        </li>
       </ul>
     </div>
   </nav>
@@ -521,9 +524,17 @@
     let currentArtist = null;
     let targetSlot = null; // Para substituir ou adicionar em slot específico
 
-    // Pegar ID da URL ou do localStorage
-    const urlParams = new URLSearchParams(window.location.search);
-    let activeArtistId = urlParams.get('id') || localStorage.getItem('casting_artist_id') || 'art-ailton';
+    // Proteção de Autenticação Obrigatória: Artista só acessa com login e senha
+    const token = localStorage.getItem('casting_auth_token');
+    const savedArtistId = localStorage.getItem('casting_artist_id');
+
+    if (!token || !savedArtistId) {
+      // Redireciona para o login caso não tenha sessão ativa
+      window.location.href = '/login.html';
+    }
+
+    // Cada artista autenticado só pode acessar estritamente o seu próprio ID
+    let activeArtistId = savedArtistId;
 
     // Navegação de Abas
     document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -564,7 +575,10 @@
 
     // Renderizar Cabeçalho & Status
     function renderHeader() {
-      document.getElementById('artistHeaderName').textContent = currentArtist.nome_artistico || currentArtist.nome_completo;
+      const artName = currentArtist.nome_artistico || currentArtist.nome_completo;
+      document.getElementById('artistHeaderName').textContent = artName;
+      const navBadge = document.getElementById('navArtistName');
+      if (navBadge) navBadge.textContent = '🎭 ' + artName;
       document.getElementById('artistHeaderId').textContent = currentArtist.id;
       document.getElementById('artistHeaderCat').textContent = currentArtist.categoria || 'Não definida';
 

@@ -146,6 +146,17 @@
 
         <div class="grid-2">
           <div class="form-group">
+            <label class="form-label">Senha de Acesso ao Painel *</label>
+            <input type="password" id="senha" class="form-input" required placeholder="Crie uma senha de acesso">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Confirmar Senha *</label>
+            <input type="password" id="confirmar_senha" class="form-input" required placeholder="Repita sua senha">
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
             <label class="form-label">Categoria Principal *</label>
             <select id="categoria" class="form-select" required>
               <option value="">Selecione sua categoria...</option>
@@ -347,9 +358,21 @@
       const nome = document.getElementById('nome_completo').value.trim();
       const email = document.getElementById('email').value.trim();
       const categoria = document.getElementById('categoria').value;
+      const senha = document.getElementById('senha').value.trim();
+      const confSenha = document.getElementById('confirmar_senha').value.trim();
 
       if (!nome || !email || !categoria) {
         alert('Por favor, preencha os campos obrigatórios (Nome, E-mail e Categoria).');
+        return;
+      }
+
+      if (!senha || senha.length < 4) {
+        alert('Por favor, crie uma senha de acesso com no mínimo 4 caracteres.');
+        return;
+      }
+
+      if (senha !== confSenha) {
+        alert('A confirmação de senha não confere com a senha digitada.');
         return;
       }
 
@@ -384,6 +407,7 @@
         nome_completo: document.getElementById('nome_completo').value.trim(),
         nome_artistico: document.getElementById('nome_artistico').value.trim(),
         email: document.getElementById('email').value.trim(),
+        senha: document.getElementById('senha').value.trim(),
         telefone: document.getElementById('telefone').value.trim(),
         categoria: document.getElementById('categoria').value,
         drt: document.getElementById('drt').value.trim(),

@@ -85,13 +85,54 @@
       <ul class="nav-links">
         <li><a href="/">Vitrine Pública</a></li>
         <li><a href="/painel-artista.html">Painel do Artista</a></li>
-        <li><a href="/admin.html" class="active">Controle Comercial</a></li>
+        <li id="adminUserBadge" style="display: none;">
+          <span style="color: #fbbf24; font-size: 0.82rem; font-weight: 700; margin-right: 8px;">👤 Tony de Luc</span>
+          <button type="button" onclick="API.logoutAdmin()" class="btn btn-secondary btn-sm" style="padding: 4px 10px; font-size: 0.78rem;">Sair</button>
+        </li>
       </ul>
     </div>
   </nav>
 
   <!-- MAIN -->
   <main class="main-wrapper">
+
+    <!-- TELA DE BLOQUEIO DE SEGURANÇA ADMIN (EXIBIDA QUANDO NÃO AUTENTICADO) -->
+    <div id="adminLockScreen" style="display: block; max-width: 480px; margin: 40px auto; padding: 40px 30px; background: rgba(18, 5, 12, 0.95); border: 1px solid rgba(239, 68, 68, 0.4); border-radius: var(--radius-lg); text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8), 0 0 35px rgba(239, 68, 68, 0.2);">
+      <div style="width: 64px; height: 64px; margin: 0 auto 18px; border-radius: 50%; background: rgba(239, 68, 68, 0.15); border: 2px solid rgba(239, 68, 68, 0.4); display: flex; align-items: center; justify-content: center; font-size: 1.8rem;">
+        🔒
+      </div>
+      <span style="display: inline-block; padding: 3px 12px; background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); color: #f87171; font-size: 0.75rem; font-weight: 700; border-radius: 9999px; text-transform: uppercase; margin-bottom: 12px;">
+        Área Confidencial
+      </span>
+      <h2 style="font-family: 'Montserrat', sans-serif; font-size: 1.5rem; color: #fff; margin-bottom: 8px;">
+        Painel Administrativo Blindado
+      </h2>
+      <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 22px; line-height: 1.5;">
+        Acesso estritamente restrito a <strong>Tony de Luc</strong> / Diretoria do CASTING PRO.
+      </p>
+
+      <div id="adminLoginError" style="display: none; background: rgba(225, 29, 72, 0.2); border: 1px solid rgba(225, 29, 72, 0.5); color: #fca5a5; padding: 10px 14px; border-radius: var(--radius-sm); font-size: 0.85rem; margin-bottom: 18px; text-align: left;"></div>
+
+      <form id="adminLoginForm" onsubmit="handleAdminLogin(event)" style="text-align: left;">
+        <div class="form-group">
+          <label class="form-label">E-mail Administrativo *</label>
+          <input type="email" id="adminInputEmail" class="form-input" required placeholder="studiodeluc@gmail.com" value="studiodeluc@gmail.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Senha de Administrador *</label>
+          <input type="password" id="adminInputSenha" class="form-input" required placeholder="Digite sua senha de admin">
+        </div>
+        <button type="submit" id="btnAdminLoginSubmit" class="btn btn-primary" style="width: 100%; padding: 13px; font-size: 0.95rem; margin-top: 10px;">
+          Desbloquear Painel Admin →
+        </button>
+      </form>
+      <div style="margin-top: 20px; font-size: 0.82rem;">
+        <a href="/" style="color: var(--text-muted); text-decoration: none;">← Voltar para a Vitrine Pública</a>
+      </div>
+    </div>
+
+    <!-- CONTEÚDO PROTEGIDO DO DASHBOARD (SÓ EXIBIDO APÓS AUTENTICAÇÃO) -->
+    <div id="adminProtectedContent" style="display: none;">
 
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 15px;">
       <div>
@@ -280,6 +321,8 @@
       </form>
     </section>
 
+    </div> <!-- /adminProtectedContent -->
+
   </main>
 
   <!-- FOOTER -->
@@ -302,14 +345,59 @@
   <script>
     let adminData = null;
 
+    async function handleAdminLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('adminInputEmail').value.trim();
+      const senha = document.getElementById('adminInputSenha').value.trim();
+      const errBox = document.getElementById('adminLoginError');
+      const btn = document.getElementById('btnAdminLoginSubmit');
+
+      errBox.style.display = 'none';
+      btn.disabled = true;
+      btn.textContent = 'Verificando credenciais...';
+
+      try {
+        await API.loginAdmin(email, senha);
+        btn.textContent = 'Acesso Liberado!';
+        loadAdminData();
+      } catch (err) {
+        errBox.textContent = err.message || 'Credenciais de administrador incorretas.';
+        errBox.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = 'Desbloquear Painel Admin →';
+      }
+    }
+
     async function loadAdminData() {
+      const lockScreen = document.getElementById('adminLockScreen');
+      const content = document.getElementById('adminProtectedContent');
+      const badge = document.getElementById('adminUserBadge');
+      const token = localStorage.getItem('casting_admin_token');
+
+      if (!token) {
+        lockScreen.style.display = 'block';
+        content.style.display = 'none';
+        badge.style.display = 'none';
+        return;
+      }
+
       try {
         adminData = await API.getAdminMetricas();
+        lockScreen.style.display = 'none';
+        content.style.display = 'block';
+        badge.style.display = 'inline-flex';
+
         renderMetrics();
         renderTransactions();
         populateSimSelect();
       } catch (err) {
-        alert('Erro ao carregar métricas administrativas: ' + err.message);
+        localStorage.removeItem('casting_admin_token');
+        lockScreen.style.display = 'block';
+        content.style.display = 'none';
+        badge.style.display = 'none';
+        const errBox = document.getElementById('adminLoginError');
+        errBox.textContent = 'Sessão expirada ou não autorizada. Faça login novamente.';
+        errBox.style.display = 'block';
       }
     }
 
