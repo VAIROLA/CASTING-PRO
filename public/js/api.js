@@ -229,22 +229,6 @@ const API = {
     return res.json();
   },
 
-  async simularCiclo(acao, artistId) {
-    const token = localStorage.getItem('casting_admin_token') || '';
-    const res = await fetch(`${this.baseURL}/api/admin/simular-ciclo`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify({ acao, artistId })
-    });
-    if (res.status === 401) {
-      throw new Error('AUTH_REQUIRED');
-    }
-    return res.json();
-  },
-
   async updateConfig(config) {
     const res = await fetch(`${this.baseURL}/api/config`, {
       method: 'PUT',
@@ -254,15 +238,16 @@ const API = {
     return res.json();
   },
 
-  async cadastrarArtistaCortesia(dados) {
+  async cadastrarArtistaCortesia(dadosOrFormData) {
     const token = localStorage.getItem('casting_admin_token') || '';
+    const isFormData = dadosOrFormData instanceof FormData;
     const res = await fetch(`${this.baseURL}/api/admin/artistas-cortesia`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
+        'Authorization': `Bearer ${token}`,
+        ...(isFormData ? {} : { 'Content-Type': 'application/json' })
       },
-      body: JSON.stringify(dados)
+      body: isFormData ? dadosOrFormData : JSON.stringify(dadosOrFormData)
     });
     const json = await res.json();
     if (!res.ok) throw new Error(json.error || 'Erro ao cadastrar artista cortesia');

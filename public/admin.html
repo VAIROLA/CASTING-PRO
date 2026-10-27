@@ -320,7 +320,7 @@
             </div>
           </div>
 
-          <div class="grid-3" style="gap: 15px; margin-bottom: 15px;">
+          <div class="grid-2" style="gap: 15px; margin-bottom: 15px;">
             <div class="form-group">
               <label class="form-label">Cidade / Estado</label>
               <div style="display: flex; gap: 8px;">
@@ -332,20 +332,25 @@
               <label class="form-label">DRT / Registro Profissional</label>
               <input type="text" id="cortesiaDrt" class="form-input" placeholder="Ex: 001234/RJ (se tiver)">
             </div>
-            <div class="form-group">
-              <label class="form-label">Motivo da Cortesia / Convidado</label>
-              <input type="text" id="cortesiaMotivo" class="form-input" placeholder="Ex: Convidado Especial Tony de Luc">
-            </div>
           </div>
 
-          <div class="form-group" style="margin-bottom: 15px;">
-            <label class="form-label">URL da Foto Principal (ou deixe em branco para foto padrão profissional)</label>
-            <input type="url" id="cortesiaFotoPerfil" class="form-input" placeholder="https://images.unsplash.com/... (ou deixe em branco)">
+          <div class="form-group" style="margin-bottom: 18px;">
+            <label class="form-label">📸 Foto Principal de Perfil (Direto do seu Computador ou Celular)</label>
+            <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+              <input type="file" id="cortesiaFotoFile" accept="image/jpeg,image/png,image/webp" class="form-input" style="flex: 1; padding: 10px; cursor: pointer;" onchange="previewCortesiaFoto(event)">
+              <div id="cortesiaPreviewWrap" style="display: none; align-items: center; gap: 10px;">
+                <img id="cortesiaFotoPreview" src="" alt="Prévia" style="width: 52px; height: 52px; border-radius: 50%; object-fit: cover; border: 2px solid #10b981;">
+                <span style="font-size: 0.8rem; color: #34d399; font-weight: 600;">✓ Foto Selecionada</span>
+              </div>
+            </div>
+            <small style="color: var(--text-muted); font-size: 0.78rem; margin-top: 5px; display: block;">
+              Selecione qualquer foto JPG, PNG ou WebP. Se não selecionar agora, o perfil entrará com foto padrão e o artista poderá trocar quando quiser pelo painel dele.
+            </small>
           </div>
 
           <div class="form-group" style="margin-bottom: 20px;">
             <label class="form-label">Biografia Curta / Apresentação</label>
-            <textarea id="cortesiaBiografia" class="form-input" rows="2" placeholder="Breve resumo da trajetória ou perfil do artista convidado..."></textarea>
+            <textarea id="cortesiaBiografia" class="form-input" rows="2" placeholder="Breve resumo da trajetória ou perfil do artista..."></textarea>
           </div>
 
           <div style="display: flex; justify-content: flex-end; gap: 12px;">
@@ -373,9 +378,8 @@
               <tr>
                 <th>Foto</th>
                 <th>Nome Artístico</th>
-                <th>E-mail & Login</th>
+                <th>E-mail & Senha de Acesso</th>
                 <th>Categoria / Local</th>
-                <th>Motivo Isenção</th>
                 <th>Status</th>
                 <th>Ações</th>
               </tr>
@@ -574,14 +578,11 @@
           </td>
           <td>
             <span style="color: #38bdf8; font-size: 0.85rem;">${art.email}</span><br>
-            <span style="font-size: 0.75rem; color: #cbd5e1;">Tel: ${art.telefone || 'Não informado'}</span>
+            <span style="font-size: 0.75rem; color: #cbd5e1;">Senha: <strong>${art.senha || 'casting123'}</strong></span>
           </td>
           <td>
             <span style="color: #fff;">${art.categoria || 'Geral'}</span><br>
             <span style="font-size: 0.75rem; color: #94a3b8;">${art.cidade ? art.cidade + '/' + art.estado : 'Brasil'}</span>
-          </td>
-          <td>
-            <span style="font-size: 0.82rem; color: #fbbf24;">★ ${art.motivo_isencao || 'Convidado Especial'}</span>
           </td>
           <td>
             <span class="status-badge status-ativo" style="background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4);">
@@ -600,6 +601,22 @@
           </td>
         </tr>
       `).join('');
+    }
+
+    function previewCortesiaFoto(e) {
+      const file = e.target.files && e.target.files[0];
+      const wrap = document.getElementById('cortesiaPreviewWrap');
+      const img = document.getElementById('cortesiaFotoPreview');
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          img.src = evt.target.result;
+          wrap.style.display = 'inline-flex';
+        };
+        reader.readAsDataURL(file);
+      } else {
+        wrap.style.display = 'none';
+      }
     }
 
     function toggleFormCortesia() {
@@ -625,26 +642,29 @@
       btn.disabled = true;
       btn.textContent = 'Cadastrando artista cortesia...';
 
-      const payload = {
-        nome_artistico: document.getElementById('cortesiaNomeArtistico').value.trim(),
-        nome_completo: document.getElementById('cortesiaNomeCompleto').value.trim(),
-        categoria: document.getElementById('cortesiaCategoria').value,
-        email: document.getElementById('cortesiaEmail').value.trim(),
-        senha: document.getElementById('cortesiaSenha').value.trim(),
-        telefone: document.getElementById('cortesiaTelefone').value.trim(),
-        cidade: document.getElementById('cortesiaCidade').value.trim(),
-        estado: document.getElementById('cortesiaEstado').value.trim(),
-        drt: document.getElementById('cortesiaDrt').value.trim(),
-        motivo_isencao: document.getElementById('cortesiaMotivo').value.trim(),
-        foto_perfil: document.getElementById('cortesiaFotoPerfil').value.trim(),
-        biografia: document.getElementById('cortesiaBiografia').value.trim()
-      };
+      const formData = new FormData();
+      formData.append('nome_artistico', document.getElementById('cortesiaNomeArtistico').value.trim());
+      formData.append('nome_completo', document.getElementById('cortesiaNomeCompleto').value.trim());
+      formData.append('categoria', document.getElementById('cortesiaCategoria').value);
+      formData.append('email', document.getElementById('cortesiaEmail').value.trim());
+      formData.append('senha', document.getElementById('cortesiaSenha').value.trim());
+      formData.append('telefone', document.getElementById('cortesiaTelefone').value.trim());
+      formData.append('cidade', document.getElementById('cortesiaCidade').value.trim());
+      formData.append('estado', document.getElementById('cortesiaEstado').value.trim());
+      formData.append('drt', document.getElementById('cortesiaDrt').value.trim());
+      formData.append('biografia', document.getElementById('cortesiaBiografia').value.trim());
+
+      const fileInput = document.getElementById('cortesiaFotoFile');
+      if (fileInput && fileInput.files && fileInput.files[0]) {
+        formData.append('foto', fileInput.files[0]);
+      }
 
       try {
-        const res = await API.cadastrarArtistaCortesia(payload);
+        const res = await API.cadastrarArtistaCortesia(formData);
         succEl.textContent = res.message || 'Artista cortesia cadastrado com sucesso!';
         succEl.style.display = 'block';
         document.getElementById('formNovoArtistaCortesia').reset();
+        document.getElementById('cortesiaPreviewWrap').style.display = 'none';
         await loadAdminData();
       } catch (err) {
         errEl.textContent = err.message || 'Erro ao cadastrar artista cortesia.';

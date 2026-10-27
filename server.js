@@ -1257,63 +1257,6 @@ app.get('/api/admin/metricas', requireAdminAuth, (req, res) => {
   });
 });
 
-// Simulador de Ciclo Financeiro (Ferramenta de testes do Admin para demonstrar renovação automática / inadimplência)
-app.post('/api/admin/simular-ciclo', requireAdminAuth, (req, res) => {
-  const { acao, artistId } = req.body;
-  const artists = readJSON(ARTISTS_FILE, []);
-  const artistIndex = artists.findIndex(a => a.id === artistId);
-
-  if (artistIndex === -1) {
-    return res.status(404).json({ error: "Artista não encontrado para simulação." });
-  }
-
-  const artist = artists[artistIndex];
-  const config = readJSON(CONFIG_FILE);
-
-  if (acao === 'renovar_mensalidade') {
-    const nextDate = new Date();
-    nextDate.setDate(nextDate.getDate() + 30);
-    const comprovanteId = 'SIM-REC-' + Date.now().toString().slice(-4);
-
-    artist.status = 'ativo';
-    artist.publicado = true;
-    artist.financeiro.proxima_cobranca = nextDate.toISOString();
-    artist.financeiro.historico.push({
-      id: 'SIM-TX-' + Date.now().toString().slice(-4),
-      data: new Date().toISOString(),
-      tipo: 'mensalidade',
-      descricao: 'Renovação Automática de Mensalidade (Simulação Webhook)',
-      valor: config.monthly_fee,
-      status: 'pago',
-      metodo: 'Cartão de Crédito Automático',
-      comprovante_id: comprovanteId
-    });
-  } else if (acao === 'falhar_cobranca') {
-    artist.status = 'pagamento_pendente';
-    artist.financeiro.historico.push({
-      id: 'SIM-FAIL-' + Date.now().toString().slice(-4),
-      data: new Date().toISOString(),
-      tipo: 'mensalidade',
-      descricao: 'Tentativa de Cobrança Recorrente Recusada',
-      valor: config.monthly_fee,
-      status: 'pendente',
-      metodo: 'Cartão de Crédito (Saldo Insuficiente)',
-      comprovante_id: null
-    });
-  } else if (acao === 'suspender_atraso') {
-    artist.status = 'pagamento_atrasado';
-    artist.publicado = false; // Suspensão de visibilidade mantendo integridade dos dados
-  }
-
-  writeJSON(ARTISTS_FILE, artists);
-
-  res.json({
-    success: true,
-    message: `Simulação '${acao}' executada no artista ${artist.nome_artistico}!`,
-    artista: artist
-  });
-});
-
 // ==========================================
 // 12. GESTÃO DE ARTISTAS CORTESIA / NÃO PAGANTES (NÃO CONTABILIZADOS)
 // ==========================================
@@ -1325,8 +1268,8 @@ app.get('/api/admin/artistas-cortesia', requireAdminAuth, (req, res) => {
   res.json(cortesias);
 });
 
-// Cadastrar novo artista cortesia (100% Isento, sem cobrança, fora do MRR/contabilidade)
-app.post('/api/admin/artistas-cortesia', requireAdminAuth, (req, res) => {
+// Cadastrar novo artista cortesia (100% Isento, sem cobrança, fora do MRR/contabilidade, com suporte a upload de arquivo direto do PC/celular)
+app.post('/api/admin/artistas-cortesia', requireAdminAuth, upload.single('foto'), (req, res) => {
   const {
     nome_artistico,
     nome_completo,
@@ -1338,8 +1281,7 @@ app.post('/api/admin/artistas-cortesia', requireAdminAuth, (req, res) => {
     estado,
     drt,
     biografia,
-    motivo_isencao,
-    foto_perfil
+    foto_url
   } = req.body || {};
 
   if (!nome_artistico || !email || !senha) {
@@ -1355,6 +1297,14 @@ app.post('/api/admin/artistas-cortesia', requireAdminAuth, (req, res) => {
     return res.status(400).json({ error: 'Já existe um artista cadastrado com este e-mail.' });
   }
 
+  // Foto de perfil: arquivo enviado do computador/celular OU url OU padrão
+  let fotoPerfilFinal = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80';
+  if (req.file) {
+    fotoPerfilFinal = `/uploads/${req.file.filename}`;
+  } else if (foto_url && foto_url.startsWith('http')) {
+    fotoPerfilFinal = foto_url.trim();
+  }
+
   const newId = 'art-cortesia-' + Date.now().toString(36) + '-' + Math.floor(Math.random() * 1000);
 
   const newCortesiaArtist = {
@@ -1368,7 +1318,7 @@ app.post('/api/admin/artistas-cortesia', requireAdminAuth, (req, res) => {
     estado: (estado || 'RJ').trim().toUpperCase(),
     categoria: categoria || 'Ator / Atriz',
     drt: (drt || '').trim(),
-    biografia: (biografia || 'Artista convidado oficial do CASTING PRO. Perfil profissional ativo.').trim(),
+    biografia: (biografia || 'Artista convidado do CASTING PRO.').trim(),
     curriculo: '',
     caracteristicas: {
       altura: '',
@@ -1380,14 +1330,14 @@ app.post('/api/admin/artistas-cortesia', requireAdminAuth, (req, res) => {
       etnia: ''
     },
     habilidades: [],
-    foto_perfil: foto_perfil && foto_perfil.startsWith('http') ? foto_perfil : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80',
+    foto_perfil: fotoPerfilFinal,
     fotos_apresentacao: [],
     videos: [],
     status: 'ativo',
     publicado: true,
     isento: true,
     tipo_cadastro: 'cortesia',
-    motivo_isencao: (motivo_isencao || 'Convidado Especial / Elenco Parceria').trim(),
+    motivo_isencao: 'Cortesia do Diretor',
     criado_em: new Date().toISOString(),
     financeiro: {
       isento: true,
