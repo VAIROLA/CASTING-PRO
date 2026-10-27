@@ -28,6 +28,41 @@ app.use('/uploads', express.static(uploadsDir));
 const ARTISTS_FILE = path.join(dataDir, 'artists.json');
 const CONFIG_FILE = path.join(dataDir, 'config.json');
 
+// Função Geradora de PIX Padrão Banco Central (EMV / Copia e Cola)
+function gerarPixEMV(chave, nome, cidade, valor, txid = 'CASTINGPRO') {
+  function f(id, val) {
+    const len = String(val.length).padStart(2, '0');
+    return id + len + val;
+  }
+  const gui = f('00', 'br.gov.bcb.pix') + f('01', chave);
+  const vStr = parseFloat(valor).toFixed(2);
+  let payload = f('00', '01') +
+                f('26', gui) +
+                f('52', '0000') +
+                f('53', '986') +
+                f('54', vStr) +
+                f('58', 'BR') +
+                f('59', nome.substring(0, 25).toUpperCase()) +
+                f('60', cidade.substring(0, 15).toUpperCase()) +
+                f('62', f('05', txid)) +
+                '6304';
+  
+  // CRC16 CCITT
+  let crc = 0xFFFF;
+  for (let i = 0; i < payload.length; i++) {
+    crc ^= (payload.charCodeAt(i) << 8);
+    for (let j = 0; j < 8; j++) {
+      if ((crc & 0x8000) !== 0) {
+        crc = ((crc << 1) ^ 0x1021) & 0xFFFF;
+      } else {
+        crc = (crc << 1) & 0xFFFF;
+      }
+    }
+  }
+  const crcHex = crc.toString(16).toUpperCase().padStart(4, '0');
+  return payload + crcHex;
+}
+
 // Helper to read/write JSON safely
 function readJSON(file, fallback = []) {
   try {
@@ -286,6 +321,14 @@ app.post('/api/cadastro', (req, res) => {
   artists.push(newArtist);
   writeJSON(ARTISTS_FILE, artists);
 
+  const pixPayload = gerarPixEMV(
+    config.pagamento?.pix_chave || 'tonydeluc@portal-tvdiversidade-news.com',
+    config.pagamento?.beneficiario || 'AILTON PAULO DOS SANTOS',
+    config.pagamento?.cidade || 'MARICA',
+    config.initial_fee || 20.00,
+    'CASTING' + newId.replace('art-', '')
+  );
+
   res.status(201).json({
     success: true,
     message: "Cadastro iniciado com sucesso! Efetue o pagamento da taxa inicial de R$ 20,00 para liberar o perfil completo.",
@@ -294,8 +337,11 @@ app.post('/api/cadastro', (req, res) => {
       txId,
       taxa_inicial: config.initial_fee,
       mensalidade_futura: config.monthly_fee,
+      beneficiario: config.pagamento?.beneficiario || 'AILTON PAULO DOS SANTOS',
+      banco: config.pagamento?.banco || 'PagBank / PagSeguro',
+      pix_chave: config.pagamento?.pix_chave || 'tonydeluc@portal-tvdiversidade-news.com',
       descricao: "Taxa Única de Cadastro R$ 20,00 + Mensalidade de R$ 10,00 após 30 dias",
-      pix_copia_cola: `00020126580014br.gov.bcb.pix0136financeiro@castingpro.com.br520400005303986540520.005802BR5911CASTING PRO6009SAO PAULO62070503***6304${Math.floor(1000 + Math.random() * 9000)}`
+      pix_copia_cola: pixPayload
     }
   });
 });

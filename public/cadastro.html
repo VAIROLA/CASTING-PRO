@@ -275,8 +275,14 @@
 
       <!-- ÁREA PIX -->
       <div id="areaPix">
+        <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 10px; padding: 12px 16px; max-width: 460px; margin: 0 auto 16px; font-size: 0.85rem; color: #a7f3d0; text-align: left;">
+          <div>🏦 <strong>Banco:</strong> <span id="pixBancoNome">PagBank / PagSeguro</span></div>
+          <div>👤 <strong>Beneficiário:</strong> <span id="pixBeneficiarioNome">AILTON PAULO DOS SANTOS</span></div>
+          <div>🔑 <strong>Chave PIX:</strong> <span id="pixChaveEmail">tonydeluc@portal-tvdiversidade-news.com</span></div>
+        </div>
+
         <div class="qr-container">
-          <!-- QR Code gerado por API pública segura para simulação -->
+          <!-- QR Code gerado dinamicamente -->
           <img id="qrImg" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=CASTING-PRO-R20-TAXA-INICIAL" alt="QR Code PIX R$ 20,00" style="display: block;">
         </div>
         <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px;">Ou copie a chave PIX Copia e Cola:</p>
@@ -395,6 +401,10 @@
 
         if (resp.cobranca && resp.cobranca.pix_copia_cola) {
           document.getElementById('pixCopiaCola').value = resp.cobranca.pix_copia_cola;
+          document.getElementById('qrImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=190x190&data=${encodeURIComponent(resp.cobranca.pix_copia_cola)}`;
+          if (resp.cobranca.beneficiario) document.getElementById('pixBeneficiarioNome').textContent = resp.cobranca.beneficiario;
+          if (resp.cobranca.banco) document.getElementById('pixBancoNome').textContent = resp.cobranca.banco;
+          if (resp.cobranca.pix_chave) document.getElementById('pixChaveEmail').textContent = resp.cobranca.pix_chave;
         }
 
         document.getElementById('step2Card').style.display = 'none';
