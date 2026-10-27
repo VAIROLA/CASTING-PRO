@@ -388,31 +388,6 @@
       </div>
     </section>
 
-    <!-- FERRAMENTA DE SIMULAÇÃO DE WEBHOOK / CICLO BANCÁRIO -->
-    <section class="card" style="margin-bottom: 30px; border-color: rgba(56, 189, 248, 0.4);">
-      <h2 style="font-family: 'Montserrat', sans-serif; font-size: 1.25rem; color: #fff; display: flex; align-items: center; gap: 8px;">
-        ⚡ Simulador de Ciclo Bancário & Webhooks
-      </h2>
-      <p style="color: var(--text-muted); font-size: 0.88rem; margin: 4px 0 16px;">
-        Utilize este painel para validar o comportamento do sistema diante de eventos do provedor (renovação mensal de R$ 10, inadimplência e suspensão sem exclusão de dados).
-      </p>
-
-      <div style="display: flex; gap: 15px; flex-wrap: wrap; align-items: center;">
-        <select id="simArtistaSelect" class="form-select" style="max-width: 280px; margin: 0;">
-          <!-- Opções preenchidas dinamicamente -->
-        </select>
-        <button type="button" class="btn btn-success btn-sm" onclick="executarSimulacao('renovar_mensalidade')">
-          ✓ Simular Cobrança de Mensalidade Aprovada (+R$ 10,00)
-        </button>
-        <button type="button" class="btn btn-warning btn-sm" onclick="executarSimulacao('falhar_cobranca')">
-          ⚠️ Simular Falha de Cartão (Pagamento Pendente)
-        </button>
-        <button type="button" class="btn btn-danger btn-sm" onclick="executarSimulacao('suspender_atraso')">
-          🔒 Simular Suspensão por Atraso (Sem Deletar Fotos)
-        </button>
-      </div>
-    </section>
-
     <!-- HISTÓRICO DE TRANSAÇÕES REAIS -->
     <section class="card" style="margin-bottom: 30px;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 10px;">
@@ -540,7 +515,6 @@
         renderMetrics();
         renderCortesiaTable();
         renderTransactions();
-        populateSimSelect();
       } catch (err) {
         localStorage.removeItem('casting_admin_token');
         lockScreen.style.display = 'block';
@@ -733,29 +707,6 @@
         </tr>
       `).join('');
     }
-
-    async function populateSimSelect() {
-      const select = document.getElementById('simArtistaSelect');
-      const artistas = await API.getArtistas();
-      // Pega todos incluindo privados via busca
-      select.innerHTML = `
-        <option value="art-101">Larissa Vasconcelos (art-101)</option>
-        <option value="art-102">Thiago Albuquerque (art-102)</option>
-        <option value="art-103">Bia Camargo (art-103)</option>
-        <option value="art-104">Gabriel Rocha (art-104)</option>
-      `;
-    }
-
-    window.executarSimulacao = async function(acao) {
-      const artistId = document.getElementById('simArtistaSelect').value;
-      try {
-        const res = await API.simularCiclo(acao, artistId);
-        alert(res.message);
-        loadAdminData();
-      } catch (err) {
-        alert('Erro na simulação: ' + err.message);
-      }
-    };
 
     // Salvar Config
     document.getElementById('formConfig').addEventListener('submit', async (e) => {
