@@ -806,9 +806,10 @@
 
           if (isDirect) {
             previewHtml = `
-              <div style="height: 180px; background: #000; border-radius: 8px; overflow: hidden; margin: 10px 0;">
-                <video controls style="width: 100%; height: 100%; object-fit: contain;">
+              <div class="video-responsive-container">
+                <video controls preload="metadata">
                   <source src="${vid.url}" type="video/mp4">
+                  Seu navegador não suporta este vídeo.
                 </video>
               </div>
             `;
@@ -820,8 +821,8 @@
               embedUrl = `https://www.youtube.com/embed/${vid.url.split('youtu.be/')[1]?.split('?')[0]}`;
             }
             previewHtml = `
-              <div style="height: 180px; background: #000; border-radius: 8px; overflow: hidden; margin: 10px 0;">
-                <iframe src="${embedUrl}" style="width: 100%; height: 100%; border: none;"></iframe>
+              <div class="video-responsive-container">
+                <iframe src="${embedUrl}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
               </div>
             `;
           }

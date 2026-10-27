@@ -717,6 +717,31 @@ body {
   font-size: 0.9rem;
 }
 
+/* RESPONSIVE VIDEO PLAYERS (16:9 PROPORTION) */
+.video-responsive-container {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* Proporção padrão 16:9 de Cinema/TV */
+  height: 0;
+  background: #000;
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 12px 0 16px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7);
+  border: 1.5px solid rgba(245, 158, 11, 0.35);
+}
+
+.video-responsive-container iframe,
+.video-responsive-container video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  object-fit: contain;
+}
+
 .footer-container {
   max-width: 1240px;
   margin: 0 auto;
