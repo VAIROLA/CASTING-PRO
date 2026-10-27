@@ -292,21 +292,17 @@
         </div>
       </div>
 
-      <!-- ÁREA CARTÃO -->
-      <div id="areaCartao" style="display: none; max-width: 440px; margin: 0 auto 25px; text-align: left;">
-        <div class="form-group">
-          <label class="form-label">Número do Cartão</label>
-          <input type="text" id="numCartao" class="form-input" placeholder="4532 •••• •••• 8934" value="4532 8920 1142 8934">
-        </div>
-        <div class="grid-2">
-          <div class="form-group">
-            <label class="form-label">Validade</label>
-            <input type="text" class="form-input" placeholder="MM/AA" value="12/29">
-          </div>
-          <div class="form-group">
-            <label class="form-label">CVV</label>
-            <input type="text" class="form-input" placeholder="123" value="789">
-          </div>
+      <!-- ÁREA CARTÃO E PAGAMENTO DIRETO PAGBANK -->
+      <div id="areaCartao" style="display: none; max-width: 480px; margin: 0 auto 25px; text-align: center;">
+        <div style="background: rgba(56, 189, 248, 0.08); border: 1.5px solid rgba(56, 189, 248, 0.35); border-radius: 12px; padding: 22px 20px; margin-bottom: 20px;">
+          <div style="font-size: 2rem; margin-bottom: 8px;">💳</div>
+          <h4 style="color: #fff; font-size: 1.15rem; margin-bottom: 6px;">Pagamento com Cartão ou Saldo PagBank</h4>
+          <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 18px; line-height: 1.5;">
+            Clique no botão abaixo para abrir a página de pagamento criptografada e oficial do <strong>PagBank</strong> no valor de <strong>R$ 20,00</strong>:
+          </p>
+          <a id="linkPagbankCartao" href="https://pag.ae/82hDtvCup" target="_blank" class="btn btn-primary btn-lg" style="width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-weight: 700; box-shadow: 0 0 20px rgba(56, 189, 248, 0.35);">
+            🔒 Pagar R$ 20,00 no PagBank &rarr;
+          </a>
         </div>
       </div>
 

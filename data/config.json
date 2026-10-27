@@ -16,6 +16,10 @@
     "banco": "PagBank / PagSeguro (290)",
     "beneficiario": "AILTON PAULO DOS SANTOS",
     "pix_chave": "tonydeluc@portal-tvdiversidade-news.com",
-    "cidade": "MARICA"
+    "cidade": "MARICA",
+    "link_pagamento_taxa_inicial": "https://pag.ae/82hDtvCup",
+    "link_cartao_pagbank": "https://pag.ae/82hDtvCup",
+    "link_taxa_inicial": "https://pag.ae/82hDtvCup",
+    "link_mensalidade": "https://pag.ae/82hDvdzHK"
   }
 }

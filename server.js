@@ -340,6 +340,8 @@ app.post('/api/cadastro', (req, res) => {
       beneficiario: config.pagamento?.beneficiario || 'AILTON PAULO DOS SANTOS',
       banco: config.pagamento?.banco || 'PagBank / PagSeguro',
       pix_chave: config.pagamento?.pix_chave || 'tonydeluc@portal-tvdiversidade-news.com',
+      link_pagamento_taxa: config.pagamento?.link_taxa_inicial || 'https://pag.ae/82hDtvCup',
+      link_pagamento_mensal: config.pagamento?.link_mensalidade || 'https://pag.ae/82hDvdzHK',
       descricao: "Taxa Única de Cadastro R$ 20,00 + Mensalidade de R$ 10,00 após 30 dias",
       pix_copia_cola: pixPayload
     }
