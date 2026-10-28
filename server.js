@@ -947,6 +947,10 @@ app.put('/api/artistas/:id', (req, res) => {
     videos: updatedVideos
   };
 
+  if (req.body.senha && req.body.senha.trim()) {
+    artists[artistIndex].senha = req.body.senha.trim();
+  }
+
   writeJSON(ARTISTS_FILE, artists);
   res.json({ success: true, message: "Perfil atualizado com sucesso!", artista: artists[artistIndex] });
 });
