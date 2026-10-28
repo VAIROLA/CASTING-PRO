@@ -9,8 +9,8 @@
     "estado": "RJ",
     "categoria": "Cineasta / Diretor / Produtor",
     "drt": "0045210/RJ",
-    "biografia": "Diretor cinematográfico, produtor executivo e curador audiovisual com ampla experiência em direção de elenco, cinema e produções televisivas.",
-    "curriculo": "• Diretor e Fundador da TV Diversidade\n• Professor e Idealizador do CINELAB Cinema & Audiovisual\n• Direção de curtas e longas metragens independentes premiados\n• Produção e captação de elenco para produções audiovisuais",
+    "biografia": "Cineasta, diretor de cinema, produtor executivo e curador audiovisual com mais de 30 anos de atuação nas artes cênicas, televisão e cinema brasileiro independente. Fundador e Diretor Geral da TV Diversidade e idealizador do CINELAB Escola de Cinema.",
+    "curriculo": "• Diretor Geral e Fundador da TV Diversidade (24h no ar)\n• Idealizador e Professor Titular do CINELAB - Curso de Formação em Cinema & Audiovisual\n• Diretor dos longas e curtas: Expresso Terminal, A Possuída, Menino na Ex-cola, Porta Aberta, Sexo Drogas e Outras Coisas Mais\n• Direção e Produção Executiva em filmagens no Amazonas e Rio de Janeiro\n• Curador de elenco e preparador de atores para cinema e publicidade",
     "caracteristicas": {
       "altura": "1.78",
       "peso": "78",
@@ -26,13 +26,37 @@
       "Produção Executiva",
       "Edição Audiovisual"
     ],
-    "foto_perfil": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80",
+    "foto_perfil": "/uploads/tony-perfil.jpg",
     "fotos_apresentacao": [
       {
         "id": "foto-1",
-        "url": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80",
-        "legenda": "Direção em Estúdio",
+        "url": "/uploads/tony-galeria-1.jpg",
+        "legenda": "Direção em Set de Filmagens",
         "ordem": 0
+      },
+      {
+        "id": "foto-2",
+        "url": "/uploads/tony-galeria-2.jpg",
+        "legenda": "Tony de Luc - Produção",
+        "ordem": 1
+      },
+      {
+        "id": "foto-3",
+        "url": "/uploads/tony-galeria-3.jpg",
+        "legenda": "Tony de Luc - Retrato",
+        "ordem": 2
+      },
+      {
+        "id": "foto-4",
+        "url": "/uploads/tony-galeria-4.jpg",
+        "legenda": "Teatro Municipal de São Paulo",
+        "ordem": 3
+      },
+      {
+        "id": "foto-5",
+        "url": "/uploads/tony-galeria-5.jpg",
+        "legenda": "Cartaz Longa-Metragem Expresso Terminal",
+        "ordem": 4
       }
     ],
     "videos": [
@@ -325,5 +349,62 @@
       ]
     },
     "senha": "marcos123"
+  },
+  {
+    "id": "art-babalu",
+    "nome_completo": "Babalu Santos",
+    "nome_artistico": "Babalu",
+    "email": "wasbabalu@gmail.com",
+    "senha": "babalu",
+    "telefone": "(21) 96672-5240",
+    "cidade": "Maricá",
+    "estado": "RJ",
+    "categoria": "Ator / Performer / Comédia",
+    "drt": "0048912/RJ",
+    "biografia": "Ator e performer com grande presença cênica, carisma e versatilidade em papéis dramáticos e comédias para teatro, televisão e produções audiovisuais independentes.",
+    "curriculo": "• Atuações em produções teatrais e audiovisuais independentes\n• Participação em projetos e eventos artísticos da TV Diversidade\n• Portfólio de caracterização em trajes clássicos e contemporâneos",
+    "caracteristicas": {
+      "altura": "1.75",
+      "peso": "75",
+      "olhos": "Castanhos",
+      "cabelos": "Pretos",
+      "manequim": "42",
+      "calcado": "41",
+      "etnia": "Moreno"
+    },
+    "habilidades": [
+      "Interpretação Teatral",
+      "Comédia",
+      "Expressão Corporal",
+      "Dublagem"
+    ],
+    "foto_perfil": "/uploads/babalu-perfil.jpg",
+    "fotos_apresentacao": [
+      {
+        "id": "foto-b1",
+        "url": "/uploads/babalu-galeria-1.png",
+        "legenda": "Book Fotográfico A-Z",
+        "ordem": 0
+      },
+      {
+        "id": "foto-b2",
+        "url": "/uploads/babalu-galeria-2.jpg",
+        "legenda": "Ensaio Fotográfico",
+        "ordem": 1
+      }
+    ],
+    "videos": [],
+    "status": "ativo",
+    "publicado": true,
+    "criado_em": "2026-10-28T19:04:23.817Z",
+    "financeiro": {
+      "taxa_inicial_paga": true,
+      "taxa_inicial_valor": 20,
+      "taxa_inicial_data": "2026-10-28T19:04:23.818Z",
+      "mensalidade_valor": 10,
+      "plano": "Assinatura Profissional Casting Pro",
+      "forma_pagamento": "PIX",
+      "status": "pago"
+    }
   }
 ]

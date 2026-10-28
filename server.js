@@ -78,9 +78,24 @@ function readJSON(file, fallback = []) {
   }
 }
 
+let gitSyncTimeout = null;
+function syncToGit() {
+  if (gitSyncTimeout) clearTimeout(gitSyncTimeout);
+  gitSyncTimeout = setTimeout(() => {
+    try {
+      const { exec } = require('child_process');
+      exec('git add data/ public/uploads/ && git commit -m "auto-sync: persistencia automatica de artistas e fotos" && git push origin main', (err, stdout, stderr) => {
+        if (!err) console.log('[GIT-SYNC] Base e uploads sincronizados com sucesso no GitHub oficial!');
+        else console.warn('[GIT-SYNC] Aviso sync:', err.message);
+      });
+    } catch (e) {}
+  }, 2500);
+}
+
 function writeJSON(file, data) {
   try {
     fs.writeFileSync(file, JSON.stringify(data, null, 2), 'utf8');
+    syncToGit();
     return true;
   } catch (err) {
     console.error(`Erro ao escrever em ${file}:`, err);
