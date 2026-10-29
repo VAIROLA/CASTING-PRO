@@ -58,7 +58,14 @@
         "legenda": "Foto de apresentação"
       }
     ],
-    "videos": [],
+    "videos": [
+      {
+        "id": 1793290436575,
+        "url": "https://www.youtube.com/watch?v=mPDD6umJeBI",
+        "titulo": "Vídeo 1",
+        "tipo": "youtube"
+      }
+    ],
     "status": "ativo",
     "publicado": true,
     "criado_em": "2026-10-27T02:37:04.792Z",
