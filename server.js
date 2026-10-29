@@ -4,6 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
 const nodemailer = require('nodemailer');
+const cloudPersistence = require('./cloudPersistence');
 
 const app = express();
 const PORT = process.env.PORT || 3300;
@@ -1551,6 +1552,8 @@ app.get('*', (req, res) => {
 
 // Start Server
 app.listen(PORT, () => {
+  cloudPersistence.pullLatestFromCloudOnStartup(ARTISTS_FILE);
+  cloudPersistence.pullLatestFromCloudOnStartup(ARTISTS_FILE);
   console.log(`=======================================================`);
   console.log(`🎬 CASTING PRO - Servidor Comercial Ativo!`);
   console.log(`📍 URL: http://localhost:${PORT}`);
