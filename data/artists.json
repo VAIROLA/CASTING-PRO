@@ -26,7 +26,7 @@
       "Produção Executiva",
       "Edição Audiovisual"
     ],
-    "foto_perfil": "/uploads/tony-perfil.jpg",
+    "foto_perfil": "/uploads/foto-1793240983359-661011575.jpg",
     "fotos_apresentacao": [
       {
         "id": "foto-1",
@@ -59,14 +59,7 @@
         "ordem": 4
       }
     ],
-    "videos": [
-      {
-        "slot": 1,
-        "tipo": "youtube",
-        "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-        "titulo": "Showreel de Direção & Produção"
-      }
-    ],
+    "videos": [],
     "status": "ativo",
     "publicado": true,
     "criado_em": "2026-10-27T02:37:04.792Z",
