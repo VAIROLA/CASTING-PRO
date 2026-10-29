@@ -169,8 +169,8 @@ async function pullLatestFromCloudOnStartup(localArtistsFilePath) {
         try { localArtists = JSON.parse(fs.readFileSync(localArtistsFilePath, 'utf8')); } catch (e) {}
       }
 
-      // Se o repositório remoto tiver dados válidos e mais artistas ou se o local estiver vazio
-      if (Array.isArray(remoteArtists) && remoteArtists.length >= localArtists.length) {
+      // O repositório oficial no GitHub é a fonte definitiva de verdade
+      if (Array.isArray(remoteArtists) && remoteArtists.length > 0) {
         fs.writeFileSync(localArtistsFilePath, JSON.stringify(remoteArtists, null, 2), 'utf8');
         console.log(`[CLOUD-SYNC] Base sincronizada com o GitHub: ${remoteArtists.length} artistas carregados.`);
       }

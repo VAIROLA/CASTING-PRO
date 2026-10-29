@@ -96,6 +96,9 @@ function syncToGit() {
 function writeJSON(file, data) {
   try {
     fs.writeFileSync(file, JSON.stringify(data, null, 2), 'utf8');
+    if (file.includes('artists.json')) {
+      cloudPersistence.syncArtistsDatabase(data);
+    }
     syncToGit();
     return true;
   } catch (err) {
@@ -772,6 +775,10 @@ app.post('/api/artistas/:id/foto-perfil', upload.single('foto'), (req, res) => {
 
   writeJSON(ARTISTS_FILE, artists);
 
+  if (req.file) {
+    cloudPersistence.syncUploadImage(req.file.filename, req.file.path);
+  }
+
   res.json({
     success: true,
     message: "Fotografia principal de perfil atualizada com sucesso!",
@@ -812,6 +819,9 @@ app.post('/api/artistas/:id/fotos-apresentacao', upload.single('foto'), (req, re
       legenda: legenda
     };
     writeJSON(ARTISTS_FILE, artists);
+    if (req.file) {
+      cloudPersistence.syncUploadImage(req.file.filename, req.file.path);
+    }
     return res.json({
       success: true,
       message: `Espaço ${slotIndex + 1} substituído com sucesso!`,
@@ -834,6 +844,10 @@ app.post('/api/artistas/:id/fotos-apresentacao', upload.single('foto'), (req, re
   });
 
   writeJSON(ARTISTS_FILE, artists);
+
+  if (req.file) {
+    cloudPersistence.syncUploadImage(req.file.filename, req.file.path);
+  }
 
   res.json({
     success: true,
@@ -1552,7 +1566,6 @@ app.get('*', (req, res) => {
 
 // Start Server
 app.listen(PORT, () => {
-  cloudPersistence.pullLatestFromCloudOnStartup(ARTISTS_FILE);
   cloudPersistence.pullLatestFromCloudOnStartup(ARTISTS_FILE);
   console.log(`=======================================================`);
   console.log(`🎬 CASTING PRO - Servidor Comercial Ativo!`);
