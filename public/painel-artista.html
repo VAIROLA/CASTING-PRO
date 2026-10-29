@@ -640,7 +640,8 @@
     // Foto Principal
     function renderMainPhoto() {
       const img = document.getElementById('mainProfilePhotoImg');
-      img.src = currentArtist.foto_perfil || 'https://via.placeholder.com/300x400?text=Sem+Foto+Principal';
+      const pUrl = currentArtist.foto_perfil ? (currentArtist.foto_perfil.startsWith('/uploads/') ? currentArtist.foto_perfil + '?v=' + Date.now() : currentArtist.foto_perfil) : 'https://via.placeholder.com/300x400?text=Sem+Foto+Principal';
+      img.src = pUrl;
     }
 
     document.getElementById('btnUploadFotoPrincipal').addEventListener('click', () => {
@@ -688,7 +689,7 @@
           html += `
             <div class="photo-slot filled">
               <span class="slot-number-badge">Espaço ${slot}</span>
-              <img src="${foto.url}" alt="${foto.legenda || 'Foto ' + slot}" class="slot-img">
+              <img src="${foto.url && foto.url.startsWith('/uploads/') ? foto.url + '?v=' + Date.now() : foto.url}" alt="${foto.legenda || 'Foto ' + slot}" class="slot-img">
               <div class="slot-actions">
                 <span style="color: #fff; font-size: 0.8rem; font-weight: 600; text-align: center; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width: 90%;">
                   ${foto.legenda || 'Sem legenda'}

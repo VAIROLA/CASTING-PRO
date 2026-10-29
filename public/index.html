@@ -219,7 +219,7 @@
           <a href="/perfil-publico.html?id=${art.id}" class="artist-card">
             <!-- FOTO PRINCIPAL -->
             <div class="artist-photo-wrap">
-              <img src="${art.foto_perfil || 'https://via.placeholder.com/600x800?text=Sem+Foto'}" alt="${art.nome_artistico}" class="artist-photo" loading="lazy">
+              <img src="${art.foto_perfil ? (art.foto_perfil.startsWith('/uploads/') ? art.foto_perfil + '?v=' + Date.now() : art.foto_perfil) : 'https://via.placeholder.com/600x800?text=Sem+Foto'}" alt="${art.nome_artistico}" class="artist-photo" loading="lazy">
               <div class="artist-photo-count">
                 📸 ${art.total_fotos_apresentacao + 1} fotos
               </div>

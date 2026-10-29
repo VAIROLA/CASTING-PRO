@@ -331,7 +331,8 @@
 
     function renderProfile() {
       document.title = `${artistData.nome_artistico} • CASTING PRO`;
-      document.getElementById('publicMainPhoto').src = artistData.foto_perfil;
+      const mainUrl = artistData.foto_perfil ? (artistData.foto_perfil.startsWith('/uploads/') ? artistData.foto_perfil + '?v=' + Date.now() : artistData.foto_perfil) : 'https://via.placeholder.com/600x800?text=Sem+Foto';
+      document.getElementById('publicMainPhoto').src = mainUrl;
       document.getElementById('publicName').textContent = artistData.nome_artistico;
       document.getElementById('publicCategory').textContent = artistData.categoria || 'Artista';
 
@@ -389,7 +390,7 @@
       } else {
         galGrid.innerHTML = fotos.map(f => `
           <div class="public-gallery-item" onclick="abrirLightbox('${f.url}')">
-            <img src="${f.url}" alt="${f.legenda || 'Foto de Apresentação'}" loading="lazy">
+            <img src="${f.url && f.url.startsWith('/uploads/') ? f.url + '?v=' + Date.now() : f.url}" alt="${f.legenda || 'Foto de Apresentação'}" loading="lazy">
             ${f.legenda ? `<div class="gallery-caption-overlay">${f.legenda}</div>` : ''}
           </div>
         `).join('');
