@@ -29,12 +29,6 @@
     "foto_perfil": "/uploads/tony-perfil.jpg",
     "fotos_apresentacao": [
       {
-        "id": "foto-1",
-        "url": "/uploads/tony-galeria-1.jpg",
-        "legenda": "Direção em Set de Filmagens",
-        "ordem": 0
-      },
-      {
         "id": "foto-2",
         "url": "/uploads/tony-galeria-2.jpg",
         "legenda": "Tony de Luc - Produção",
