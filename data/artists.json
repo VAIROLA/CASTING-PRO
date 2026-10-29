@@ -39,12 +39,6 @@
         "url": "/uploads/tony-galeria-3.jpg",
         "legenda": "Tony de Luc - Retrato",
         "ordem": 2
-      },
-      {
-        "id": "foto-5",
-        "url": "/uploads/tony-galeria-5.jpg",
-        "legenda": "Cartaz Longa-Metragem Expresso Terminal",
-        "ordem": 4
       }
     ],
     "videos": [],
