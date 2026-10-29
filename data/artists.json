@@ -26,19 +26,31 @@
       "Produção Executiva",
       "Edição Audiovisual"
     ],
-    "foto_perfil": "/uploads/foto-1793289452138-258339491.jpg",
+    "foto_perfil": "/uploads/tony-perfil.jpg",
     "fotos_apresentacao": [
       {
         "id": "foto-2",
         "url": "/uploads/tony-galeria-2.jpg",
         "legenda": "Tony de Luc - Produção",
-        "ordem": 1
+        "ordem": 0
       },
       {
         "id": "foto-3",
         "url": "/uploads/tony-galeria-3.jpg",
         "legenda": "Tony de Luc - Retrato",
+        "ordem": 1
+      },
+      {
+        "id": 1793289510985,
+        "url": "/uploads/foto-1793289510985-199844638.jpg",
+        "legenda": "Tony de Luc - Apresentação",
         "ordem": 2
+      },
+      {
+        "id": 1793289536124,
+        "url": "/uploads/foto-1793289536124-224131211.jpg",
+        "legenda": "Tony de Luc - Apresentação",
+        "ordem": 3
       }
     ],
     "videos": [],

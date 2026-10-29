@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
+const https = require('https');
 const multer = require('multer');
 const nodemailer = require('nodemailer');
 const cloudPersistence = require('./cloudPersistence');
@@ -24,6 +25,38 @@ if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
 
 app.use(express.static(publicDir));
 app.use('/uploads', express.static(uploadsDir));
+
+// Fallback dinâmico para uploads: se o arquivo não estiver no disco local, busca na nuvem (GitHub)
+app.get('/uploads/:filename', (req, res) => {
+  const filename = path.basename(req.params.filename);
+  const localPath = path.join(uploadsDir, filename);
+
+  if (fs.existsSync(localPath)) {
+    return res.sendFile(localPath);
+  }
+
+  const rawUrl = `https://raw.githubusercontent.com/VAIROLA/CASTING-PRO/main/public/uploads/${filename}`;
+  const ghReq = https.get(rawUrl, (ghRes) => {
+    if (ghRes.statusCode === 200) {
+      const fileStream = fs.createWriteStream(localPath);
+      ghRes.pipe(fileStream);
+      fileStream.on('finish', () => {
+        res.sendFile(localPath);
+      });
+    } else {
+      res.status(404).send('Imagem não encontrada');
+    }
+  });
+
+  ghReq.on('error', () => {
+    res.status(404).send('Imagem não encontrada');
+  });
+
+  ghReq.setTimeout(8000, () => {
+    ghReq.destroy();
+    if (!res.headersSent) res.status(404).send('Timeout ao buscar imagem');
+  });
+});
 
 // File Paths
 const ARTISTS_FILE = path.join(dataDir, 'artists.json');
@@ -1558,8 +1591,8 @@ app.get('/api/recibos/:id', (req, res) => {
 
 // Fallback to index
 app.get('*', (req, res) => {
-  if (req.path.startsWith('/api')) {
-    return res.status(404).json({ error: 'Endpoint não encontrado.' });
+  if (req.path.startsWith('/api') || req.path.startsWith('/uploads')) {
+    return res.status(404).json({ error: 'Recurso não encontrado.' });
   }
   res.sendFile(path.join(publicDir, 'index.html'));
 });

@@ -11,6 +11,20 @@ const REPO_NAME = 'CASTING-PRO';
 const REPO_FULL = `${REPO_OWNER}/${REPO_NAME}`;
 
 /**
+ * Fila sequencial (mutex) para operações na API do GitHub
+ * Evita conflitos 409 quando múltiplos arquivos são enviados simultaneamente
+ */
+let cloudQueue = Promise.resolve();
+
+function enqueueCloudTask(fn) {
+  const task = cloudQueue.then(() => fn()).catch(err => {
+    console.error('[CLOUD-QUEUE] Erro no processamento da fila:', err);
+  });
+  cloudQueue = task;
+  return task;
+}
+
+/**
  * Faz uma requisição HTTPS para a API do GitHub com autenticação
  */
 function githubRequest(endpoint, method = 'GET', body = null) {
@@ -78,51 +92,72 @@ async function getFileSha(repoRelativePath) {
 
 /**
  * Salva ou atualiza um arquivo diretamente no repositório GitHub via REST API
+ * com retentativas automáticas e mensagem com [skip render] [skip ci] para NÃO
+ * reiniciar o servidor em produção.
  */
-async function saveFileToCloud(repoRelativePath, contentBufferOrString, message = 'cloud-sync: persistencia automatica') {
-  try {
-    const cleanPath = repoRelativePath.replace(/\\/g, '/');
-    const contentBuffer = Buffer.isBuffer(contentBufferOrString)
-      ? contentBufferOrString
-      : Buffer.from(contentBufferOrString, 'utf8');
+async function saveFileToCloudInternal(repoRelativePath, contentBufferOrString, message = 'cloud-sync: persistencia automatica') {
+  // CRÍTICO: [skip render] [skip ci] evita que o Render reinicie o container durante uploads do usuário
+  const finalMessage = message.includes('[skip render]') 
+    ? message 
+    : `[skip render] [skip ci] ${message}`;
 
-    const base64Content = contentBuffer.toString('base64');
-    const sha = await getFileSha(cleanPath);
+  const cleanPath = repoRelativePath.replace(/\\/g, '/');
+  const contentBuffer = Buffer.isBuffer(contentBufferOrString)
+    ? contentBufferOrString
+    : Buffer.from(contentBufferOrString, 'utf8');
 
-    const payload = {
-      message: message,
-      content: base64Content
-    };
-    if (sha) payload.sha = sha;
+  const base64Content = contentBuffer.toString('base64');
 
-    const res = await githubRequest(`/repos/${REPO_FULL}/contents/${cleanPath}`, 'PUT', payload);
-    if (res.status === 200 || res.status === 201) {
-      console.log(`[CLOUD-SYNC] Arquivo ${cleanPath} persistido no GitHub com sucesso!`);
-      return true;
-    } else {
+  for (let attempt = 1; attempt <= 4; attempt++) {
+    try {
+      const sha = await getFileSha(cleanPath);
+      const payload = {
+        message: finalMessage,
+        content: base64Content
+      };
+      if (sha) payload.sha = sha;
+
+      const res = await githubRequest(`/repos/${REPO_FULL}/contents/${cleanPath}`, 'PUT', payload);
+      if (res.status === 200 || res.status === 201) {
+        console.log(`[CLOUD-SYNC] Arquivo ${cleanPath} persistido no GitHub com sucesso!`);
+        return true;
+      }
+
+      if (res.status === 409) {
+        console.warn(`[CLOUD-SYNC] Conflito 409 em ${cleanPath} (tentativa ${attempt}/4). Aguardando nova SHA...`);
+        await new Promise(r => setTimeout(r, 1200 * attempt));
+        continue;
+      }
+
       console.warn(`[CLOUD-SYNC] Resposta inesperada ao salvar ${cleanPath}:`, res.status, res.data);
-      return false;
+      if (attempt < 4) await new Promise(r => setTimeout(r, 1000));
+    } catch (err) {
+      console.error(`[CLOUD-SYNC] Erro tentativa ${attempt}/4 para ${repoRelativePath}:`, err.message);
+      if (attempt < 4) await new Promise(r => setTimeout(r, 1000));
     }
-  } catch (err) {
-    console.error(`[CLOUD-SYNC] Falha ao persistir ${repoRelativePath}:`, err.message);
-    return false;
   }
+
+  return false;
 }
 
-// Fila de sincronização com debounce para evitar requisições concorrentes da base de dados
+function saveFileToCloud(repoRelativePath, contentBufferOrString, message) {
+  return enqueueCloudTask(() => saveFileToCloudInternal(repoRelativePath, contentBufferOrString, message));
+}
+
+// Fila de sincronização com debounce para a base de dados
 let artistsSyncTimeout = null;
 function syncArtistsDatabase(artistsData) {
   if (artistsSyncTimeout) clearTimeout(artistsSyncTimeout);
 
-  artistsSyncTimeout = setTimeout(async () => {
+  artistsSyncTimeout = setTimeout(() => {
     try {
       const jsonStr = JSON.stringify(artistsData, null, 2);
-      console.log('[CLOUD-SYNC] Enviando base de artistas para persistência permanente no GitHub...');
-      await saveFileToCloud('data/artists.json', jsonStr, 'auto-sync: atualizacao da base de artistas e cadastros');
+      console.log('[CLOUD-SYNC] Enfileirando base de artistas para persistência permanente no GitHub...');
+      saveFileToCloud('data/artists.json', jsonStr, 'auto-sync: atualizacao da base de artistas e cadastros');
     } catch (err) {
       console.error('[CLOUD-SYNC] Erro no sync da base de dados:', err.message);
     }
-  }, 1200);
+  }, 1000);
 }
 
 /**
@@ -132,7 +167,7 @@ async function syncUploadImage(filename, fullLocalPath) {
   try {
     if (!fs.existsSync(fullLocalPath)) return false;
     const fileBuf = fs.readFileSync(fullLocalPath);
-    console.log(`[CLOUD-SYNC] Enviando imagem ${filename} (${fileBuf.length} bytes) para o GitHub...`);
+    console.log(`[CLOUD-SYNC] Enfileirando imagem ${filename} (${fileBuf.length} bytes) para o GitHub...`);
     const ok = await saveFileToCloud(`public/uploads/${filename}`, fileBuf, `auto-sync: nova foto ${filename}`);
     return ok;
   } catch (err) {
@@ -164,12 +199,6 @@ async function pullLatestFromCloudOnStartup(localArtistsFilePath) {
       const remoteContent = Buffer.from(res.data.content, 'base64').toString('utf8');
       const remoteArtists = JSON.parse(remoteContent);
 
-      let localArtists = [];
-      if (fs.existsSync(localArtistsFilePath)) {
-        try { localArtists = JSON.parse(fs.readFileSync(localArtistsFilePath, 'utf8')); } catch (e) {}
-      }
-
-      // O repositório oficial no GitHub é a fonte definitiva de verdade
       if (Array.isArray(remoteArtists) && remoteArtists.length > 0) {
         fs.writeFileSync(localArtistsFilePath, JSON.stringify(remoteArtists, null, 2), 'utf8');
         console.log(`[CLOUD-SYNC] Base sincronizada com o GitHub: ${remoteArtists.length} artistas carregados.`);
@@ -185,5 +214,6 @@ module.exports = {
   syncArtistsDatabase,
   syncUploadImage,
   pullLatestFromCloudOnStartup,
-  initGitEnvironment
+  initGitEnvironment,
+  REPO_FULL
 };
